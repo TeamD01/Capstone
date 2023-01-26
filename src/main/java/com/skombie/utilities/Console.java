@@ -1,4 +1,4 @@
-package com.skombie.utilities;
+package main.java.com.skombie.utilities;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ public class Console {
     public static void clear(){
         ProcessBuilder builder = opSystem.contains("windows") ?
                 new ProcessBuilder("cmd", "/c", "cls"):
-                new ProcessBuilder("clear");
+                new ProcessBuilder(new String[]{"clear"});
 
         try {
             builder.inheritIO().start().waitFor();
