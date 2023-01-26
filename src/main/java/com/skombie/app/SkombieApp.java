@@ -2,13 +2,11 @@ package com.skombie.app;
 
 import main.java.com.skombie.utilities.Console;
 import com.skombie.utilities.PromptHelper;
-import main.java.com.skombie.utilities.Printer;
+import com.skombie.utilities.InteractionParser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Scanner;
 
 import static main.java.com.skombie.utilities.Printer.printFile;
@@ -26,6 +24,8 @@ public class SkombieApp {
         promptUserNew();
         alertMessage();
         generateInstructions();
+        InteractionParser pars = new InteractionParser();
+        pars.verifyInput();
     }
 
     public void promptUserNew(){
