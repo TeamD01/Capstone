@@ -1,7 +1,8 @@
 package com.skombie.app;
 
-import com.skombie.utilities.Console;
+import main.java.com.skombie.utilities.Console;
 import com.skombie.utilities.PromptHelper;
+import main.java.com.skombie.utilities.Printer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,8 +11,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 
+import static main.java.com.skombie.utilities.Printer.printFile;
+
 public class SkombieApp {
     private final PromptHelper prompter = new PromptHelper(new Scanner(System.in));
+    private static final String TITLE = "src/main/resources/images/title.txt";
+    private static final String INTRO = "src/main/resources/data/intro";
+    private static final String ALERT = "src/main/resources/data/alertMsg.txt";
+
+
 
     public void execute() {
         getGameTitle();
@@ -33,8 +41,10 @@ public class SkombieApp {
 
     }
 
+
+
     public void getGameTitle() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("images/title.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(TITLE))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
@@ -47,22 +57,15 @@ public class SkombieApp {
     }
 
     public void generateInstructions() {
-        printFile("data/intro");
+        printFile(INTRO);
     }
 
     public void alertMessage() {
-        printFile("data/alertMsg.txt");
+        printFile(ALERT);
         Console.pause(6000);
         Console.clear();
     }
 
-    private void printFile(String fileName) {
-        try {
-            System.out.println(Files.readString(Path.of(fileName)));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 }
