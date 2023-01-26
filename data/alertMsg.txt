@@ -1,8 +1,10 @@
-"This is an emergency announcement. Reports have been received of skunk zombies attacking in the surrounding area.
+This is an emergency announcement. Reports have been received of skunk zombies attacking in the surrounding area.
 These creatures are extremely dangerous and should not be approached under any circumstances.
 They are believed to be highly contagious and can infect others with a zombie virus through bites or scratches.
- If you see one of these skunk zombies, immediately seek shelter and contact authorities.
-  Do not attempt to engage or confront the skunk zombie.\n This is not a drill, repeat, this is not a drill.
+If you see one of these skunk zombies, immediately seek shelter and contact authorities.
+Do not attempt to engage or confront the skunk zombie.\n This is not a drill, repeat, this is not a drill.
 
-** Authorities are urging that everyone stay indoors since the skunk spray will KILL you.
- IF YOU DO NEED TO GO OUTSIDE MAKE SURE TO WEAR A GAS MASK ** Stay safe and stay indoors."
+** Authorities are urging that everyone stay indoors since the skunk spray will KILL you. **
+                IF YOU DO NEED TO GO OUTSIDE MAKE SURE TO WEAR A GAS MASK
+
+Stay safe and stay indoors.
