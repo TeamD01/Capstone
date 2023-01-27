@@ -16,6 +16,7 @@ public class SkombieApp {
     private static final String TITLE = "src/main/resources/images/title.txt";
     private static final String INTRO = "src/main/resources/data/intro";
     private static final String ALERT = "src/main/resources/data/alertMsg.txt";
+    InteractionParser pars = new InteractionParser();
 
 
 
@@ -24,8 +25,7 @@ public class SkombieApp {
         promptUserNew();
         alertMessage();
         generateInstructions();
-        InteractionParser pars = new InteractionParser();
-        pars.verifyInput();
+        pars.verifyCommand();
     }
 
     public void promptUserNew(){
@@ -48,7 +48,7 @@ public class SkombieApp {
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
-                Console.pause(500);
+                Console.pause(5);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,7 +62,7 @@ public class SkombieApp {
 
     public void alertMessage() {
         printFile(ALERT);
-        Console.pause(6000);
+        Console.pause(6);
         Console.clear();
     }
 

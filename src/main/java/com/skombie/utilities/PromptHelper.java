@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class PromptHelper {
 // MUST USE "Printer.printFile(<INSERT FILENAME>) instead of System.println"
     private static final String QUIT = "src/main/resources/images/quit.txt";
-    private static final String HELP = "src/main/resources/data/intro.txt";
+    private static final String HELP = "src/main/resources/data/intro";
 
 
 
@@ -53,7 +53,7 @@ public class PromptHelper {
     public void  checkHelp(String input){
         if("Help".equalsIgnoreCase(input)){
             Printer.printFile(HELP);
-            System.exit(0);
+//            System.exit(0);
         }
     };
 }
