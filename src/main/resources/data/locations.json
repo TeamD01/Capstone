@@ -1,0 +1,92 @@
+{
+  "locations": [
+    {
+      "name": "Living Room",
+      "description": "You are in the living room.",
+      "characters": ["Grandpa Nick"],
+      "furniture": null,
+      "unsecurePoints": 2,
+      "hasSkunk": false,
+      "items": ["Hammer"],
+      "isSecure": false,
+      "availableRooms": ["Hallway"]
+    },
+    {
+      "name": "Hallway",
+      "description": "Ahh, yes the main hallway.",
+      "characters": null,
+      "furniture": null,
+      "unsecurePoints": 2,
+      "hasSkunk": false,
+      "items": null,
+      "isSecure": false,
+      "availableRooms": ["Office", "Living Room", "Basement", "Bedroom", "Kitchen", "Backyard"]
+    },
+    {
+      "name": "Office",
+      "description": "You are now in the office, no time for work now!",
+      "characters": ["Sugey"],
+      "furniture": ["Desk"],
+      "unsecurePoints": 2,
+      "hasSkunk": false,
+      "items": null,
+      "isSecure": false,
+      "availableRooms": ["Hallway"]
+    },
+    {
+      "name": "Basement",
+      "description": "Maybe you should get down here soon to clean up. That is if you make it out alive.",
+      "characters": null,
+      "furniture": ["Trunk"],
+      "unsecurePoints": 2,
+      "hasSkunk": false,
+      "items": ["Nails"],
+      "isSecure": false,
+      "availableRooms": ["Hallway"]
+    },
+    {
+      "name": "Bedroom",
+      "description": "The main bedroom, maybe we can find something useful in here.",
+      "characters": ["Chris"],
+      "furniture": null,
+      "unsecurePoints": 2,
+      "hasSkunk": false,
+      "items": null,
+      "isSecure": false,
+      "availableRooms": ["Hallway", "Attic"]
+    },
+    {
+      "name": "Kitchen",
+      "description": "Room for cooking ",
+      "characters": null,
+      "furniture": ["Cabinet"],
+      "unsecurePoints": 2,
+      "hasSkunk": false,
+      "items": ["Kitten litter"],
+      "isSecure": false,
+      "availableRooms": ["Hallway"]
+    },
+    {
+      "name": "Attic",
+      "description": "Smells musty in here.",
+      "characters": null,
+      "furniture": null,
+      "unsecurePoints": 0,
+      "hasSkunk": false,
+      "items": ["Radio"],
+      "isSecure": true,
+      "availableRooms": ["Bedroom"]
+    },
+    {
+      "name": "Backyard",
+      "description": "1/8 acre fenced in...",
+      "characters": null,
+      "furniture": null,
+      "unsecurePoints": 0,
+      "hasSkunk": true,
+      "items": ["Wood"],
+      "isSecure": true,
+      "availableRooms": ["Hallway"]
+    }
+  ]
+}

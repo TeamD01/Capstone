@@ -1,5 +1,12 @@
 package com.skombie.app;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.skombie.Character;
+import com.skombie.Location;
+import com.skombie.utilities.JSONMapper;
 import main.java.com.skombie.utilities.Console;
 import com.skombie.utilities.PromptHelper;
 import com.skombie.utilities.InteractionParser;
@@ -7,6 +14,11 @@ import com.skombie.utilities.InteractionParser;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static main.java.com.skombie.utilities.Printer.printFile;
@@ -16,9 +28,10 @@ public class SkombieApp {
     private static final String TITLE = "src/main/resources/images/title.txt";
     private static final String INTRO = "src/main/resources/data/intro";
     private static final String ALERT = "src/main/resources/data/alertMsg.txt";
+    private final String startingPoint = "Living Room";
+    private final Location currLocation = JSONMapper.grabJSONLocation("Living Room");
+    private final boolean gameOver = false;
     InteractionParser pars = new InteractionParser();
-
-
 
     public void execute() {
         getGameTitle();
@@ -26,6 +39,7 @@ public class SkombieApp {
         alertMessage();
         generateInstructions();
         pars.verifyCommand();
+        startGame();
     }
 
     public void promptUserNew(){
@@ -38,10 +52,7 @@ public class SkombieApp {
             // and add necessary code here.
             prompter.prompt("NOT A VALID SELECTION AT THIS TIME");
         }
-
     }
-
-
 
     public void getGameTitle() {
         try (BufferedReader reader = new BufferedReader(new FileReader(TITLE))) {
@@ -58,14 +69,43 @@ public class SkombieApp {
 
     public void generateInstructions() {
         printFile(INTRO);
+        Console.pause(6000);
     }
 
     public void alertMessage() {
         printFile(ALERT);
-        Console.pause(6);
+        Console.pause(10000);
         Console.clear();
     }
 
+    public void startGame(){
+        //TODO: GAME LOGIC HERE
+//        while(!gameOver){
+        printCurrLocationData();
+        //}
+    }
 
+    public void printCurrLocationData(){
+        System.out.println("=======================");
+        System.out.printf("Location: %s\n", currLocation.getName());
+        System.out.printf("%s\n", currLocation.getDescription());
 
+        if(!(currLocation.getFurniture() == null)) {
+            System.out.println("\nFurniture:");
+            currLocation.getFurniture().forEach(x -> System.out.printf("> %s\n", x));
+        }
+        if(!(currLocation.getCharacters() == null)){
+            System.out.println("\nPeople:");
+            currLocation.getCharacters().forEach(x -> System.out.printf("> %s\n", x));
+        }
+        if(!(currLocation.getItems() == null)){
+            System.out.println("\nItems:");
+            currLocation.getItems().forEach(x -> System.out.printf("> %s\n", x));
+        }
+
+        System.out.println("\nAvailable Locations:");
+        currLocation.getAvailableRooms().forEach(x -> System.out.printf("> %s\n", x));
+
+        System.out.println("=======================");
+    }
 }

@@ -1,0 +1,19 @@
+{
+  "furniture": [
+    {
+      "name": "Cabinet",
+      "isLocked": false,
+      "items": ["Mothballs"]
+    },
+    {
+      "name": "Desk",
+      "isLocked": false,
+      "items": ["Files"]
+    },
+    {
+      "name": "Trunk",
+      "isLocked": true,
+      "items": ["Gas Mask"]
+    }
+  ]
+}
