@@ -19,7 +19,7 @@ public class SkombieApp {
     private static final String INTRO = "src/main/resources/data/intro";
     private static final String ALERT = "src/main/resources/data/alertMsg.txt";
     private final String startingPoint = "Living Room";
-    private final Location currLocation = JSONMapper.grabJSONLocation("Living Room");
+    private Location currLocation = JSONMapper.grabJSONLocation("Living Room");
     private final boolean gameOver = false;
     InteractionParser pars = new InteractionParser();
 
@@ -29,15 +29,14 @@ public class SkombieApp {
         alertMessage();
         generateInstructions();
         startGame();
-        pars.goRoom(currLocation);
+
     }
 
-    public void promptUserNew(){
+    public void promptUserNew() {
         String input = prompter.prompt("\nWould you like to start a new game or continue?\n[N]ew Game\t[C]ontinue\n", "[nNcC]", "\nInvalid Entry\n");
-        if("N".equalsIgnoreCase(input)){
+        if ("N".equalsIgnoreCase(input)) {
             Console.clear();
-        }
-        else {
+        } else {
             //TODO: If user selects continue we will grab their data from somewhere
             // and add necessary code here.
             prompter.prompt("NOT A VALID SELECTION AT THIS TIME");
@@ -68,27 +67,29 @@ public class SkombieApp {
         Console.clear();
     }
 
-    public void startGame(){
+    public void startGame() {
         //TODO: GAME LOGIC HERE
-//        while(!gameOver){
-        printCurrLocationData();
-        //}
+        while (true) {
+            printCurrLocationData();
+            String requestedLocation = pars.goRoom(currLocation);
+            currLocation = JSONMapper.grabJSONLocation(requestedLocation);
+        }
     }
 
-    public void printCurrLocationData(){
+    public void printCurrLocationData() {
         System.out.println("=======================");
         System.out.printf("Location: %s\n", currLocation.getName());
         System.out.printf("%s\n", currLocation.getDescription());
 
-        if(!(currLocation.getFurniture() == null)) {
+        if (!(currLocation.getFurniture() == null)) {
             System.out.println("\nFurniture:");
             currLocation.getFurniture().forEach(x -> System.out.printf("> %s\n", x));
         }
-        if(!(currLocation.getCharacters() == null)){
+        if (!(currLocation.getCharacters() == null)) {
             System.out.println("\nPeople:");
             currLocation.getCharacters().forEach(x -> System.out.printf("> %s\n", x));
         }
-        if(!(currLocation.getItems() == null)){
+        if (!(currLocation.getItems() == null)) {
             System.out.println("\nItems:");
             currLocation.getItems().forEach(x -> System.out.printf("> %s\n", x));
         }

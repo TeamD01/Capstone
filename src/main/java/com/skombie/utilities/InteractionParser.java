@@ -9,7 +9,7 @@ public class InteractionParser {
     Scanner sc = new Scanner(System.in);
     PromptHelper prompt = new PromptHelper(sc);
     private static final String[] VERBS = new String[] {"use", "look", "go", "get", "drop"};
-    private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway"};
+    private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room"};
 
     public InteractionParser() {
     }
@@ -22,8 +22,8 @@ public class InteractionParser {
         System.out.println("Please enter a verb noun command or type \"Help\" to see a list of commands");
         while (true) {
             String temp = sc.nextLine().toLowerCase(Locale.ROOT);
-            if (temp.matches("([a-zA-Z ]*)") && temp.split(" ").length == 2) {
-                strSplit = temp.split(" ");
+            if (temp.matches("([a-zA-Z  ]*)") && temp.split(" ", 2).length == 2 || temp.split(" ", 2).length == 3) {
+                strSplit = temp.split(" ",2);
                 break;
             }
             else if (temp.equals("help")) {
@@ -45,6 +45,8 @@ public class InteractionParser {
     private String[] verifyCommand() {
         while (true) {
             String[] command = verifyInput();
+            System.out.println(command[0]);
+            System.out.println(command[1]);
             boolean containsVerb = Arrays.stream(VERBS).anyMatch(command[0]::equals);
             boolean containsNoun = Arrays.stream(NOUNS).anyMatch(command[1]::equals);
             if (containsVerb && containsNoun) {
@@ -63,6 +65,8 @@ public class InteractionParser {
         }
     }
 
+    // This looks at the current location, sees list of available locations and checks
+    // if user is able to proceed to next location.
     public String goRoom(Location curLoc) {
         String newLocation = null;
         List<String> availRooms = curLoc.getAvailableRooms();
