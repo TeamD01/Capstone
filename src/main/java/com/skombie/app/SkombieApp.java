@@ -1,24 +1,14 @@
 package com.skombie.app;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.skombie.Character;
 import com.skombie.Location;
-import com.skombie.utilities.JSONMapper;
-import main.java.com.skombie.utilities.Console;
-import com.skombie.utilities.PromptHelper;
 import com.skombie.utilities.InteractionParser;
+import com.skombie.utilities.JSONMapper;
+import com.skombie.utilities.PromptHelper;
+import main.java.com.skombie.utilities.Console;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import static main.java.com.skombie.utilities.Printer.printFile;
@@ -38,8 +28,8 @@ public class SkombieApp {
         promptUserNew();
         alertMessage();
         generateInstructions();
-        pars.verifyCommand();
         startGame();
+        pars.goRoom(currLocation);
     }
 
     public void promptUserNew(){
@@ -69,12 +59,12 @@ public class SkombieApp {
 
     public void generateInstructions() {
         printFile(INTRO);
-        Console.pause(6000);
+        Console.pause(6);
     }
 
     public void alertMessage() {
         printFile(ALERT);
-        Console.pause(10000);
+        Console.pause(1);
         Console.clear();
     }
 
