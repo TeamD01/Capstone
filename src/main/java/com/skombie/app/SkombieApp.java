@@ -31,12 +31,14 @@ public class SkombieApp {
     private final String startingPoint = "Living Room";
     private final Location currLocation = JSONMapper.grabJSONLocation("Living Room");
     private final boolean gameOver = false;
+    InteractionParser pars = new InteractionParser();
 
     public void execute() {
         getGameTitle();
         promptUserNew();
         alertMessage();
         generateInstructions();
+        pars.verifyCommand();
         startGame();
     }
 
@@ -50,7 +52,6 @@ public class SkombieApp {
             // and add necessary code here.
             prompter.prompt("NOT A VALID SELECTION AT THIS TIME");
         }
-
     }
 
     public void getGameTitle() {
@@ -58,7 +59,7 @@ public class SkombieApp {
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
-                Console.pause(500);
+                Console.pause(5);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,7 +70,6 @@ public class SkombieApp {
     public void generateInstructions() {
         printFile(INTRO);
         Console.pause(6000);
-        Console.clear();
     }
 
     public void alertMessage() {
@@ -82,10 +82,7 @@ public class SkombieApp {
         //TODO: GAME LOGIC HERE
 //        while(!gameOver){
         printCurrLocationData();
-
-
         //}
-
     }
 
     public void printCurrLocationData(){
