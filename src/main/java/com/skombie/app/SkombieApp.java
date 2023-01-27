@@ -69,10 +69,18 @@ public class SkombieApp {
 
     public void startGame() {
         //TODO: GAME LOGIC HERE
+        String requestedLocation = null;
         while (true) {
             printCurrLocationData();
-            String requestedLocation = pars.goRoom(currLocation);
-            currLocation = JSONMapper.grabJSONLocation(requestedLocation);
+            String[] command = pars.verifyCommand();
+//            pars.useCommand(currLocation, command);
+            if (command[0].equals("go")) {
+                requestedLocation = pars.goRoom(currLocation, command);
+                currLocation = JSONMapper.grabJSONLocation(requestedLocation);
+            }
+            else if (command[0].equals("look")){
+                pars.look(currLocation, command);
+            }
         }
     }
 

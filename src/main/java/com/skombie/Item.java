@@ -5,6 +5,11 @@ import java.util.Objects;
 public class Item {
 
     private final String name;
+
+    public String getDescription() {
+        return description;
+    }
+
     private final String description;
 
     public Item(String name, String description) {
