@@ -3,13 +3,15 @@ import java.util.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.skombie.Item;
 import com.skombie.Location;
 
 public class InteractionParser {
     Scanner sc = new Scanner(System.in);
     PromptHelper prompt = new PromptHelper(sc);
     private static final String[] VERBS = new String[] {"use", "look", "go", "get", "drop"};
-    private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room"};
+    private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room", "hammer", "nails", "desk"};
+    JsonObject obj = new JsonObject();
 
     public InteractionParser() {
     }
@@ -42,7 +44,7 @@ public class InteractionParser {
 
     // This calls the verifyInput method to get and array of commands and checks to see if the commands passed
     // are part of the official commands for the game. It returns an array of the offical commands.
-    private String[] verifyCommand() {
+    public String[] verifyCommand() {
         while (true) {
             String[] command = verifyInput();
             System.out.println(command[0]);
@@ -65,24 +67,86 @@ public class InteractionParser {
         }
     }
 
+//    public void useCommand(Location curLoc, String[] command){
+//        if (command[0].equals("go")){
+//            goRoom(curLoc, command);
+//        }
+//        else if (command[0].equals("look")){
+//            look(curLoc, command);
+//        }
+//        else {
+//            System.out.println("That option does not exist yet");
+//        }
+//    }
+
     // This looks at the current location, sees list of available locations and checks
     // if user is able to proceed to next location.
-    public String goRoom(Location curLoc) {
-        String newLocation = null;
+    public String goRoom(Location curLoc, String[] commands) {
+        String location = curLoc.getName();
         List<String> availRooms = curLoc.getAvailableRooms();
         for (int i = 0; i < availRooms.size(); i++) {
             String newValue = availRooms.get(i).toLowerCase(Locale.ROOT);
             availRooms.set(i, newValue);
         }
         while (true) {
-            String[] commands = verifyCommand();
             if (commands[0].equals("go") && availRooms.contains(commands[1])) {
                 System.out.println("You are now heading to " + commands[1]);
-                newLocation = commands[1];
-                return newLocation;
+                location = commands[1];
+                return location;
             }
             else {
                 System.out.println(commands[1] + " is not available to you. Your available rooms are: " + availRooms);
+                break;
+            }
+        }
+        return location;
+    }
+    public void look(Location curLoc, String[] commands) {
+        List<String> items = curLoc.getItems();
+        List<String> furniture = curLoc.getFurniture();
+//        try {
+//            for (int i = 0; i < furniture.size(); i++) {
+//                String newValue = furniture.get(i).toLowerCase(Locale.ROOT);
+//                furniture.set(i, newValue);
+//            }
+//        } catch (Exception e) {
+//        }
+//        try {
+//            for (int i = 0; i < items.size(); i++) {
+//                String newValue = items.get(i).toLowerCase(Locale.ROOT);
+//                items.set(i, newValue);
+//            }
+//        } catch (Exception e) {
+//        }
+        while (true) {
+            if (items == null && furniture == null) {
+                System.out.println("There is nothing there.");
+                break;
+            }
+            else if (items == null && commands[0].equals("look") && furniture.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
+                System.out.println("You are looking at " + commands[1]);
+                JsonArray arr = obj.getAsJsonArray("description");
+                System.out.println(arr);
+                break;
+
+            }
+            else if (furniture == null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
+                System.out.println("You are looking at " + commands[1]);
+                JsonArray arr = obj.getAsJsonArray("description");
+                System.out.println(arr);
+                break;
+
+            }
+            else if (items !=null && furniture != null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase) && furniture.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
+                System.out.println("You are looking at " + commands[1]);
+                JsonArray arr = obj.getAsJsonArray("description");
+                System.out.println(arr);
+                break;
+
+            }
+            else {
+                System.out.println(commands[1] + " is not available to you. The current available items: " + items);
+                break;
             }
         }
     }
