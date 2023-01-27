@@ -43,7 +43,7 @@ public class PromptHelper {
         }
         return userInput;
     }
-    public void  checkQuit(String input){
+    public void checkQuit(String input){
       if("QUIT".equalsIgnoreCase(input)){
           Printer.printFile(QUIT);
           System.exit(0);
