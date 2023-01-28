@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "name" : "Hammer",
+      "description": "This will probably be helpful to secure the house."
+    },
+    {
+      "name" : "Nails",
+      "description": "We definitely need these."
+    },
+    {
+      "name": "Kitten Litter",
+      "description": "HMM.. This might come in handy."
+    },
+    {
+      "name": "Radio",
+      "description": "We should use this to request help."
+    },
+    {
+      "name": "Wood",
+      "description": "YES, it's time to start securing this house."
+    },
+    {
+      "name": "Mothballs",
+      "description": "We might be able to use this to scare the skunks!"
+    },
+    {
+      "name": "Files",
+      "description": "Looks like it's some birth certificates."
+    }
+  ]
+}

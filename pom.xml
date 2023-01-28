@@ -10,15 +10,15 @@
    package name, and should be written entirely in lower case, with the components separated by
    periods, and without enclosing quotes.
   -->
-  <groupId>replace.me</groupId>
+  <groupId>com.skombie</groupId>
 
   <!--
   TODO: Replace "project" in the <artifactId> element with a spinal-case (lower-case, with dashes
    between words) version of the project name, without any quotes.
   -->
-  <artifactId>project</artifactId>
+  <artifactId>skombie</artifactId>
 
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -40,31 +40,12 @@
     TODO: Replace "replace.me.project.Main" with the fully qualified class name of the project's main class,
      without any quotes, as the content of the <main-class.name> element.
     -->
-    <main-class.name>replace.me.project.Main</main-class.name>
+    <main-class.name>com.skombie.client.Main</main-class.name>
 
   </properties>
 
   <dependencies>
 
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${junit-jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit-jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-<!--
-    To use JUnit4 instead of JUnit5, comment out the previous 2 dependency elements and uncomment
-    the following 2 elements.
--->
-<!--
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -78,7 +59,12 @@
       <version>${junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>
--->
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
 
   </dependencies>
 
