@@ -12,7 +12,7 @@ public class InteractionParser {
     private static final String[] VERBS = new String[] {"use", "look", "go", "get", "drop"};
     private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room", "hammer", "nails", "desk"};
     JsonObject obj = new JsonObject();
-    JSONMapper map = JSONMapper.getInstance();
+
 
     public InteractionParser() {
     }
@@ -24,9 +24,11 @@ public class InteractionParser {
 
         System.out.println("Please enter a verb noun command or type \"Help\" to see a list of commands");
         while (true) {
+            // Use strip for input
             String temp = sc.nextLine().toLowerCase(Locale.ROOT);
             if (temp.matches("([a-zA-Z  ]*)") && temp.split(" ", 2).length == 2 || temp.split(" ", 2).length == 3) {
-                strSplit = temp.split(" ",2);
+                // used \\s+ instead of " "
+                strSplit = temp.split("\\s+",2);
                 break;
             }
             else if (temp.equals("help")) {
@@ -90,12 +92,12 @@ public class InteractionParser {
         }
         return location;
     }
-    public void look(Location curLoc, String[] commands) {
+    public void look(Location name, String[] commands) {
         // Better way to use current location using current instance of the map. Now can use currentLocation with the Location Class methods!
-        Location currentLocation = map.grabJSONLocation(curLoc.getName());
-        System.out.println(currentLocation.getDescription());
-        List<String> items = curLoc.getItems();
-        List<String> furniture = curLoc.getFurniture();
+//        Location currentLocation = map.grabJSONLocation(curLoc.getName());
+        System.out.println(name.getDescription());
+        List<String> items = name.getItems();
+        List<String> furniture = name.getFurniture();
 
         while (true) {
             if (items == null && furniture == null) {
@@ -110,9 +112,9 @@ public class InteractionParser {
 
             }
             else if (furniture == null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
+
                 System.out.println("You are looking at " + commands[1]);
-                JsonArray arr = obj.getAsJsonArray("description");
-                System.out.println(arr);
+                System.out.println();
                 break;
 
             }
