@@ -12,6 +12,7 @@ public class InteractionParser {
     private static final String[] VERBS = new String[] {"use", "look", "go", "get", "drop"};
     private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room", "hammer", "nails", "desk"};
     JsonObject obj = new JsonObject();
+    JSONMapper map = JSONMapper.getInstance();
 
     public InteractionParser() {
     }
@@ -58,7 +59,7 @@ public class InteractionParser {
             else if (!containsVerb && containsNoun) {
                 System.out.println("Your command of \"" + command[0] + "\" is not recognized.");
             }
-            else if(containsVerb == true && containsNoun == false) {
+            else if(containsVerb && !containsNoun) {
                 System.out.println("Your command of \"" + command[1] + "\" is not recognized.");
             }
             else {
@@ -66,18 +67,6 @@ public class InteractionParser {
             }
         }
     }
-
-//    public void useCommand(Location curLoc, String[] command){
-//        if (command[0].equals("go")){
-//            goRoom(curLoc, command);
-//        }
-//        else if (command[0].equals("look")){
-//            look(curLoc, command);
-//        }
-//        else {
-//            System.out.println("That option does not exist yet");
-//        }
-//    }
 
     // This looks at the current location, sees list of available locations and checks
     // if user is able to proceed to next location.
@@ -102,22 +91,12 @@ public class InteractionParser {
         return location;
     }
     public void look(Location curLoc, String[] commands) {
+        // Better way to use current location using current instance of the map. Now can use currentLocation with the Location Class methods!
+        Location currentLocation = map.grabJSONLocation(curLoc.getName());
+        System.out.println(currentLocation.getDescription());
         List<String> items = curLoc.getItems();
         List<String> furniture = curLoc.getFurniture();
-//        try {
-//            for (int i = 0; i < furniture.size(); i++) {
-//                String newValue = furniture.get(i).toLowerCase(Locale.ROOT);
-//                furniture.set(i, newValue);
-//            }
-//        } catch (Exception e) {
-//        }
-//        try {
-//            for (int i = 0; i < items.size(); i++) {
-//                String newValue = items.get(i).toLowerCase(Locale.ROOT);
-//                items.set(i, newValue);
-//            }
-//        } catch (Exception e) {
-//        }
+
         while (true) {
             if (items == null && furniture == null) {
                 System.out.println("There is nothing there.");

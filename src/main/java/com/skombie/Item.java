@@ -6,9 +6,7 @@ public class Item {
 
     private final String name;
 
-    public String getDescription() {
-        return description;
-    }
+
 
     private final String description;
 
@@ -36,5 +34,9 @@ public class Item {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
