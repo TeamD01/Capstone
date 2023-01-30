@@ -1,5 +1,4 @@
-{
-  "locations": [
+[
     {
       "name": "Living Room",
       "description": "You are in the living room.",
@@ -89,4 +88,4 @@
       "availableRooms": ["Hallway"]
     }
   ]
-}
+

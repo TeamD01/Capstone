@@ -1,5 +1,6 @@
 package com.skombie.app;
 
+import com.skombie.House;
 import com.skombie.Location;
 import com.skombie.utilities.InteractionParser;
 import com.skombie.utilities.JSONMapper;
@@ -9,21 +10,29 @@ import main.java.com.skombie.utilities.Console;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
 import static main.java.com.skombie.utilities.Printer.printFile;
 
-public class SkombieApp {
+public class SkombieApp implements Runnable{
+
+    private House house;
     private final PromptHelper prompter = new PromptHelper(new Scanner(System.in));
     private static final String TITLE = "src/main/resources/images/title.txt";
     private static final String INTRO = "src/main/resources/data/intro";
     private static final String ALERT = "src/main/resources/data/alertMsg.txt";
-    private final String startingPoint = "Living Room";
-    private Location currLocation = JSONMapper.grabJSONLocation("Living Room");
+    private Location currLocation;
     private final boolean gameOver = false;
     InteractionParser pars = new InteractionParser();
 
-    public void execute() {
+    public SkombieApp(House house) {
+        this.house = house;
+        this.currLocation = house.grabJSONLocation("Living Room");
+    }
+
+
+    public void run() {
         getGameTitle();
         promptUserNew();
         alertMessage();
@@ -76,10 +85,11 @@ public class SkombieApp {
 //            pars.useCommand(currLocation, command);
             if (command[0].equals("go")) {
                 requestedLocation = pars.goRoom(currLocation, command);
-                currLocation = JSONMapper.grabJSONLocation(requestedLocation);
+                currLocation = house.grabJSONLocation(requestedLocation);
+                checkForSkombie();
             }
             else if (command[0].equals("look")){
-                pars.look(currLocation, command);
+                pars.look(house.grabJSONLocation(currLocation.getName()), command);
             }
         }
     }
@@ -106,5 +116,15 @@ public class SkombieApp {
         currLocation.getAvailableRooms().forEach(x -> System.out.printf("> %s\n", x));
 
         System.out.println("=======================");
+    }
+
+    public Location getCurrLocation() {
+        return currLocation;
+    }
+
+    private void checkForSkombie () {
+        if (house.grabJSONLocation(currLocation.getName()).isHasSkunk()) {
+            System.out.println("There is a skunk, get it, get it!!!");
+        }
     }
 }
