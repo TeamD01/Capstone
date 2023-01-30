@@ -1,5 +1,6 @@
 package com.skombie.app;
 
+import com.skombie.House;
 import com.skombie.Location;
 import com.skombie.utilities.InteractionParser;
 import com.skombie.utilities.JSONMapper;
@@ -15,15 +16,20 @@ import java.util.Scanner;
 import static main.java.com.skombie.utilities.Printer.printFile;
 
 public class SkombieApp implements Runnable{
-    private final JSONMapper rooms = JSONMapper.getInstance();
+
+    private House house;
     private final PromptHelper prompter = new PromptHelper(new Scanner(System.in));
     private static final String TITLE = "src/main/resources/images/title.txt";
     private static final String INTRO = "src/main/resources/data/intro";
     private static final String ALERT = "src/main/resources/data/alertMsg.txt";
-    private final String startingPoint = "Living Room";
-    private Location currLocation = rooms.grabJSONLocation("Living Room");
+    private Location currLocation;
     private final boolean gameOver = false;
     InteractionParser pars = new InteractionParser();
+
+    public SkombieApp(House house) {
+        this.house = house;
+        this.currLocation = house.grabJSONLocation("Living Room");
+    }
 
 
     public void run() {
@@ -79,11 +85,11 @@ public class SkombieApp implements Runnable{
 //            pars.useCommand(currLocation, command);
             if (command[0].equals("go")) {
                 requestedLocation = pars.goRoom(currLocation, command);
-                currLocation = rooms.grabJSONLocation(requestedLocation);
+                currLocation = house.grabJSONLocation(requestedLocation);
                 checkForSkombie();
             }
             else if (command[0].equals("look")){
-                pars.look(currLocation, command);
+                pars.look(house.grabJSONLocation(currLocation.getName()), command);
             }
         }
     }
@@ -117,7 +123,7 @@ public class SkombieApp implements Runnable{
     }
 
     private void checkForSkombie () {
-        if (rooms.grabJSONLocation(currLocation.getName()).isHasSkunk()) {
+        if (house.grabJSONLocation(currLocation.getName()).isHasSkunk()) {
             System.out.println("There is a skunk, get it, get it!!!");
         }
     }
