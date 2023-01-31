@@ -1,16 +1,18 @@
 package com.skombie.utilities;
+
 import java.util.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.skombie.Furniture;
 import com.skombie.Item;
 import com.skombie.Location;
 
 public class InteractionParser {
     Scanner sc = new Scanner(System.in);
     PromptHelper prompt = new PromptHelper(sc);
-    private static final String[] VERBS = new String[] {"use", "look", "go", "get", "drop"};
-//    private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room", "hammer", "nails", "desk"};
+    private static final String[] VERBS = new String[]{"use", "look", "go", "get", "drop"};
+    //    private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room", "hammer", "nails", "desk"};
     private static final int VERBELEMENT = 0;
     private static final int NOUNELEMENT = 1;
     JsonObject obj = new JsonObject();
@@ -30,21 +32,18 @@ public class InteractionParser {
             String temp = sc.nextLine().toLowerCase(Locale.ROOT).trim();
             if (temp.matches("([a-zA-Z  ]*)") && temp.split(" ", 2).length == 2 || temp.split(" ", 2).length == 3) {
                 // used \\s+ instead of " "
-                strSplit = temp.split("\\s+",2);
+                strSplit = temp.split("\\s+", 2);
                 break;
-            }
-            else if (temp.equals("help")) {
+            } else if (temp.equals("help")) {
                 prompt.checkHelp(temp);
                 System.out.println("Please enter a verb noun command or type \"Help\" to see a list of commands");
-            }
-            else if (temp.equals("quit")) {
+            } else if (temp.equals("quit")) {
                 prompt.checkQuit(temp);
-            }
-            else {
+            } else {
                 System.out.println("Please enter a verb noun command or type \"Help\" to see a list of commands");
             }
         }
-        return  strSplit;
+        return strSplit;
     }
 
     // This calls the verifyInput method to get and array of commands and checks to see if the commands passed
@@ -84,8 +83,7 @@ public class InteractionParser {
                 System.out.println("You are now heading to " + commands[NOUNELEMENT]);
                 location = commands[NOUNELEMENT];
                 return location;
-            }
-            else {
+            } else {
                 System.out.println(commands[NOUNELEMENT] + " is not available to you. Your available rooms are: " + availRooms);
                 break;
             }
@@ -94,44 +92,34 @@ public class InteractionParser {
     }
 
 
-    public void look(Location name, String[] commands) {
-        // Better way to use current location using current instance of the map. Now can use currentLocation with the Location Class methods!
-//        Location currentLocation = map.grabJSONLocation(curLoc.getName());
-        System.out.println(name.getDescription());
-//        List<String> items = name.getItems();
-//        List<String> furniture = name.getFurniture();
-//
-//        while (true) {
-//            if (items == null && furniture == null) {
-//                System.out.println("There is nothing there.");
-//                break;
-//            }
-//            else if (items == null && commands[0].equals("look") && furniture.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
-//                System.out.println("You are looking at " + commands[1]);
-//                JsonArray arr = obj.getAsJsonArray("description");
-//                System.out.println(arr);
-//                break;
-//
-//            }
-//            else if (furniture == null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
-//
-//                System.out.println("You are looking at " + commands[1]);
-//                System.out.println();
-//                break;
-//
-//            }
-//            else if (items !=null && furniture != null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase) && furniture.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
-//                System.out.println("You are looking at " + commands[1]);
-//                JsonArray arr = obj.getAsJsonArray("description");
-//                System.out.println(arr);
-//                break;
-//
-//            }
-//            else {
-//                System.out.println(commands[1] + " is not available to you. The current available items: " + items);
-//                break;
-//            }
-//        }
-//    }
+    public String look(Location name, String[] commands) {
+        String description = null;
+        List<String> itemsString = new ArrayList<>();
+        List<Item> items = name.getItems();
+        if (items != null) {
+            for (Item item : items) {
+                itemsString.add(item.getName().toLowerCase(Locale.ROOT));
+                if (item.getName().toLowerCase(Locale.ROOT).equals(commands[NOUNELEMENT])) {
+                    description = item.getDescription();
+                }
+            }
+        }
+        List<String> furnituresString = new ArrayList<>();
+        List<Furniture> furnitures = name.getFurniture();
+        if (furnitures != null) {
+            for (Furniture furniture : furnitures) {
+                furnituresString.add(furniture.getName().toLowerCase(Locale.ROOT));
+                if (furniture.getName().toLowerCase(Locale.ROOT).equals(commands[NOUNELEMENT])) {
+                    description = furniture.getDescription();
+                }
+            }
+        }
+        if (description != null) {
+            return description;
+        }
+        else {
+            return null;
+
+        }
     }
 }

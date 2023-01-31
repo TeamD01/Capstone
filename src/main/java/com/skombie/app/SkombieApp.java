@@ -2,6 +2,7 @@ package com.skombie.app;
 
 import com.skombie.House;
 import com.skombie.Location;
+import com.skombie.Player;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.InteractionParser;
 import com.skombie.utilities.JSONMapper;
@@ -25,11 +26,13 @@ public class SkombieApp implements Runnable{
     private final PromptHelper prompter = new PromptHelper(new Scanner(System.in));
     private final InteractionParser pars = new InteractionParser();
     private final House house;
+    private final Player player;
 
     private Location currLocation;
 
-    public SkombieApp(House house) {
+    public SkombieApp(House house, Player player) {
         this.house = house;
+        this.player = player;
         this.currLocation = house.grabJSONLocation("Living Room");
     }
 
@@ -53,18 +56,18 @@ public class SkombieApp implements Runnable{
     }
 
     public void getGameTitle() {
-        printFile(TITLE, 500);
+        printFile(TITLE, 5);
     }
 
     public void alertMessage() {
-        printFile(ALERT, 500);
-        Console.pause(3000);
+        printFile(ALERT, 5);
+        Console.pause(3);
         Console.clear();
     }
 
     public void generateInstructions() {
         printFile(INTRO);
-        Console.pause(5000);
+        Console.pause(5);
         Console.clear();
     }
 
@@ -81,7 +84,10 @@ public class SkombieApp implements Runnable{
                 checkForSkombie();
             }
             else if (command[0].equals("look")){
-               // pars.look(house.grabJSONLocation(currLocation.getName()), command);
+                if (pars.look(house.grabJSONLocation(currLocation.getName()), command) != null) {
+                    String description = pars.look(house.grabJSONLocation(currLocation.getName()), command);
+                    System.out.println(description);
+                }
             }
         }
     }
