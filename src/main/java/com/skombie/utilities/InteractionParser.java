@@ -10,7 +10,9 @@ public class InteractionParser {
     Scanner sc = new Scanner(System.in);
     PromptHelper prompt = new PromptHelper(sc);
     private static final String[] VERBS = new String[] {"use", "look", "go", "get", "drop"};
-    private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room", "hammer", "nails", "desk"};
+//    private static final String[] NOUNS = new String[] {"kitchen","bedroom", "basement", "attic", "backyard", "hallway", "office", "living room", "hammer", "nails", "desk"};
+    private static final int VERBELEMENT = 0;
+    private static final int NOUNELEMENT = 1;
     JsonObject obj = new JsonObject();
 
 
@@ -19,13 +21,13 @@ public class InteractionParser {
 
     // This validates the pattern of the user input and checks to see if they type help or quit and returns array
     // of commands. If help is requested then a help message is displayed. Quit allows the user to exit the game.
-    private String[] verifyInput() {
+    public String[] verifyInput() {
         String[] strSplit;
 
         System.out.println("Please enter a verb noun command or type \"Help\" to see a list of commands");
         while (true) {
             // Use strip for input
-            String temp = sc.nextLine().toLowerCase(Locale.ROOT);
+            String temp = sc.nextLine().toLowerCase(Locale.ROOT).trim();
             if (temp.matches("([a-zA-Z  ]*)") && temp.split(" ", 2).length == 2 || temp.split(" ", 2).length == 3) {
                 // used \\s+ instead of " "
                 strSplit = temp.split("\\s+",2);
@@ -47,28 +49,26 @@ public class InteractionParser {
 
     // This calls the verifyInput method to get and array of commands and checks to see if the commands passed
     // are part of the official commands for the game. It returns an array of the offical commands.
-    public String[] verifyCommand() {
-        while (true) {
-            String[] command = verifyInput();
-            System.out.println(command[0]);
-            System.out.println(command[1]);
-            boolean containsVerb = Arrays.stream(VERBS).anyMatch(command[0]::equals);
-            boolean containsNoun = Arrays.stream(NOUNS).anyMatch(command[1]::equals);
-            if (containsVerb && containsNoun) {
-                System.out.println("You have decided to " + command[0] + " " + command[1]);
-                return command;
-            }
-            else if (!containsVerb && containsNoun) {
-                System.out.println("Your command of \"" + command[0] + "\" is not recognized.");
-            }
-            else if(containsVerb && !containsNoun) {
-                System.out.println("Your command of \"" + command[1] + "\" is not recognized.");
-            }
-            else {
-                System.out.println("Your command of \"" + command[0] + "\" and \"" + command[1] + "\" is not recognized.");
-            }
-        }
-    }
+//    public String[] verifyCommand() {
+//        while (true) {
+//            String[] command = verifyInput();
+//            boolean containsVerb = Arrays.stream(VERBS).anyMatch(command[VERBELEMENT]::equals);
+////            boolean containsNoun = Arrays.stream(NOUNS).anyMatch(command[NOUNELEMENT]::equals);
+//            if (containsVerb) {
+//                System.out.println("You have decided to " + command[VERBELEMENT] + " " + command[NOUNELEMENT]);
+//                return command;
+//            }
+////            else if (!containsVerb && containsNoun) {
+////                System.out.println("Your command of \"" + command[VERBELEMENT] + "\" is not recognized.");
+////            }
+////            else if(containsVerb && !containsNoun) {
+////                System.out.println("Your command of \"" + command[NOUNELEMENT] + "\" is not recognized.");
+////            }
+//            else {
+//                System.out.println("Your command of \"" + command[VERBELEMENT] + "\" and \"" + command[NOUNELEMENT] + "\" is not recognized.");
+//            }
+//        }
+//    }
 
     // This looks at the current location, sees list of available locations and checks
     // if user is able to proceed to next location.
@@ -80,23 +80,24 @@ public class InteractionParser {
             availRooms.set(i, newValue);
         }
         while (true) {
-            if (commands[0].equals("go") && availRooms.contains(commands[1])) {
-                System.out.println("You are now heading to " + commands[1]);
-                location = commands[1];
+            if (commands[VERBELEMENT].equals("go") && availRooms.contains(commands[NOUNELEMENT])) {
+                System.out.println("You are now heading to " + commands[NOUNELEMENT]);
+                location = commands[NOUNELEMENT];
                 return location;
             }
             else {
-                System.out.println(commands[1] + " is not available to you. Your available rooms are: " + availRooms);
+                System.out.println(commands[NOUNELEMENT] + " is not available to you. Your available rooms are: " + availRooms);
                 break;
             }
         }
         return location;
     }
 
-//    public void look(Location name, String[] commands) {
-//        // Better way to use current location using current instance of the map. Now can use currentLocation with the Location Class methods!
-////        Location currentLocation = map.grabJSONLocation(curLoc.getName());
-//        System.out.println(name.getDescription());
+
+    public void look(Location name, String[] commands) {
+        // Better way to use current location using current instance of the map. Now can use currentLocation with the Location Class methods!
+//        Location currentLocation = map.grabJSONLocation(curLoc.getName());
+        System.out.println(name.getDescription());
 //        List<String> items = name.getItems();
 //        List<String> furniture = name.getFurniture();
 //
@@ -132,4 +133,5 @@ public class InteractionParser {
 //            }
 //        }
 //    }
+    }
 }

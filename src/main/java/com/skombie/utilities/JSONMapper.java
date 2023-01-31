@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JSONMapper {
-    private final Gson gson = new Gson();
-    private final String LOCATIONS_PATH = "data/locations.json";
+    //Dont want static fields, only static instance itself.
+    private static final Gson gson = new Gson();
+    private static final String LOCATIONS_PATH = "data/locations.json";
+
 
     public JSONMapper() {
     }
