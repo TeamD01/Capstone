@@ -92,43 +92,44 @@ public class InteractionParser {
         }
         return location;
     }
-    public void look(Location name, String[] commands) {
-        // Better way to use current location using current instance of the map. Now can use currentLocation with the Location Class methods!
-//        Location currentLocation = map.grabJSONLocation(curLoc.getName());
-        System.out.println(name.getDescription());
-        List<String> items = name.getItems();
-        List<String> furniture = name.getFurniture();
 
-        while (true) {
-            if (items == null && furniture == null) {
-                System.out.println("There is nothing there.");
-                break;
-            }
-            else if (items == null && commands[0].equals("look") && furniture.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
-                System.out.println("You are looking at " + commands[1]);
-                JsonArray arr = obj.getAsJsonArray("description");
-                System.out.println(arr);
-                break;
-
-            }
-            else if (furniture == null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
-
-                System.out.println("You are looking at " + commands[1]);
-                System.out.println();
-                break;
-
-            }
-            else if (items !=null && furniture != null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase) && furniture.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
-                System.out.println("You are looking at " + commands[1]);
-                JsonArray arr = obj.getAsJsonArray("description");
-                System.out.println(arr);
-                break;
-
-            }
-            else {
-                System.out.println(commands[1] + " is not available to you. The current available items: " + items);
-                break;
-            }
-        }
-    }
+//    public void look(Location name, String[] commands) {
+//        // Better way to use current location using current instance of the map. Now can use currentLocation with the Location Class methods!
+////        Location currentLocation = map.grabJSONLocation(curLoc.getName());
+//        System.out.println(name.getDescription());
+//        List<String> items = name.getItems();
+//        List<String> furniture = name.getFurniture();
+//
+//        while (true) {
+//            if (items == null && furniture == null) {
+//                System.out.println("There is nothing there.");
+//                break;
+//            }
+//            else if (items == null && commands[0].equals("look") && furniture.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
+//                System.out.println("You are looking at " + commands[1]);
+//                JsonArray arr = obj.getAsJsonArray("description");
+//                System.out.println(arr);
+//                break;
+//
+//            }
+//            else if (furniture == null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
+//
+//                System.out.println("You are looking at " + commands[1]);
+//                System.out.println();
+//                break;
+//
+//            }
+//            else if (items !=null && furniture != null && commands[0].equals("look") && items.stream().anyMatch(commands[1]::equalsIgnoreCase) && furniture.stream().anyMatch(commands[1]::equalsIgnoreCase)) {
+//                System.out.println("You are looking at " + commands[1]);
+//                JsonArray arr = obj.getAsJsonArray("description");
+//                System.out.println(arr);
+//                break;
+//
+//            }
+//            else {
+//                System.out.println(commands[1] + " is not available to you. The current available items: " + items);
+//                break;
+//            }
+//        }
+//    }
 }

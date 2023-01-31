@@ -1,15 +1,13 @@
 package com.skombie.utilities;
 
-import main.java.com.skombie.utilities.Printer;
+import com.skombie.utilities.Printer;
 
 import java.util.Scanner;
 
 public class PromptHelper {
 // MUST USE "Printer.printFile(<INSERT FILENAME>) instead of System.println"
-    private static final String QUIT = "src/main/resources/images/quit.txt";
-    private static final String HELP = "src/main/resources/data/intro";
-
-
+    private static final String QUIT = "images/quit.txt";
+    private static final String HELP = "data/intro";
 
     private final Scanner scanner;
 
@@ -53,7 +51,6 @@ public class PromptHelper {
     public void  checkHelp(String input){
         if("Help".equalsIgnoreCase(input)){
             Printer.printFile(HELP);
-//            System.exit(0);
         }
     };
 }
