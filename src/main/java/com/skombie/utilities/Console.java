@@ -1,4 +1,6 @@
-package main.java.com.skombie.utilities;
+package com.skombie.utilities;
+
+import com.skombie.Item;
 
 import java.io.IOException;
 
@@ -9,15 +11,13 @@ public class Console {
     }
 
     public static void clear(){
-        ProcessBuilder builder = opSystem.contains("windows") ?
-                new ProcessBuilder("cmd", "/c", "cls"):
-                new ProcessBuilder(new String[]{"clear"});
-
         try {
-            builder.inheritIO().start().waitFor();
-        }
-        catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            if (System.getProperty("os.name").contains("Windows"))
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            else
+                Runtime.getRuntime().exec("clear");
+        } catch (IOException | InterruptedException ex) {
+            ex.printStackTrace();
         }
     }
 
