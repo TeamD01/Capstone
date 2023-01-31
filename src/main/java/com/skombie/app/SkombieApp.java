@@ -81,7 +81,7 @@ public class SkombieApp implements Runnable{
         String requestedLocation = null;
         while (true) {
             printCurrLocationData();
-            String[] command = pars.verifyCommand();
+            String[] command = pars.verifyInput();
 //            pars.useCommand(currLocation, command);
             if (command[0].equals("go")) {
                 requestedLocation = pars.goRoom(currLocation, command);

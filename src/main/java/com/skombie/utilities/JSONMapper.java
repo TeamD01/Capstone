@@ -18,8 +18,6 @@ public class JSONMapper {
 
     //Dont want static fields, only static instance itself.
     private static final Gson gson = new Gson();
-
-
     private static final String LOCATIONSPATH = "data/locations.json";
 
     public JSONMapper() {
