@@ -2,10 +2,11 @@ package com.skombie.app;
 
 import com.skombie.House;
 import com.skombie.Location;
+import com.skombie.utilities.Console;
 import com.skombie.utilities.InteractionParser;
 import com.skombie.utilities.JSONMapper;
 import com.skombie.utilities.PromptHelper;
-import main.java.com.skombie.utilities.Console;
+import com.skombie.utilities.Console;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,24 +14,24 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Scanner;
 
-import static main.java.com.skombie.utilities.Printer.printFile;
+import static com.skombie.utilities.Printer.printFile;
+import static com.skombie.utilities.Printer.printFile;
 
 public class SkombieApp implements Runnable{
+    private static final String TITLE = "images/title.txt";
+    private static final String ALERT = "data/alertMsg.txt";
+    private static final String INTRO = "data/intro";
 
-    private House house;
     private final PromptHelper prompter = new PromptHelper(new Scanner(System.in));
-    private static final String TITLE = "src/main/resources/images/title.txt";
-    private static final String INTRO = "src/main/resources/data/intro";
-    private static final String ALERT = "src/main/resources/data/alertMsg.txt";
+    private final InteractionParser pars = new InteractionParser();
+    private final House house;
+
     private Location currLocation;
-    private final boolean gameOver = false;
-    InteractionParser pars = new InteractionParser();
 
     public SkombieApp(House house) {
         this.house = house;
         this.currLocation = house.grabJSONLocation("Living Room");
     }
-
 
     public void run() {
         getGameTitle();
@@ -38,7 +39,6 @@ public class SkombieApp implements Runnable{
         alertMessage();
         generateInstructions();
         startGame();
-
     }
 
     public void promptUserNew() {
@@ -53,26 +53,18 @@ public class SkombieApp implements Runnable{
     }
 
     public void getGameTitle() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(TITLE))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-                Console.pause(5);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        printFile(TITLE, 500);
+    }
+
+    public void alertMessage() {
+        printFile(ALERT, 500);
+        Console.pause(3000);
         Console.clear();
     }
 
     public void generateInstructions() {
         printFile(INTRO);
-        Console.pause(6);
-    }
-
-    public void alertMessage() {
-        printFile(ALERT);
-        Console.pause(1);
+        Console.pause(5000);
         Console.clear();
     }
 
@@ -89,7 +81,7 @@ public class SkombieApp implements Runnable{
                 checkForSkombie();
             }
             else if (command[0].equals("look")){
-                pars.look(house.grabJSONLocation(currLocation.getName()), command);
+               // pars.look(house.grabJSONLocation(currLocation.getName()), command);
             }
         }
     }
@@ -101,15 +93,19 @@ public class SkombieApp implements Runnable{
 
         if (!(currLocation.getFurniture() == null)) {
             System.out.println("\nFurniture:");
-            currLocation.getFurniture().forEach(x -> System.out.printf("> %s\n", x));
+            currLocation.getFurniture().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
         if (!(currLocation.getCharacters() == null)) {
             System.out.println("\nPeople:");
-            currLocation.getCharacters().forEach(x -> System.out.printf("> %s\n", x));
+            currLocation.getCharacters().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
         if (!(currLocation.getItems() == null)) {
             System.out.println("\nItems:");
-            currLocation.getItems().forEach(x -> System.out.printf("> %s\n", x));
+            currLocation.getItems().forEach(x -> System.out.printf("> %s\n", x.getName()));
+        }
+        if (!(currLocation.getWeapons() == null)) {
+            System.out.println("\nWeapons:");
+            currLocation.getWeapons().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
 
         System.out.println("\nAvailable Locations:");

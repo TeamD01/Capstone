@@ -2,11 +2,23 @@
     {
       "name": "Living Room",
       "description": "You are in the living room.",
-      "characters": ["Grandpa Nick"],
+      "characters": [
+        {
+          "name": "Grandpa Nick",
+          "description": "Grandfather, he has the best war stories",
+          "dialogue": ["Back in my day we had zombie birds, they tasted delicious","I've survived five wars and one bird zombie attack, this is nothing", "Hurry up and call the calvary"]
+        }
+      ],
       "furniture": null,
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": ["Hammer"],
+      "items": [
+        {
+          "name" : "Hammer",
+          "description": "This will probably be helpful to secure the house."
+        }
+      ],
+      "weapons": null,
       "isSecure": false,
       "availableRooms": ["Hallway"]
     },
@@ -18,17 +30,37 @@
       "unsecurePoints": 2,
       "hasSkunk": false,
       "items": null,
+      "weapons": null,
       "isSecure": false,
       "availableRooms": ["Office", "Living Room", "Basement", "Bedroom", "Kitchen", "Backyard"]
     },
     {
       "name": "Office",
       "description": "You are now in the office, no time for work now!",
-      "characters": ["Sugey"],
-      "furniture": ["Desk"],
+      "characters": [
+        {
+          "name": "Sugey",
+          "description": "Wife, She knows where everything is in the house",
+          "dialogue": ["Don't hurt your hand with the hammer!","I just cleaned the house and now we are being attacked by skunks!"]
+        }
+      ],
+      "furniture": [
+        {
+          "name": "Desk",
+          "description": "We might be able to find something useful in here.",
+          "isLocked": false,
+          "items": [
+            {
+              "name": "Files",
+              "description": "Looks like it's some birth certificates."
+            }
+          ]
+        }
+      ],
       "unsecurePoints": 2,
       "hasSkunk": false,
       "items": null,
+      "weapons": null,
       "isSecure": false,
       "availableRooms": ["Hallway"]
     },
@@ -36,21 +68,52 @@
       "name": "Basement",
       "description": "Maybe you should get down here soon to clean up. That is if you make it out alive.",
       "characters": null,
-      "furniture": ["Trunk"],
+      "furniture": [
+        {
+          "name": "Trunk",
+          "description": "An old dusty trunk, anything good?",
+          "isLocked": true,
+          "items": [
+            {
+              "name" : "Gas Mask",
+              "description": "The Skombies will never stop you now!"
+            }
+          ]
+        }
+      ],
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": ["Nails"],
+      "items": [
+        {
+          "name" : "Nails",
+          "description": "We definitely need these."
+        }
+      ],
+      "weapons": [
+        {
+          "name": "Vinegar Spray Bottle",
+          "description": "Bottle with apple cider vinegar",
+          "attack value": 25
+        }
+      ],
       "isSecure": false,
       "availableRooms": ["Hallway"]
     },
     {
       "name": "Bedroom",
       "description": "The main bedroom, maybe we can find something useful in here.",
-      "characters": ["Chris"],
+      "characters": [
+        {
+          "name": "Chris Jr",
+          "description": "Son, he loves drawing maps",
+          "dialogue": ["I think skunks are cool", "Yay, I don't have to go to school!"]
+        }
+      ],
       "furniture": null,
       "unsecurePoints": 2,
       "hasSkunk": false,
       "items": null,
+      "weapons": null,
       "isSecure": false,
       "availableRooms": ["Hallway", "Attic"]
     },
@@ -58,10 +121,46 @@
       "name": "Kitchen",
       "description": "Room for cooking ",
       "characters": null,
-      "furniture": ["Cabinet"],
+      "furniture": [
+        {
+          "name": "Cabinet",
+          "description": "Let's see if there is anything good in here.",
+          "isLocked": false,
+          "items": [],
+          "weapons": [
+            {
+              "name": "Mothballs",
+              "description": "small balls of chemical pesticide and deodorant",
+              "attack value": 20
+            }
+          ]
+        },
+        {
+          "name": "Refrigerator",
+          "description": "Time for snacks",
+          "isLocked": false,
+          "items": [
+            {
+              "name": "Orange Juice",
+              "description": "This should boost your energy a bit"
+            },
+            {
+              "name": "Tomato Juice",
+              "description": "Time to take a bath!"
+            }
+          ],
+          "weapons": null
+        }
+      ],
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": ["Kitten litter"],
+      "items": [],
+      "weapons" : [
+        {
+          "name": "Kitten Litter",
+          "description": "HMM.. This might come in handy."
+        }
+      ],
       "isSecure": false,
       "availableRooms": ["Hallway"]
     },
@@ -72,7 +171,19 @@
       "furniture": null,
       "unsecurePoints": 0,
       "hasSkunk": false,
-      "items": ["Radio"],
+      "items": [
+        {
+          "name": "Radio",
+          "description": "We should use this to request help."
+        }
+      ],
+      "weapons": [
+        {
+          "name": "Vinegar Spray Bottle",
+          "description": "Bottle with apple cider vinegar",
+          "attack value": 25
+        }
+      ],
       "isSecure": true,
       "availableRooms": ["Bedroom"]
     },
@@ -83,7 +194,19 @@
       "furniture": null,
       "unsecurePoints": 0,
       "hasSkunk": true,
-      "items": ["Wood"],
+      "items": [
+        {
+          "name": "Wood",
+          "description": "YES, it's time to start securing this house."
+        }
+      ],
+      "weapons": [
+        {
+          "name": "Leaf Blower",
+          "description": "Device that propels air out of a nozzle to move debris",
+          "attack value": 50
+        }
+      ],
       "isSecure": true,
       "availableRooms": ["Hallway"]
     }

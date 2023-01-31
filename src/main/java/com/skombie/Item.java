@@ -3,15 +3,27 @@ package com.skombie;
 import java.util.Objects;
 
 public class Item {
-
-    private final String name;
-
-
-
-    private final String description;
+    private String name;
+    private String description;
 
     public Item(String name, String description) {
         this.name = name;
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    private void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    private void setDescription(String description) {
         this.description = description;
     }
 
@@ -34,9 +46,5 @@ public class Item {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
-    }
-
-    public String getDescription() {
-        return description;
     }
 }
