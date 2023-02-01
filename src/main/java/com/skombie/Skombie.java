@@ -11,7 +11,7 @@ public class Skombie extends TimerTask{
 
     public void run() {
         System.out.println("A skombie is attacking!");
-        Location loc = house.grabJSONLocation("bedroom");
+        Location loc = house.findLocationByName("bedroom");
         if (loc.isHasSkunk()) {
         }
         else {

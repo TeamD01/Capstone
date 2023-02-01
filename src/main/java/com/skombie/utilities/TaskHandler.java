@@ -9,8 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TaskHandler extends TimerTask {
     House house = new House();
-    Player player = new Player(house);
-    Runnable rb1 = new SkombieApp(house, player);
+    Runnable rb1 = new SkombieApp(house);
     Runnable skombie = new Skombie(house);
     ScheduledThreadPoolExecutor tp = new ScheduledThreadPoolExecutor(2);
 

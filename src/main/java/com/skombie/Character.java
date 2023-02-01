@@ -2,8 +2,9 @@ package com.skombie;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
-public class Character {
+public class Character implements Speaker, Inspectable{
     private String name;
     private String description;
     private List<String> dialogue;
@@ -58,5 +59,11 @@ public class Character {
                 ", description='" + description + '\'' +
                 ", dialogue=" + dialogue +
                 '}';
+    }
+
+    @Override
+    public String getRandomDialogue() {
+        Random random = new Random();
+        return dialogue.get(random.nextInt(dialogue.size()));
     }
 }

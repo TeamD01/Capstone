@@ -2,7 +2,7 @@ package com.skombie;
 
 import java.util.Objects;
 
-public class Weapon {
+public class Weapon implements Inspectable{
     private String name;
     private String description;
     private double attackValue;
