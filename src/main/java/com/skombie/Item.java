@@ -2,7 +2,7 @@ package com.skombie;
 
 import java.util.Objects;
 
-public class Item implements Inspectable{
+public class Item implements InventoryItem, Inspectable{
     private String name;
     private String description;
 

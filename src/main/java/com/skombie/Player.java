@@ -1,15 +1,14 @@
 package com.skombie;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class Player implements Speaker {
     private boolean isDead = false;
     private double health = 100.0;
-    private List<Item> inventory = new ArrayList<>();
-    private Weapon currentWeapon = null;
+    private List<InventoryItem> inventory = new ArrayList<>();
+    private Weapon currentWeapon;
     private final List<String> dialogue = new ArrayList<String>(){
         {
             add("What's going on");
@@ -26,11 +25,11 @@ public class Player implements Speaker {
         return item.getDescription();
     }
 
-    public void get(Item item){
+    public void get(InventoryItem item){
         inventory.add(item);
     }
 
-    public void drop(Item item){
+    public void drop(InventoryItem item){
         inventory.remove(item);
     }
 
@@ -59,11 +58,11 @@ public class Player implements Speaker {
         this.health = health;
     }
 
-    public List<Item> getInventory() {
+    public List<InventoryItem> getInventory() {
         return inventory;
     }
 
-    public void setInventory(List<Item> inventory) {
+    public void setInventory(List<InventoryItem> inventory) {
         this.inventory = inventory;
     }
 
