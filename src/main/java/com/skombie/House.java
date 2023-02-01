@@ -109,6 +109,7 @@ public class House {
         Console.clear();
 
         System.out.println("=======================");
+
         System.out.printf("Location: %s\n", currLocation.getName());
         System.out.printf("%s\n", currLocation.getDescription());
 
@@ -132,8 +133,17 @@ public class House {
         System.out.println("\nAvailable Locations:");
         currLocation.getAvailableRooms().forEach(x -> System.out.printf("> %s\n", x));
 
-        System.out.println("=======================");
+        System.out.printf("\nHealth: %s", player.getHealth());
+        if (player.getCurrentWeapon() != null) {
+            System.out.printf("\tWeapon: %s", player.getCurrentWeapon());
+        }
+        if (player.getInventory().size() > 0) {
+            System.out.print("\tInventory:");
+            player.getInventory().forEach(x -> System.out.printf(" %s ", x.getName()));
+        }
+        System.out.println("\n=======================");
     }
+
 
     private void goLocation(Location location){
         currLocation = location;

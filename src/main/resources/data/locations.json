@@ -41,7 +41,7 @@
         {
           "name": "Sugey",
           "description": "Wife, She knows where everything is in the house",
-          "dialogue": ["Don't hurt your hand with the hammer!","I just cleaned the house and now we are being attacked by skunks!"]
+          "dialogue": ["Don't hurt your hand with the hammer!","I just cleaned the house and now we are being attacked by skunks!","Those skunks better not dig up my new rose bush"]
         }
       ],
       "furniture": [
@@ -104,9 +104,9 @@
       "description": "The main bedroom, maybe we can find something useful in here.",
       "characters": [
         {
-          "name": "Chris Jr",
+          "name": "Chris",
           "description": "Son, he loves drawing maps",
-          "dialogue": ["I think skunks are cool", "Yay, I don't have to go to school!"]
+          "dialogue": ["I think skunks are cool", "Yay, I don't have to go to school!", "When I grow up, can I help you fight the skombies?"]
         }
       ],
       "furniture": null,
@@ -126,7 +126,7 @@
           "name": "Cabinet",
           "description": "Let's see if there is anything good in here.",
           "isLocked": false,
-          "items": [],
+          "items": null,
           "weapons": [
             {
               "name": "Mothballs",
