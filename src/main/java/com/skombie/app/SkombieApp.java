@@ -43,8 +43,8 @@ public class SkombieApp implements Runnable{
     }
 
     public void alertMessage() {
-        printFile(ALERT, 500);
-        Console.pause(3000);
+        printFile(ALERT, 600);
+        Console.pause(5500);
         Console.clear();
     }
 

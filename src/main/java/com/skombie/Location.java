@@ -1,5 +1,6 @@
 package com.skombie;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,7 +8,7 @@ public class Location {
     private String name;
     private String description;
     private List<Character> characters;
-    private List<Furniture> furniture = null;
+    private List<Furniture> furniture;
     private int unsecurePoints;
     private boolean hasSkunk = false;
     private List<Item> items;
@@ -30,6 +31,28 @@ public class Location {
         this.availableRooms = availableRooms;
     }
 
+    // action methods
+    public void removeItemFromRoom(Item item){
+        items.remove(item);
+    }
+
+    public void removeWeaponFromRoom(Weapon weapon){
+        weapons.remove(weapon);
+    }
+    public void addItemToRoom(Item item){
+        if (items == null) {
+            this.items = new ArrayList<>();
+        }
+
+        items.add(item);
+    }
+
+    public void addWeaponToRoom(Weapon weapon){
+        if (weapons == null) {
+            this.weapons = new ArrayList<>();
+        }
+        weapons.add(weapon);
+    }
     public String getName() {
         return name;
     }

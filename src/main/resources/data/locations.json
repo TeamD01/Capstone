@@ -18,7 +18,13 @@
           "description": "This will probably be helpful to secure the house."
         }
       ],
-      "weapons": null,
+      "weapons": [
+        {
+          "name": "Baseball Bat",
+          "description": "Louisville Slugger with nail spikes on the end",
+          "attack value": 10
+        }
+      ],
       "isSecure": false,
       "availableRooms": ["Hallway"]
     },

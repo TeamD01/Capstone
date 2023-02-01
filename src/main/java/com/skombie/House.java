@@ -71,12 +71,17 @@ public class House {
                     InventoryItem found = findInventoryItemByName(object);
                     if(found != null){
                         if(found instanceof Weapon){
+                            Weapon previousWeapon = player.getCurrentWeapon();
+                            if (previousWeapon != null)currLocation.addWeaponToRoom(previousWeapon);
+
                             player.setCurrentWeapon((Weapon) found);
                             System.out.printf("\n%s set to current weapon\n", found.getName().toUpperCase());
+                            currLocation.removeWeaponFromRoom((Weapon) found);
                         }
                         else if (found instanceof Item){
                             player.get(found);
-                            System.out.printf("\n%s added to inventory", found.getName().toUpperCase());
+                            System.out.printf("\n%s added to inventory\n", found.getName().toUpperCase());
+                            currLocation.removeItemFromRoom((Item) found);
                         }
                     }
                     else{
@@ -86,10 +91,14 @@ public class House {
                     break;
 
                 case "drop":
-                    InventoryItem inInventory = findUserItemInventory(object);
+                    InventoryItem inInventory = findItemInUserInventory(object);
                     if(inInventory != null){
-                        player.drop(inInventory);
+                        if (inInventory instanceof Item){
+                            player.drop(inInventory);
+                            currLocation.addItemToRoom((Item) inInventory);
+                        }
                     }
+
                     else{
                         System.out.printf("You don't have %s in your inventory", object);
                         Console.pause(2000);
@@ -105,7 +114,7 @@ public class House {
                     else {
                         System.out.printf("%s is not in this room.", friend);
                     }
-                    Console.pause(2000);
+                    Console.pause(2500);
                     break;
             }
         }
@@ -134,20 +143,19 @@ public class House {
 
         System.out.printf("Location: %s\n", currLocation.getName());
         System.out.printf("%s\n", currLocation.getDescription());
-
-        if (!(currLocation.getFurniture() == null)) {
+        if (currLocation.getFurniture() != null && currLocation.getFurniture().size() !=0) {
             System.out.println("\nFurniture:");
             currLocation.getFurniture().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
-        if (!(currLocation.getCharacters() == null)) {
+        if (currLocation.getCharacters() != null && currLocation.getCharacters().size() !=0) {
             System.out.println("\nPeople:");
             currLocation.getCharacters().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
-        if (!(currLocation.getItems() == null)) {
+        if (currLocation.getItems() != null && currLocation.getItems().size() !=0) {
             System.out.println("\nItems:");
             currLocation.getItems().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
-        if (!(currLocation.getWeapons() == null)) {
+        if (currLocation.getWeapons() != null && currLocation.getWeapons().size() !=0) {
             System.out.println("\nWeapons:");
             currLocation.getWeapons().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
@@ -175,8 +183,8 @@ public class House {
         return currLocation.getCharacters().stream().filter(x -> x.getName().equalsIgnoreCase(character)).findFirst().orElse(null);
     }
 
-    private InventoryItem findUserItemInventory(String item){
-        return player.getInventory().stream().filter(x-> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
+    private InventoryItem findItemInUserInventory(String item){
+        return getPlayerInventoryItems().stream().filter(x-> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
     }
 
 //    private Item findItemByName(String item){
@@ -222,6 +230,18 @@ public class House {
         }
         return validItems;
     }
+
+    private List<InventoryItem> getPlayerInventoryItems(){
+        List<InventoryItem> validItems = new ArrayList<>();
+        if(player.getInventory() != null) {
+            validItems.addAll(player.getInventory());
+        }
+        if(player.getCurrentWeapon() != null){
+            validItems.add(player.getCurrentWeapon());
+        }
+        return validItems;
+    }
+
 
     private void checkForSkombie () {
         if (findLocationByName(currLocation.getName()).isHasSkunk()) {
