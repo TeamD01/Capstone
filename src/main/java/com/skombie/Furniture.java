@@ -3,7 +3,7 @@ package com.skombie;
 import java.util.List;
 import java.util.Objects;
 
-public class Furniture{
+public class Furniture implements Inspectable{
     private String name;
     private String description;
     private boolean isLocked;
