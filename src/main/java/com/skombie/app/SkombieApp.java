@@ -39,18 +39,18 @@ public class SkombieApp implements Runnable{
     }
 
     public void getGameTitle() {
-        printFile(TITLE, 5);
+        printFile(TITLE, 500);
     }
 
     public void alertMessage() {
-        printFile(ALERT, 5);
-        Console.pause(3);
+        printFile(ALERT, 500);
+        Console.pause(3000);
         Console.clear();
     }
 
     public void generateInstructions() {
         printFile(INTRO);
-        Console.pause(5);
+        Console.pause(5000);
         Console.clear();
     }
 
@@ -59,7 +59,6 @@ public class SkombieApp implements Runnable{
              house.printCurrLocationData();
              String userInput = prompter.prompt("Please enter a command to proceed.");
              house.manageCommand(userInput);
-             Console.pause(2500);
          }
     }
 }
