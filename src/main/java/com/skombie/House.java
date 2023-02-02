@@ -51,14 +51,14 @@ public class House {
         Character characterToMove = characterList.get(0);
         // get string name of location of character to move
         String characterToMoveLocation = characters.get(characterToMove);
-        Location nameOfRemovedLocation = null;
+//        Location nameOfRemovedLocation = null;
         Location tempCurrentCharLoc = null;
 
         for (Location currentCharLoc : rooms) {
             if (Objects.equals(characterToMoveLocation, currentCharLoc.getName())) {
                 tempCurrentCharLoc = currentCharLoc;
 //                currentCharLoc.removeCharacter(characterToMove);
-                nameOfRemovedLocation = currentCharLoc;
+//                nameOfRemovedLocation = currentCharLoc;
             }
         }
         if (tempCurrentCharLoc != null) {
@@ -68,9 +68,10 @@ public class House {
                 rooms.add(tempCurrentCharLoc);
             }
         }
-        if (nameOfRemovedLocation != null) {
-            System.out.println(characterToMove + " removed from " + nameOfRemovedLocation.getName());
-        }
+        // for testing
+//        if (nameOfRemovedLocation != null) {
+//            System.out.println(characterToMove.getName() + " removed from " + nameOfRemovedLocation.getName());
+//        }
 
         //put character in random room
         Location tempRoomPutCharacterOld = null;
@@ -99,8 +100,9 @@ public class House {
             rooms.remove(tempRoomPutCharacterOld);
             rooms.add(tempRoomPutCharacterNew);
         }
-        System.out.println(characterToMove + " moving to " + roomList.get(0).getName());
-
+        if (characterToMove.getName() != null) {
+            System.out.println(characterToMove.getName() + " moving to " + roomList.get(0).getName());
+        }
     }
 
     public void manageCommand(String userInput) {
@@ -326,7 +328,17 @@ public class House {
             Console.clear();
             isSpecial = true;
             Printer.printFile(HELP);
-            Console.pause(3000);
+            Scanner myObj = new Scanner(System.in);
+            System.out.println("[P]roceed?");
+            while (true) {
+                String userInput = myObj.next();
+                if (userInput.matches("([pP])")) {
+                    break;
+                }
+                else {
+                    System.out.println("[P]roceed?");
+                }
+            }
         } else if ("INVENTORY".equalsIgnoreCase(input)) {
             Console.clear();
             isSpecial = true;
@@ -356,7 +368,7 @@ public class House {
     }
 
     private void printInventory() {
-        if (player.getInventory() == null) {
+        if (player.getInventory().isEmpty()) {
             System.out.println("Your inventory is empty.");
         } else {
             player.getInventory().forEach(x -> {
