@@ -133,6 +133,15 @@ public class Location {
         this.availableRooms = availableRooms;
     }
 
+    public void removeCharacter (Character character) {
+        this.characters.remove(character);
+    }
+
+    public void setCharacter (Character character) {
+        this.characters.add(character);
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
