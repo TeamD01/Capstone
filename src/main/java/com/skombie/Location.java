@@ -1,20 +1,24 @@
 package com.skombie;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Location {
     private String name;
     private String description;
-    private List<String> characters;
-    private List<String> furniture = null;
+    private List<Character> characters;
+    private List<Furniture> furniture;
     private int unsecurePoints;
     private boolean hasSkunk = false;
-    private List<String> items;
+    private List<Item> items;
+    private List<Weapon> weapons;
     private boolean isSecure;
     private List<String> availableRooms;
 
-    public Location(String name, String description, List<String> characters, List<String> furniture, int unsecurePoints, boolean hasSkunk, List<String> items, boolean isSecure, List<String> availableRooms) {
+    public Location(String name, String description, List<Character> characters,
+                    List<Furniture> furniture, int unsecurePoints, boolean hasSkunk,
+                    List<Item> items, List<Weapon> weapons, boolean isSecure, List<String> availableRooms) {
         this.name = name;
         this.description = description;
         this.characters = characters;
@@ -22,10 +26,33 @@ public class Location {
         this.unsecurePoints = unsecurePoints;
         this.hasSkunk = hasSkunk;
         this.items = items;
+        this.weapons = weapons;
         this.isSecure = isSecure;
         this.availableRooms = availableRooms;
     }
 
+    // action methods
+    public void removeItemFromRoom(Item item){
+        items.remove(item);
+    }
+
+    public void removeWeaponFromRoom(Weapon weapon){
+        weapons.remove(weapon);
+    }
+    public void addItemToRoom(Item item){
+        if (items == null) {
+            this.items = new ArrayList<>();
+        }
+
+        items.add(item);
+    }
+
+    public void addWeaponToRoom(Weapon weapon){
+        if (weapons == null) {
+            this.weapons = new ArrayList<>();
+        }
+        weapons.add(weapon);
+    }
     public String getName() {
         return name;
     }
@@ -42,19 +69,19 @@ public class Location {
         this.description = description;
     }
 
-    public List<String> getCharacters() {
+    public List<Character> getCharacters() {
         return characters;
     }
 
-    public void setCharacters(List<String> characters) {
+    public void setCharacters(List<Character> characters) {
         this.characters = characters;
     }
 
-    public List<String> getFurniture() {
+    public List<Furniture> getFurniture() {
         return furniture;
     }
 
-    public void setFurniture(List<String> furniture) {
+    public void setFurniture(List<Furniture> furniture) {
         this.furniture = furniture;
     }
 
@@ -74,12 +101,20 @@ public class Location {
         this.hasSkunk = hasSkunk;
     }
 
-    public List<String> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<String> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public List<Weapon> getWeapons() {
+        return weapons;
+    }
+
+    public void setWeapons(List<Weapon> weapons) {
+        this.weapons = weapons;
     }
 
     public boolean isSecure() {

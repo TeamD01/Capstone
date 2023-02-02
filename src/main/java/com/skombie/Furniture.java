@@ -3,31 +3,42 @@ package com.skombie;
 import java.util.List;
 import java.util.Objects;
 
-public class Furniture {
+public class Furniture implements Inspectable{
     private String name;
+    private String description;
     private boolean isLocked;
     private List<Item> items;
+    private List<Weapon> weapons;
 
-    public Furniture(String name, boolean isLocked, List<Item> items) {
+    public Furniture(String name, String description, boolean isLocked, List<Item> items, List<Weapon> weapons) {
         this.name = name;
+        this.description = description;
         this.isLocked = isLocked;
         this.items = items;
+        this.weapons = weapons;
     }
-
 
     public String getName() {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isLocked() {
         return isLocked;
     }
 
-    private void setLocked(boolean locked) {
+    public void setLocked(boolean locked) {
         isLocked = locked;
     }
 
@@ -35,8 +46,16 @@ public class Furniture {
         return items;
     }
 
-    private void setItems(List<Item> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public List<Weapon> getWeapons() {
+        return weapons;
+    }
+
+    public void setWeapons(List<Weapon> weapons) {
+        this.weapons = weapons;
     }
 
     @Override
@@ -44,12 +63,12 @@ public class Furniture {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Furniture furniture = (Furniture) o;
-        return isLocked() == furniture.isLocked() && getName().equals(furniture.getName()) && getItems().equals(furniture.getItems());
+        return isLocked() == furniture.isLocked() && getName().equals(furniture.getName()) && getDescription().equals(furniture.getDescription()) && getItems().equals(furniture.getItems());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), isLocked(), getItems());
+        return Objects.hash(getName(), getDescription(), isLocked(), getItems());
     }
 
     @Override

@@ -1,12 +1,11 @@
 package com.skombie.client;
-
-import com.skombie.app.SkombieApp;
+import com.skombie.utilities.TaskHandler;
 
 class Main {
 
     public static void main(String[] args) {
-        SkombieApp app = new SkombieApp();
-        app.execute();
+        TaskHandler th = new TaskHandler();
+        th.run();
     }
 
 }

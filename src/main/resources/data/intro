@@ -1,9 +1,18 @@
+==================
 Basic Commands
+==================
+** Navigation **
+Go <Direction> - Go Living Room
 
-***Navigation
-Go <Direction> - example-Go North
+** ITEMS, WEAPONS **
+Get <Item>  - Get Hammer
+Drop <Item> - Drop Hammer
+Look <Item> - Look Hammer
 
-**To grab items
-Get <Item> example -Get hammer
-Look <Item> example -Look hammer
-**Type Quit to end Game
+** TALK **
+Talk <Character> - Talk Chris
+
+** OTHER **
+Inventory - returns your inventory details
+Help - returns this page if you get stuck
+Quit - quit the current game
