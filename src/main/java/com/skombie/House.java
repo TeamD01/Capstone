@@ -5,18 +5,14 @@ import com.skombie.utilities.InteractionParser;
 import com.skombie.utilities.JSONMapper;
 import com.skombie.utilities.Printer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /*
-* HOUSE CLASS WILL BE USED TO MANAGE ROOMS (POSSIBLE OPTIONS FOR PLAYERS)
-* */
+ * HOUSE CLASS WILL BE USED TO MANAGE ROOMS (POSSIBLE OPTIONS FOR PLAYERS)
+ * */
 
 public class House {
     //TODO : we need to add "secure" as a command?
-    private static final Set<String> VERBS = Set.of("use", "look", "go", "get", "drop", "talk");
     private static final String QUIT = "images/quit.txt";
     private static final String HELP = "data/intro";
     private final Player player;
@@ -32,96 +28,167 @@ public class House {
         parser = new InteractionParser();
     }
 
-    public void manageCommand(String userInput){
-        if(checkForSpecialCommand(userInput)) return;
+    public void changeCharacterRoom() {
+        HashMap<Character, String> characters = new HashMap<>();
+        ArrayList<Location> roomList = new ArrayList<>();
+        ArrayList<Character> characterList = new ArrayList<>();
+        for (Location roomOfCharacter : rooms) {
+            // add all game Locations to roomList
+            roomList.add(roomOfCharacter);
+            if (roomOfCharacter.getCharacters() != null) {
+                //loop through all characters in room
+                for (Character characterInRoom : roomOfCharacter.getCharacters()) {
+                    // add to hashmap the characters in the room and all rooms
+                    characters.put(characterInRoom, roomOfCharacter.getName());
+                    // add character list all characters
+                    characterList.add(characterInRoom);
+                }
+            }
+        }
+
+        //randomly select character
+        Collections.shuffle(characterList);
+        Character characterToMove = characterList.get(0);
+        // get string name of location of character to move
+        String characterToMoveLocation = characters.get(characterToMove);
+//        Location nameOfRemovedLocation = null;
+        Location tempCurrentCharLoc = null;
+
+        for (Location currentCharLoc : rooms) {
+            if (Objects.equals(characterToMoveLocation, currentCharLoc.getName())) {
+                tempCurrentCharLoc = currentCharLoc;
+//                currentCharLoc.removeCharacter(characterToMove);
+//                nameOfRemovedLocation = currentCharLoc;
+            }
+        }
+        if (tempCurrentCharLoc != null) {
+            if (rooms.contains(tempCurrentCharLoc)) {
+                rooms.remove(tempCurrentCharLoc);
+                tempCurrentCharLoc.removeCharacter(characterToMove);
+                rooms.add(tempCurrentCharLoc);
+            }
+        }
+        // for testing
+//        if (nameOfRemovedLocation != null) {
+//            System.out.println(characterToMove.getName() + " removed from " + nameOfRemovedLocation.getName());
+//        }
+
+        //put character in random room
+        Location tempRoomPutCharacterOld = null;
+        Location tempRoomPutCharacterNew = null;
+        List<Character> charsList = new ArrayList<>();
+        Collections.shuffle(roomList);
+        for (Location roomToPutCharacter : rooms) {
+            if (roomToPutCharacter.getName().toLowerCase(Locale.ROOT).equals(roomList.get(0).getName().toLowerCase(Locale.ROOT))) {
+                tempRoomPutCharacterOld = roomToPutCharacter;
+
+                if (tempRoomPutCharacterOld.getCharacters() != null) {
+                    tempRoomPutCharacterNew = tempRoomPutCharacterOld;
+                    tempRoomPutCharacterNew.setCharacter(characterToMove);
+
+
+                }
+                if (tempRoomPutCharacterOld.getCharacters() == null) {
+                    charsList.add(characterToMove);
+                    tempRoomPutCharacterNew = tempRoomPutCharacterOld;
+                    tempRoomPutCharacterNew.setCharacters(charsList);
+                }
+            }
+
+        }
+        if (tempRoomPutCharacterOld != null && tempRoomPutCharacterNew != null && characterToMove != null && rooms.contains(tempRoomPutCharacterOld)) {
+            rooms.remove(tempRoomPutCharacterOld);
+            rooms.add(tempRoomPutCharacterNew);
+        }
+        if (characterToMove.getName() != null) {
+            System.out.println(characterToMove.getName() + " moving to " + roomList.get(0).getName());
+        }
+    }
+
+    public void manageCommand(String userInput) {
+        if (checkForSpecialCommand(userInput)) return;
 
         String[] userCommands = parser.verifyInput(userInput);
-        if(userCommands == null){
+        if (userCommands == null) {
             return;
         }
         String command = userCommands[0];
         String object = userCommands[1];
 
-        if(VERBS.contains(command)) {
-            switch(command){
-                case "look":
+
+            switch (command) {
+                case "look": case "examine": case "see": case "scan": case "view": case "inspect":
                     Inspectable item = findInspectableByName(object);
-                    if(item != null){
+                    if (item != null) {
                         String itemDesc = player.look(item);
                         System.out.println(itemDesc);
-                    }
-                    else{
+                    } else {
                         System.out.println("Not a valid item");
                     }
                     Console.pause(2000);
                     break;
 
-                case "go":
+                case "go": case "move": case "proceed": case "advance": case "walk": case "run": case "travel":
                     Location location = findAvailableLocationInCurrLocation(object);
-                    if (location != null){
-                       goLocation(location);
-                    }
-                    else{
+                    if (location != null) {
+                        goLocation(location);
+                    } else {
                         System.out.println("Not a valid location.");
                         Console.pause(2000);
                     }
                     break;
 
-                case "get":
+                case "get": case "take": case "pick": case "grab": case "acquire": case "hold":
                     InventoryItem found = findInventoryItemByName(object);
-                    if(found != null){
-                        if(found instanceof Weapon){
+                    if (found != null) {
+                        if (found instanceof Weapon) {
                             Weapon previousWeapon = player.getCurrentWeapon();
-                            if (previousWeapon != null)currLocation.addWeaponToRoom(previousWeapon);
+                            if (previousWeapon != null) currLocation.addWeaponToRoom(previousWeapon);
 
                             player.setCurrentWeapon((Weapon) found);
                             System.out.printf("\n%s set to current weapon\n", found.getName().toUpperCase());
                             currLocation.removeWeaponFromRoom((Weapon) found);
-                        }
-                        else if (found instanceof Item){
+                        } else if (found instanceof Item) {
                             player.get(found);
                             System.out.printf("\n%s added to inventory\n", found.getName().toUpperCase());
                             currLocation.removeItemFromRoom((Item) found);
                         }
-                    }
-                    else{
+                    } else {
                         System.out.println("Not a valid item in this location");
                     }
                     Console.pause(2000);
                     break;
 
-                case "drop":
+                case "drop": case "leave": case "down": case "release":
                     InventoryItem inInventory = findItemInUserInventory(object);
-                    if(inInventory != null){
-                        if (inInventory instanceof Item){
+                    if (inInventory != null) {
+                        if (inInventory instanceof Item) {
                             player.drop(inInventory);
                             currLocation.addItemToRoom((Item) inInventory);
                         }
-                    }
-
-                    else{
+                    } else {
                         System.out.printf("You don't have %s in your inventory", object);
                         Console.pause(2000);
                     }
                     break;
 
                 case "talk":
+                case "chat":
+                case "speak":
                     Character friend = findNPCByName(object);
-                    if(friend != null){
+                    if (friend != null) {
                         String[] dialogue = player.talk(friend);
                         Arrays.stream(dialogue).forEach(System.out::println);
-                    }
-                    else {
-                        System.out.printf("%s is not in this room.", friend);
+                    } else {
+                        System.out.printf("%s is not in this room.", object);
                     }
                     Console.pause(2500);
                     break;
+                default:
+                    System.out.printf("%s Not a valid command", command);
             }
         }
-        else{
-            System.out.printf("%s not a valid command\n", command);
-        }
-    }
+
 
 
     /**
@@ -133,7 +200,7 @@ public class House {
     }
 
     /**
-     *Helper method to print information for the current location the user is in.
+     * Helper method to print information for the current location the user is in.
      */
     public void printCurrLocationData() {
         Console.pause(150);
@@ -143,19 +210,19 @@ public class House {
 
         System.out.printf("Location: %s\n", currLocation.getName());
         System.out.printf("%s\n", currLocation.getDescription());
-        if (currLocation.getFurniture() != null && currLocation.getFurniture().size() !=0) {
+        if (currLocation.getFurniture() != null && currLocation.getFurniture().size() != 0) {
             System.out.println("\nFurniture:");
             currLocation.getFurniture().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
-        if (currLocation.getCharacters() != null && currLocation.getCharacters().size() !=0) {
+        if (currLocation.getCharacters() != null && currLocation.getCharacters().size() != 0) {
             System.out.println("\nPeople:");
             currLocation.getCharacters().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
-        if (currLocation.getItems() != null && currLocation.getItems().size() !=0) {
+        if (currLocation.getItems() != null && currLocation.getItems().size() != 0) {
             System.out.println("\nItems:");
             currLocation.getItems().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
-        if (currLocation.getWeapons() != null && currLocation.getWeapons().size() !=0) {
+        if (currLocation.getWeapons() != null && currLocation.getWeapons().size() != 0) {
             System.out.println("\nWeapons:");
             currLocation.getWeapons().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
@@ -174,17 +241,17 @@ public class House {
         System.out.println("\n=======================");
     }
 
-    private void goLocation(Location location){
+    private void goLocation(Location location) {
         currLocation = location;
         checkForSkombie();
     }
 
-    private Character findNPCByName(String character){
+    private Character findNPCByName(String character) {
         return currLocation.getCharacters().stream().filter(x -> x.getName().equalsIgnoreCase(character)).findFirst().orElse(null);
     }
 
-    private InventoryItem findItemInUserInventory(String item){
-        return getPlayerInventoryItems().stream().filter(x-> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
+    private InventoryItem findItemInUserInventory(String item) {
+        return getPlayerInventoryItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
     }
 
 //    private Item findItemByName(String item){
@@ -195,106 +262,115 @@ public class House {
      * Inspectable interface is used because Item, Weapon, Character, other objects can use the "look" command
      * this allows us to build similar functionality for diff types of objs
      */
-    private Inspectable findInspectableByName(String item){
+    private Inspectable findInspectableByName(String item) {
         return getInspectableItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
     }
 
-    private List<Inspectable> getInspectableItems(){
+    private List<Inspectable> getInspectableItems() {
         List<Inspectable> inspectables = new ArrayList<>();
-        if(currLocation.getItems() != null) {
+        if (currLocation.getItems() != null) {
             inspectables.addAll(currLocation.getItems());
         }
 
-        if(currLocation.getFurniture() != null){
+        if (currLocation.getFurniture() != null) {
             inspectables.addAll(currLocation.getFurniture());
         }
 
-        if(currLocation.getWeapons() != null) {
+        if (currLocation.getWeapons() != null) {
             inspectables.addAll(currLocation.getWeapons());
         }
 
-        if(currLocation.getCharacters() != null) {
+        if (currLocation.getCharacters() != null) {
             inspectables.addAll(currLocation.getCharacters());
         }
 
         return inspectables;
     }
 
-    private List<InventoryItem> getInventoryItems(){
+    private List<InventoryItem> getInventoryItems() {
         List<InventoryItem> validItems = new ArrayList<>();
-        if(currLocation.getItems() != null) {
+        if (currLocation.getItems() != null) {
             validItems.addAll(currLocation.getItems());
         }
-        if(currLocation.getWeapons() != null){
+        if (currLocation.getWeapons() != null) {
             validItems.addAll(currLocation.getWeapons());
         }
         return validItems;
     }
 
-    private List<InventoryItem> getPlayerInventoryItems(){
+    private List<InventoryItem> getPlayerInventoryItems() {
         List<InventoryItem> validItems = new ArrayList<>();
-        if(player.getInventory() != null) {
+        if (player.getInventory() != null) {
             validItems.addAll(player.getInventory());
         }
-        if(player.getCurrentWeapon() != null){
+        if (player.getCurrentWeapon() != null) {
             validItems.add(player.getCurrentWeapon());
         }
         return validItems;
     }
 
 
-    private void checkForSkombie () {
+    private void checkForSkombie() {
         if (findLocationByName(currLocation.getName()).isHasSkunk()) {
             System.out.println("There is a skunk, get it, get it!!!");
         }
     }
 
-    private boolean checkForSpecialCommand(String input){
+    private boolean checkForSpecialCommand(String input) {
         boolean isSpecial = false;
 
-        if("QUIT".equalsIgnoreCase(input)){
+        if ("QUIT".equalsIgnoreCase(input)) {
             Console.clear();
             isSpecial = true;
             Printer.printFile(QUIT);
             System.exit(0);
-        }
-        else if("HELP".equalsIgnoreCase(input)){
+        } else if ("HELP".equalsIgnoreCase(input)) {
             Console.clear();
             isSpecial = true;
             Printer.printFile(HELP);
-            Console.pause(3000);
-        }
-        else if("INVENTORY".equalsIgnoreCase(input)){
+            Scanner myObj = new Scanner(System.in);
+            System.out.println("[P]roceed?");
+            while (true) {
+                String userInput = myObj.next();
+                if (userInput.matches("([pP])")) {
+                    break;
+                }
+                else {
+                    System.out.println("[P]roceed?");
+                }
+            }
+        } else if ("INVENTORY".equalsIgnoreCase(input)) {
             Console.clear();
             isSpecial = true;
             printInventory();
             Console.pause(3000);
         }
         return isSpecial;
-    };
+    }
+
+    ;
 
     /**
      * InventoryItem is an interface that collects both Item <Class/> & Weapon<Class/>
      * because functionality is very similar with these objects
      */
-    private InventoryItem findInventoryItemByName(String item){
+    private InventoryItem findInventoryItemByName(String item) {
         return getInventoryItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
     }
 
     /**
      * Based on user input will find if location input is an available location in the current room
      */
-    private Location findAvailableLocationInCurrLocation(String location){
+    private Location findAvailableLocationInCurrLocation(String location) {
         String valid = currLocation.getAvailableRooms().stream().filter(x -> x.equalsIgnoreCase(location)).findFirst().orElse(null);
 
         return findLocationByName(valid);
     }
 
-    private void printInventory(){
-        if(player.getInventory() == null){
+    private void printInventory() {
+        if (player.getInventory().isEmpty()) {
             System.out.println("Your inventory is empty.");
-        }
-        else {
+        } else {
             player.getInventory().forEach(x -> {
                 System.out.printf("%s - %s\n", x.getName().toUpperCase(), x.getDescription().toUpperCase());
             });
