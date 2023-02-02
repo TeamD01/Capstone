@@ -13,7 +13,6 @@ import java.util.*;
 
 public class House {
     //TODO : we need to add "secure" as a command?
-    private static final Set<String> VERBS = Set.of("use", "look", "go", "get", "drop", "talk");
     private static final String QUIT = "images/quit.txt";
     private static final String HELP = "data/intro";
     private final Player player;
@@ -114,9 +113,9 @@ public class House {
         String command = userCommands[0];
         String object = userCommands[1];
 
-        if (VERBS.contains(command)) {
+
             switch (command) {
-                case "look":
+                case "look": case "examine": case "see": case "scan": case "view": case "inspect":
                     Inspectable item = findInspectableByName(object);
                     if (item != null) {
                         String itemDesc = player.look(item);
@@ -127,7 +126,7 @@ public class House {
                     Console.pause(2000);
                     break;
 
-                case "go":
+                case "go": case "move": case "proceed": case "advance": case "walk": case "run": case "travel":
                     Location location = findAvailableLocationInCurrLocation(object);
                     if (location != null) {
                         goLocation(location);
@@ -137,7 +136,7 @@ public class House {
                     }
                     break;
 
-                case "get":
+                case "get": case "take": case "pick": case "grab": case "acquire": case "hold":
                     InventoryItem found = findInventoryItemByName(object);
                     if (found != null) {
                         if (found instanceof Weapon) {
@@ -158,7 +157,7 @@ public class House {
                     Console.pause(2000);
                     break;
 
-                case "drop":
+                case "drop": case "leave": case "down": case "release":
                     InventoryItem inInventory = findItemInUserInventory(object);
                     if (inInventory != null) {
                         if (inInventory instanceof Item) {
@@ -172,20 +171,22 @@ public class House {
                     break;
 
                 case "talk":
+                case "chat":
+                case "speak":
                     Character friend = findNPCByName(object);
                     if (friend != null) {
                         String[] dialogue = player.talk(friend);
                         Arrays.stream(dialogue).forEach(System.out::println);
                     } else {
-                        System.out.printf("%s is not in this room.", friend);
+                        System.out.printf("%s is not in this room.", object);
                     }
                     Console.pause(2500);
                     break;
+                default:
+                    System.out.printf("%s Not a valid command", command);
             }
-        } else {
-            System.out.printf("%s not a valid command\n", command);
         }
-    }
+
 
 
     /**
