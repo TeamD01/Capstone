@@ -1,17 +1,21 @@
 package com.skombie;
-import com.skombie.utilities.JSONMapper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.TimerTask;
 
 public class Skombie extends TimerTask{
     House house;
+    List<String> skunkRooms = new ArrayList<>(List.of("bedroom", "basement", "bedroom", "office", "kitchen", "living room"));
 
     public Skombie(House house) {
         this.house = house;
     }
 
     public void run() {
-        System.out.println("A skombie is attacking!");
-        Location loc = house.findLocationByName("bedroom");
+        Collections.shuffle(skunkRooms);
+        System.out.println("A skombie is attacking in room " + skunkRooms.get(0));
+        Location loc = house.findLocationByName(skunkRooms.get(0));
         if (loc.isHasSkunk()) {
         }
         else {
