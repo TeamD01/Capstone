@@ -1,10 +1,11 @@
 package com.skombie;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Player implements Speaker {
+public class Player implements Speaker, Serializable {
     private boolean isDead = false;
     private double health = 100.0;
     private List<InventoryItem> inventory = new ArrayList<>();

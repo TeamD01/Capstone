@@ -1,9 +1,10 @@
 package com.skombie;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class Furniture implements Inspectable{
+public class Furniture implements Inspectable, Serializable {
     private String name;
     private String description;
     private boolean isLocked;

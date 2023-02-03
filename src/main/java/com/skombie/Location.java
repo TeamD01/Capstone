@@ -1,10 +1,11 @@
 package com.skombie;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Location {
+public class Location implements Serializable {
     private String name;
     private String description;
     private List<Character> characters;
@@ -139,8 +140,9 @@ public class Location {
 
     public void setCharacter (Character character) {
         this.characters.add(character);
-
     }
+
+
 
     @Override
     public boolean equals(Object o) {

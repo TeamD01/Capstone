@@ -1,10 +1,11 @@
 package com.skombie;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class Character implements Speaker, Inspectable{
+public class Character implements Speaker, Inspectable, Serializable {
     private String name;
     private String description;
     private List<String> dialogue;

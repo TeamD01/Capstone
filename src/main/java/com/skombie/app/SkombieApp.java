@@ -37,6 +37,9 @@ public class SkombieApp implements Runnable{
         if ("N".equalsIgnoreCase(input)) {
             Console.clear();
         }
+        else if ("C".equalsIgnoreCase(input)) {
+            house.loadGame();
+        }
     }
 
     public void getGameTitle() {
