@@ -356,7 +356,7 @@ public class House {
     }
 
     private void printInventory() {
-        if (player.getInventory() == null) {
+        if (getPlayerInventoryItems().isEmpty()) {
             System.out.println("Your inventory is empty.");
         } else {
             player.getInventory().forEach(x -> {
