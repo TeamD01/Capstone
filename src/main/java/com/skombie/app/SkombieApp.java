@@ -6,6 +6,7 @@ import com.skombie.Player;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.PromptHelper;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -82,7 +83,6 @@ public class SkombieApp implements Runnable{
     private int randGen() {
         Random rand = new Random();
         int upperbound = 5;
-        int int_random = rand.nextInt(upperbound);
-        return int_random;
+        return rand.nextInt(upperbound);
     }
 }
