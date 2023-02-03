@@ -5,6 +5,7 @@ import com.skombie.utilities.InteractionParser;
 import com.skombie.utilities.JSONMapper;
 import com.skombie.utilities.Printer;
 
+import java.io.*;
 import java.util.*;
 
 /*
@@ -20,6 +21,8 @@ public class House {
     private final List<Location> rooms;
     private final InteractionParser parser;
     private Location currLocation;
+    private static final String SAVE = "data/";
+    private static final String LOAD = "data/";
 
     public House() {
         JSONMapper map = new JSONMapper();
@@ -251,6 +254,52 @@ public class House {
         return getPlayerInventoryItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
     }
 
+    private void saveGame(){
+        ArrayList<Object>saveGameData = new ArrayList<>();
+        if (currLocation != null) {
+            saveGameData.add(currLocation);
+        }
+        if (player != null) {
+            saveGameData.add(player);
+        }
+        if (rooms != null) {
+            saveGameData.add(rooms);
+        }
+
+        try {
+            File myObj = new File("src/main/resources/data/save.txt");
+            if (myObj.createNewFile()) {
+                System.out.println("File created!");
+            } else {
+                System.out.println("File exists!");
+            }
+            FileOutputStream fileOut = new FileOutputStream("src/main/resources/data/save.txt");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(saveGameData);
+            out.close();
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Your progress is being saved.........");
+        System.out.println("Gamed Saved");
+    }
+
+    public void loadGame() {
+        try {
+            FileInputStream fileIn = new FileInputStream(LOAD + "filename.txt");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            Object loadLocation = in.readObject();
+            currLocation = (Location) loadLocation;
+            in.close();
+            fileIn.close();
+            System.out.println(".......loading....");
+            System.out.println("Game Loaded.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 //    private Item findItemByName(String item){
 //        return currLocation.getItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
 //    }
@@ -332,6 +381,13 @@ public class House {
             printInventory();
             Console.pause(3000);
         }
+        else if ("SAVE".equalsIgnoreCase(input)) {
+            Console.clear();
+            isSpecial = true;
+            saveGame();
+            Console.pause(3000);
+        }
+
         return isSpecial;
     }
 

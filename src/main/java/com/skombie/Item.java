@@ -1,8 +1,9 @@
 package com.skombie;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Item implements InventoryItem, Inspectable{
+public class Item implements InventoryItem, Inspectable, Serializable {
     private String name;
     private String description;
 
