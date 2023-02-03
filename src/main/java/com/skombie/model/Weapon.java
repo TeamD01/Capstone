@@ -1,4 +1,4 @@
-package com.skombie;
+package com.skombie.model;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -1,8 +1,7 @@
 package com.skombie.utilities;
-import com.skombie.House;
-import com.skombie.Player;
+import com.skombie.model.House;
 import com.skombie.app.SkombieApp;
-import com.skombie.Skombie;
+import com.skombie.model.Skombie;
 import java.util.TimerTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

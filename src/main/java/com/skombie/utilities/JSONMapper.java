@@ -2,10 +2,7 @@ package com.skombie.utilities;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.skombie.Character;
-import com.skombie.Furniture;
-import com.skombie.Item;
-import com.skombie.Location;
+import com.skombie.model.Location;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

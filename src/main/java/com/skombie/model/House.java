@@ -1,9 +1,8 @@
-package com.skombie;
+package com.skombie.model;
 
+import com.skombie.utilities.*;
 import com.skombie.utilities.Console;
-import com.skombie.utilities.InteractionParser;
-import com.skombie.utilities.JSONMapper;
-import com.skombie.utilities.Printer;
+import com.skombie.utilities.Reader;
 
 
 import java.io.*;
@@ -14,6 +13,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 import java.util.*;
+
+import static com.skombie.utilities.Reader.readFileToArrayList;
 
 /*
  * HOUSE CLASS WILL BE USED TO MANAGE ROOMS (POSSIBLE OPTIONS FOR PLAYERS)
@@ -29,6 +30,8 @@ public class House {
     private final InteractionParser parser;
     private Location currLocation;
     private static final String LOAD = "data/";
+    private String currentMap = "images/map/livingroom.txt";
+    private final PromptHelper prompter;
 
     public House() {
         JSONMapper map = new JSONMapper();
@@ -36,6 +39,8 @@ public class House {
         player = new Player();
         currLocation = findLocationByName("Living Room");
         parser = new InteractionParser();
+        Scanner scanner = new Scanner(System.in);
+        prompter = new PromptHelper(scanner);
     }
 
     public void changeCharacterRoom() {
@@ -113,7 +118,7 @@ public class House {
             rooms.remove(tempRoomPutCharacterOld);
             rooms.add(tempRoomPutCharacterNew);
         }
-        if (characterToMove.getName() != null) {
+        if (characterToMove != null) {
             System.out.println(characterToMove.getName() + " moving to " + roomList.get(0).getName());
         }
     }
@@ -157,6 +162,7 @@ public class House {
             ObjectInputStream in = new ObjectInputStream(fileIn);
             List<Object> saveGameData = (List<Object>) in.readObject();
             this.currLocation = (Location) saveGameData.get(0);
+            this.currentMap = String.format("images/map/%s.txt", currLocation.getName().replaceAll("\\s+", "").toLowerCase());
             this.player = (Player) saveGameData.get(1);
             this.rooms = new ArrayList<>();
             for (int i = 2; i < saveGameData.size(); i++){
@@ -173,7 +179,6 @@ public class House {
             e.printStackTrace();
         }
     }
-
 
     public void manageCommand(String userInput) {
         if (checkForSpecialCommand(userInput)) return;
@@ -290,48 +295,78 @@ public class House {
     /**
      * Helper method to print information for the current location the user is in.
      */
-    public void printCurrLocationData() {
+    public void gatherLocationData() {
         Console.pause(150);
         Console.clear();
 
-        System.out.println("=======================");
+        List<String> locationData = new ArrayList<>();
 
-        System.out.printf("Location: %s\n", currLocation.getName());
-        System.out.printf("%s\n", currLocation.getDescription());
+        locationData.add("=======================");
+        locationData.add(String.format("Location: %s", currLocation.getName()));
+        locationData.add(String.format("%s", currLocation.getDescription()));
         if (currLocation.getFurniture() != null && currLocation.getFurniture().size() != 0) {
-            System.out.println("\nFurniture:");
-            currLocation.getFurniture().forEach(x -> System.out.printf("> %s\n", x.getName()));
+            locationData.add("Furniture:");
+            currLocation.getFurniture().forEach(x -> locationData.add(String.format("> %s", x.getName())));
         }
         if (currLocation.getCharacters() != null && currLocation.getCharacters().size() != 0) {
-            System.out.println("\nPeople:");
-            currLocation.getCharacters().forEach(x -> System.out.printf("> %s\n", x.getName()));
+            locationData.add("\nPeople:");
+            currLocation.getCharacters().forEach(x -> locationData.add(String.format("> %s", x.getName())));
         }
         if (currLocation.getItems() != null && currLocation.getItems().size() != 0) {
-            System.out.println("\nItems:");
-            currLocation.getItems().forEach(x -> System.out.printf("> %s\n", x.getName()));
+            locationData.add("\nItems:");
+            currLocation.getItems().forEach(x -> locationData.add(String.format("> %s", x.getName())));
         }
         if (currLocation.getWeapons() != null && currLocation.getWeapons().size() != 0) {
-            System.out.println("\nWeapons:");
-            currLocation.getWeapons().forEach(x -> System.out.printf("> %s\n", x.getName()));
+            locationData.add("\nWeapons:");
+            currLocation.getWeapons().forEach(x -> locationData.add(String.format("> %s", x.getName())));
         }
+        locationData.add("\nAvailable Locations:");
+        currLocation.getAvailableRooms().forEach(x -> locationData.add(String.format("> %s", x)));
 
-        System.out.println("\nAvailable Locations:");
-        currLocation.getAvailableRooms().forEach(x -> System.out.printf("> %s\n", x));
-
-        System.out.printf("\nHealth: %s", player.getHealth());
+        locationData.add("==========YOU==========");
+        locationData.add(String.format("Health: %s", player.getHealth()));
         if (player.getCurrentWeapon() != null) {
-            System.out.printf("\tWeapon: %s", player.getCurrentWeapon().getName());
+            locationData.add("Current Weapon:");
+            locationData.add(String.format("> %s",player.getCurrentWeapon().getName()));
         }
         if (player.getInventory().size() > 0) {
-            System.out.print("\tInventory:");
-            player.getInventory().forEach(x -> System.out.printf(" %s ", x.getName()));
+            locationData.add("Inventory:");
+            player.getInventory().forEach(x -> locationData.add(String.format("> %s", x.getName())));
         }
-        System.out.println("\n=======================");
+        locationData.add("=======================");
+
+        addMapAndPrint(locationData);
     }
 
     private void goLocation(Location location) {
+        currentMap = String.format("images/map/%s.txt", location.getName().replaceAll("\\s+","").toLowerCase());
         currLocation = location;
         checkForSkombie();
+    }
+
+    private void addMapAndPrint(List<String> locationData){
+       List<String> mapStrings = Reader.readFileToArrayList(currentMap);
+       int size = Math.max(locationData.size(), mapStrings.size());
+       Set<String> locationInfo = new HashSet<>();
+       int i = 0;
+       int j = 0;
+
+       while(i <= size || j <=  size){
+           String item1 = i < locationData.size() ? locationData.get(i) : "";
+
+           if(item1.contains("\n")){
+               System.out.printf("%-65s %s%n", "", j < mapStrings.size() ? mapStrings.get(j) : "");
+               j++;
+               System.out.printf("%-65s %s%n", locationData.get(i).replace("\n", ""), j < mapStrings.size() ? mapStrings.get(j) : "");
+               i++;
+               j++;
+           }
+           else {
+               System.out.printf("%-65s %s%n", i < locationData.size() ? locationData.get(i) : "", j < mapStrings.size() ? mapStrings.get(j) : "");
+                i++;
+                j++;
+           }
+       }
     }
 
     private Character findNPCByName(String character) {
@@ -341,11 +376,6 @@ public class House {
     private InventoryItem findItemInUserInventory(String item) {
         return getPlayerInventoryItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
     }
-
-
-//    private Item findItemByName(String item){
-//        return currLocation.getItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
-//    }
 
     /**
      * Inspectable interface is used because Item, Weapon, Character, other objects can use the "look" command
@@ -398,7 +428,6 @@ public class House {
         return validItems;
     }
 
-
     private void checkForSkombie() {
         if (findLocationByName(currLocation.getName()).isHasSkunk()) {
             System.out.println("There is a skunk, get it, get it!!!");
@@ -418,16 +447,8 @@ public class House {
             isSpecial = true;
             Printer.printFile(HELP);
             Scanner myObj = new Scanner(System.in);
-            System.out.println("[P]roceed?");
-            while (true) {
-                String userInput = myObj.next();
-                if (userInput.matches("([pP])")) {
+            prompter.prompt("\n[P]roceed ?", "[pP]", "\nNot Valid");
 
-                    break;
-                } else {
-                    System.out.println("[P]roceed?");
-                }
-            }
         } else if ("INVENTORY".equalsIgnoreCase(input)) {
             Console.clear();
             isSpecial = true;
@@ -448,8 +469,6 @@ public class House {
 
         return isSpecial;
     }
-
-    ;
 
     /**
      * InventoryItem is an interface that collects both Item <Class/> & Weapon<Class/>
