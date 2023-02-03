@@ -1,8 +1,9 @@
 package com.skombie;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Weapon implements InventoryItem, Inspectable{
+public class Weapon implements InventoryItem, Inspectable, Serializable {
     private String name;
     private String description;
     private double attackValue;

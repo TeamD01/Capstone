@@ -5,6 +5,14 @@ import com.skombie.utilities.InteractionParser;
 import com.skombie.utilities.JSONMapper;
 import com.skombie.utilities.Printer;
 
+
+import java.io.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import java.util.*;
 
 /*
@@ -15,10 +23,12 @@ public class House {
     //TODO : we need to add "secure" as a command?
     private static final String QUIT = "images/quit.txt";
     private static final String HELP = "data/intro";
-    private final Player player;
-    private final List<Location> rooms;
+    private static final String SAVE = "data/savefile.txt";
+    private Player player;
+    private List<Location> rooms;
     private final InteractionParser parser;
     private Location currLocation;
+    private static final String LOAD = "data/";
 
     public House() {
         JSONMapper map = new JSONMapper();
@@ -46,15 +56,17 @@ public class House {
             }
         }
 
+
         //randomly select character
         Collections.shuffle(characterList);
         Character characterToMove = characterList.get(0);
         // get string name of location of character to move
         String characterToMoveLocation = characters.get(characterToMove);
-//        Location nameOfRemovedLocation = null;
+        //        Location nameOfRemovedLocation = null;
         Location tempCurrentCharLoc = null;
 
-        for (Location currentCharLoc : rooms) {
+        for (
+                Location currentCharLoc : rooms) {
             if (Objects.equals(characterToMoveLocation, currentCharLoc.getName())) {
                 tempCurrentCharLoc = currentCharLoc;
 //                currentCharLoc.removeCharacter(characterToMove);
@@ -78,7 +90,8 @@ public class House {
         Location tempRoomPutCharacterNew = null;
         List<Character> charsList = new ArrayList<>();
         Collections.shuffle(roomList);
-        for (Location roomToPutCharacter : rooms) {
+        for (
+                Location roomToPutCharacter : rooms) {
             if (roomToPutCharacter.getName().toLowerCase(Locale.ROOT).equals(roomList.get(0).getName().toLowerCase(Locale.ROOT))) {
                 tempRoomPutCharacterOld = roomToPutCharacter;
 
@@ -105,6 +118,63 @@ public class House {
         }
     }
 
+    private void saveGame() {
+        ArrayList<Object> saveGameData = new ArrayList<>();
+        if (currLocation != null) {
+            saveGameData.add(currLocation);
+        }
+        if (player != null) {
+            saveGameData.add(player);
+        }
+        for (Location room : rooms) {
+            if (room != null) {
+                saveGameData.add(room);
+            }
+        }
+        try {
+            File myObj = new File("src/main/resources/data/save.txt");
+            if (myObj.createNewFile()) {
+                System.out.println("File created!");
+            } else {
+                System.out.println("File exists!");
+            }
+            FileOutputStream fileOut = new FileOutputStream("src/main/resources/data/save.txt");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(saveGameData);
+            out.close();
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Your progress is being saved.........");
+        System.out.println("Gamed Saved");
+
+    }
+
+    public void loadGame() {
+        try {
+            FileInputStream fileIn = new FileInputStream("src/main/resources/data/save.txt");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            List<Object> saveGameData = (List<Object>) in.readObject();
+            this.currLocation = (Location) saveGameData.get(0);
+            this.player = (Player) saveGameData.get(1);
+            this.rooms = new ArrayList<>();
+            for (int i = 2; i < saveGameData.size(); i++){
+                Location loc = (Location) saveGameData.get(i);
+                if (loc != null) {
+                    rooms.add(loc);
+                }
+            }
+            in.close();
+            fileIn.close();
+            System.out.println(".......loading....");
+            System.out.println("Game Loaded.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void manageCommand(String userInput) {
         if (checkForSpecialCommand(userInput)) return;
 
@@ -116,79 +186,97 @@ public class House {
         String object = userCommands[1];
 
 
-            switch (command) {
-                case "look": case "examine": case "see": case "scan": case "view": case "inspect":
-                    Inspectable item = findInspectableByName(object);
-                    if (item != null) {
-                        String itemDesc = player.look(item);
-                        System.out.println(itemDesc);
-                    } else {
-                        System.out.println("Not a valid item");
-                    }
+        switch (command) {
+            case "look":
+            case "examine":
+            case "see":
+            case "scan":
+            case "view":
+            case "inspect":
+                Inspectable item = findInspectableByName(object);
+                if (item != null) {
+                    String itemDesc = player.look(item);
+                    System.out.println(itemDesc);
+                } else {
+                    System.out.println("Not a valid item");
+                }
+                Console.pause(2000);
+                break;
+
+            case "go":
+            case "move":
+            case "proceed":
+            case "advance":
+            case "walk":
+            case "run":
+            case "travel":
+                Location location = findAvailableLocationInCurrLocation(object);
+                if (location != null) {
+                    goLocation(location);
+                } else {
+                    System.out.println("Not a valid location.");
                     Console.pause(2000);
-                    break;
+                }
+                break;
 
-                case "go": case "move": case "proceed": case "advance": case "walk": case "run": case "travel":
-                    Location location = findAvailableLocationInCurrLocation(object);
-                    if (location != null) {
-                        goLocation(location);
-                    } else {
-                        System.out.println("Not a valid location.");
-                        Console.pause(2000);
+            case "get":
+            case "take":
+            case "pick":
+            case "grab":
+            case "acquire":
+            case "hold":
+                InventoryItem found = findInventoryItemByName(object);
+                if (found != null) {
+                    if (found instanceof Weapon) {
+                        Weapon previousWeapon = player.getCurrentWeapon();
+                        if (previousWeapon != null) currLocation.addWeaponToRoom(previousWeapon);
+
+                        player.setCurrentWeapon((Weapon) found);
+                        System.out.printf("\n%s set to current weapon\n", found.getName().toUpperCase());
+                        currLocation.removeWeaponFromRoom((Weapon) found);
+                    } else if (found instanceof Item) {
+                        player.get(found);
+                        System.out.printf("\n%s added to inventory\n", found.getName().toUpperCase());
+                        currLocation.removeItemFromRoom((Item) found);
                     }
-                    break;
+                } else {
+                    System.out.println("Not a valid item in this location");
+                }
+                Console.pause(2000);
+                break;
 
-                case "get": case "take": case "pick": case "grab": case "acquire": case "hold":
-                    InventoryItem found = findInventoryItemByName(object);
-                    if (found != null) {
-                        if (found instanceof Weapon) {
-                            Weapon previousWeapon = player.getCurrentWeapon();
-                            if (previousWeapon != null) currLocation.addWeaponToRoom(previousWeapon);
-
-                            player.setCurrentWeapon((Weapon) found);
-                            System.out.printf("\n%s set to current weapon\n", found.getName().toUpperCase());
-                            currLocation.removeWeaponFromRoom((Weapon) found);
-                        } else if (found instanceof Item) {
-                            player.get(found);
-                            System.out.printf("\n%s added to inventory\n", found.getName().toUpperCase());
-                            currLocation.removeItemFromRoom((Item) found);
-                        }
-                    } else {
-                        System.out.println("Not a valid item in this location");
+            case "drop":
+            case "leave":
+            case "down":
+            case "release":
+                InventoryItem inInventory = findItemInUserInventory(object);
+                if (inInventory != null) {
+                    if (inInventory instanceof Item) {
+                        player.drop(inInventory);
+                        currLocation.addItemToRoom((Item) inInventory);
                     }
+                } else {
+                    System.out.printf("You don't have %s in your inventory", object);
                     Console.pause(2000);
-                    break;
+                }
+                break;
 
-                case "drop": case "leave": case "down": case "release":
-                    InventoryItem inInventory = findItemInUserInventory(object);
-                    if (inInventory != null) {
-                        if (inInventory instanceof Item) {
-                            player.drop(inInventory);
-                            currLocation.addItemToRoom((Item) inInventory);
-                        }
-                    } else {
-                        System.out.printf("You don't have %s in your inventory", object);
-                        Console.pause(2000);
-                    }
-                    break;
-
-                case "talk":
-                case "chat":
-                case "speak":
-                    Character friend = findNPCByName(object);
-                    if (friend != null) {
-                        String[] dialogue = player.talk(friend);
-                        Arrays.stream(dialogue).forEach(System.out::println);
-                    } else {
-                        System.out.printf("%s is not in this room.", object);
-                    }
-                    Console.pause(2500);
-                    break;
-                default:
-                    System.out.printf("%s Not a valid command", command);
-            }
+            case "talk":
+            case "chat":
+            case "speak":
+                Character friend = findNPCByName(object);
+                if (friend != null) {
+                    String[] dialogue = player.talk(friend);
+                    Arrays.stream(dialogue).forEach(System.out::println);
+                } else {
+                    System.out.printf("%s is not in this room.", object);
+                }
+                Console.pause(2500);
+                break;
+            default:
+                System.out.printf("%s Not a valid command", command);
         }
-
+    }
 
 
     /**
@@ -253,6 +341,7 @@ public class House {
     private InventoryItem findItemInUserInventory(String item) {
         return getPlayerInventoryItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
     }
+
 
 //    private Item findItemByName(String item){
 //        return currLocation.getItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
@@ -333,9 +422,9 @@ public class House {
             while (true) {
                 String userInput = myObj.next();
                 if (userInput.matches("([pP])")) {
+
                     break;
-                }
-                else {
+                } else {
                     System.out.println("[P]roceed?");
                 }
             }
@@ -344,7 +433,19 @@ public class House {
             isSpecial = true;
             printInventory();
             Console.pause(3000);
+        } else if ("SAVE".equalsIgnoreCase(input)) {
+            Console.clear();
+            isSpecial = true;
+            saveGame();
+            Console.pause(3000);
         }
+        else if ("SAVE".equalsIgnoreCase(input)) {
+            Console.clear();
+            isSpecial = true;
+            saveGame();
+            Console.pause(3000);
+        }
+
         return isSpecial;
     }
 
