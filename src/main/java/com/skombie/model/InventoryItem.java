@@ -1,4 +1,4 @@
-package com.skombie;
+package com.skombie.model;
 
 public interface InventoryItem {
     String getName();

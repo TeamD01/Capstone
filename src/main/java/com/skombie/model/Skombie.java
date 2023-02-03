@@ -1,4 +1,5 @@
-package com.skombie;
+package com.skombie.model;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
