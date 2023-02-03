@@ -1,12 +1,9 @@
 package com.skombie.app;
 
 import com.skombie.House;
-import com.skombie.Location;
-import com.skombie.Player;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.PromptHelper;
-
-import java.io.IOException;
+import com.skombie.utilities.Music;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -26,6 +23,7 @@ public class SkombieApp implements Runnable{
     }
 
     public void run() {
+        Music.playSound(SkombieApp.class.getClassLoader().getResourceAsStream("music/monkeySpin.wav"));
         getGameTitle();
         promptUserNew();
         alertMessage();
