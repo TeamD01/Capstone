@@ -36,7 +36,7 @@ public class House {
     private static final int CHARACTERDIES = 5;
     private int skombieCounter = 0;
     // sets attack value of skombies and zombies
-    private static final double ATTACK_HEALTH = 5.0;
+    private static final double ATTACK_HEALTH = 10.0;
     public boolean progressedPastHelp = false;
     private boolean isSecure = false;
     private boolean isEvacuating = false;
@@ -131,7 +131,7 @@ public class House {
                 if (characterToMove.isDead() && tempRoomPutCharacterNew.equals(currLocation)) {
                     messages.add("Zombie " + characterToMove.getName() + " has burst into the room... Fight or Run for your life\n");
                     characterToMove.setAvailableMove(false);
-                    if (randGen() == 1) {
+                    if (randGen()) {
                         double health = player.getHealth();
                         player.setHealth(health - ATTACK_HEALTH);
                         messages.add("Zombie " + characterToMove.getName() + " has attacked you.\n");
@@ -368,6 +368,23 @@ public class House {
 
             case "attack":
             case "hit":
+                Character familyMember = findNPCByName(object);
+                if(familyMember != null && !familyMember.isDead()){
+                    messages.add(String.format("I would never hurt %s",familyMember.getName()));
+                }
+                else if(familyMember != null && familyMember.isDead()){
+                    messages.add(String.format("You have attacked %s", familyMember.getName()));
+                    double attackValue = (familyMember.getHitsCanTake() - player.getAttackValue());
+                    familyMember.setHitsCanTake(attackValue);
+
+                    if (attackValue <= 0) {
+                        messages.add(String.format("** You have killed %s **", familyMember.getName()));
+                        currLocation.removeNPCFromRoom(familyMember);
+                    } else {
+                        messages.add(String.format("** You attacked the %s. Keep attacking it! **",familyMember.getName()));
+                    }
+                }
+
                 if (object != null && object.equalsIgnoreCase("skombie") && currLocation.isHasSkunk()) {
                     double attackValue = (currLocation.getTimesLeftToKillSkombie() - player.getAttackValue());
                     currLocation.setTimesLeftToKillSkombie(attackValue);
@@ -378,7 +395,7 @@ public class House {
                         messages.add("** You attacked the skombie. Keep attacking it! **");
                     }
                 }
-                else if (!currLocation.isHasSkunk()) {
+                else if (object.equalsIgnoreCase("skombie") && !currLocation.isHasSkunk()) {
                     messages.add("Relax there is no skombie here.. YET..");
                 }
                 break;
@@ -650,11 +667,12 @@ public class House {
                 Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/zombie.wav"));
                 userMessages.add("There is a skombie, get it!");
             }
-            if (randGen() == 1) {
+            if (randGen()) {
                 double health = player.getHealth();
                 Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/bloodSplash.wav"));
                 userMessages.add("Skombie attacks you!! Your health has dropped to " + (health - ATTACK_HEALTH));
                 player.setHealth(health - ATTACK_HEALTH);
+                checkIfPlayerDead();
             }
         }
         return userMessages;
@@ -669,10 +687,18 @@ public class House {
                     messages.add(character.getName() + " is a zombie. You must attack");
                     character.setAvailableMove(false);
                     messages.add(combatCycle(character));
+                    checkIfPlayerDead();
                 }
             }
         }
         return messages;
+    }
+
+    private void checkIfPlayerDead(){
+        if(player.getHealth() <= 0){
+            player.setDead(true);
+            player.setReasonForDeath("The infected have killed you.");
+        }
     }
 
     private void inspectFurniture(Furniture furniture, String message) {
@@ -831,7 +857,7 @@ public class House {
 
     private String combatCycle(Character character) {
         String message = "";
-        if (randGen() == 1) {
+        if (randGen()) {
             double health = player.getHealth();
             message = ("Zombie " + character.getName() + " attacks you!!!");
             player.setHealth(health - ATTACK_HEALTH);
@@ -855,8 +881,8 @@ public class House {
         this.skombieCounter += skombieInc;
     }
 
-    private int randGen() {
-        return new Random().nextInt(3);
+    private boolean randGen() {
+        return Math.random() < 0.5;
     }
 
     public boolean isProgressedPastHelp() {
@@ -873,7 +899,9 @@ public class House {
         if ("QUIT".equalsIgnoreCase(input)) {
             Console.clear();
             isSpecial = true;
+            Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/gamefinish.wav"));
             printFile(QUIT);
+            Console.pause(22000);
             System.exit(0);
         } else if ("HELP".equalsIgnoreCase(input)) {
             Console.clear();
@@ -886,7 +914,7 @@ public class House {
             Console.clear();
             isSpecial = true;
             printInventory();
-            Console.pause(3000);
+            prompter.prompt("\n[P]roceed ?", "[pP]", "\nNot Valid");
         } else if ("SAVE".equalsIgnoreCase(input)) {
             Console.clear();
             isSpecial = true;
