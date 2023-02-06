@@ -16,8 +16,8 @@
       "hasSkunk": false,
       "items": [
         {
-          "name" : "Hammer",
-          "description": "This will probably be helpful to secure the house."
+          "name": "Radio",
+          "description": "We should use this to request help."
         }
       ],
       "weapons": [
@@ -198,8 +198,8 @@
       "hasSkunk": false,
       "items": [
         {
-          "name": "Radio",
-          "description": "We should use this to request help."
+          "name" : "Hammer",
+          "description": "This will probably be helpful to secure the house."
         }
       ],
       "weapons": [

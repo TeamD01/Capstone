@@ -39,6 +39,7 @@ public class House {
     private static final double ATTACK_HEALTH = 5.0;
     public boolean progressedPastHelp = false;
     private boolean isSecure = false;
+    private boolean isEvacuating = false;
 
     public House() {
         JSONMapper map = new JSONMapper();
@@ -271,14 +272,18 @@ public class House {
                     if (found instanceof Weapon) {
                         Weapon previousWeapon = player.getCurrentWeapon();
                         if (previousWeapon != null) currLocation.addWeaponToRoom(previousWeapon);
-
                         player.setCurrentWeapon((Weapon) found);
                         messages.add(String.format("%s set to current weapon", found.getName().toUpperCase()));
                         currLocation.removeWeaponFromRoom((Weapon) found);
                     } else if (found instanceof Item) {
-                        player.get(found);
-                        messages.add(String.format("%s added to inventory", found.getName().toUpperCase()));
-                        currLocation.removeItemFromRoom((Item) found);
+                        if(found.getName().equalsIgnoreCase("radio")){
+                            messages.add("We don't want to lug this radio around with us. USE <Radio>");
+                        }
+                        else {
+                            player.get(found);
+                            messages.add(String.format("%s added to inventory", found.getName().toUpperCase()));
+                            currLocation.removeItemFromRoom((Item) found);
+                        }
                     }
                 } else {
                     messages.add(String.format("%s Not a valid item in this location", object.toUpperCase()));
@@ -351,6 +356,7 @@ public class House {
                     messages.add(String.format("%s all secure!", currLocation.getName()));
                     currLocation.setUnsecurePoints(0);
                     currLocation.setSecure(true);
+                    messages.addAll(checkIfHouseSecure());
                 }
                 else if(currLocation.getUnsecurePoints() == 0){
                     messages.add(String.format("%s is already secure", currLocation.getName()));
@@ -376,12 +382,42 @@ public class House {
                     messages.add("Relax there is no skombie here.. YET..");
                 }
                 break;
+
+            case "use":
+                if(object != null && object.equalsIgnoreCase("radio")){
+                    if(!isSecure){
+                        messages.add("YOU: MAYDAY, MAYDAY We need to request evacuation at 2 Jefferson Ave.");
+                        messages.add("GENERAL JOE LEE: We hear you loud and clear, we won't be able to get to you for another 30 minutes or so.");
+                        messages.add("You need to secure your house, keep your family safe!");
+                    }
+                    else{
+                        messages.add("YOU: Our house is secure, what is your status?");
+                        messages.add("GENERAL JOE LEE: We have a helicopter heading your way now. Get to the highest point in your house");
+                        isEvacuating = true;
+                    }
+                }
+                break;
             default:
                 messages.add(String.format("%s Not a valid command", command.toUpperCase()));
         }
         messages.addAll(checkForSkombie());
         messages.addAll(checkForZombie());
         gatherLocationData(messages);
+    }
+
+    public List<String> checkIfHouseSecure(){
+        List<String> message = new ArrayList<>();
+        boolean allSecure = rooms.stream().allMatch(Location::isSecure);
+
+        if(allSecure){
+            isSecure = true;
+            message.add("The house is now secure");
+            message.add("Call for evacuation. Get out now!!");
+        }
+        else{
+            message.add("You still have a few rooms to go");
+        }
+        return message;
     }
 
     public boolean inInventory(String name){
@@ -485,6 +521,11 @@ public class House {
 
                 }
             }
+        }
+        if(location.getName().equalsIgnoreCase("attic") && isEvacuating){
+            Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/helicopter.wav"));
+            Console.pause(1500);
+            gameComplete();
         }
         currLocation = location;
     }
@@ -872,5 +913,13 @@ public class House {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void gameComplete(){
+        Console.clear();
+        Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/gamefinish.wav"));
+        printFile("images/quit.txt");
+        Console.pause(22000);
+        System.exit(0);
     }
 }

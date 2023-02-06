@@ -18,7 +18,7 @@ public class TaskHandler extends TimerTask {
         tp.setContinueExistingPeriodicTasksAfterShutdownPolicy(true); //not sure about this one...
         tp.scheduleWithFixedDelay(rb1, 0, 10, TimeUnit.SECONDS);
         //set to 10000 to avoid many skombies while testing.
-            tp.scheduleAtFixedRate(skombie, 180, 120, TimeUnit.SECONDS);
+        tp.scheduleAtFixedRate(skombie, 60, 300, TimeUnit.SECONDS);
     }
 
 }
