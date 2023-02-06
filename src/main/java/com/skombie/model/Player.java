@@ -18,6 +18,7 @@ public class Player implements Speaker, Serializable {
         }
     };
     private boolean hasGasMask = false;
+    private String reasonForDeath;
 
 
     public Player() {
@@ -83,6 +84,14 @@ public class Player implements Speaker, Serializable {
 
     public void setHasGasMask(boolean hasGasMask) {
         this.hasGasMask = hasGasMask;
+    }
+
+    public String getReasonForDeath() {
+        return reasonForDeath;
+    }
+
+    public void setReasonForDeath(String reasonForDeath) {
+        this.reasonForDeath = reasonForDeath;
     }
 
     @Override

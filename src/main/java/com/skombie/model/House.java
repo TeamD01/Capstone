@@ -464,8 +464,9 @@ public class House {
 
     private void goLocation(Location location) {
         if(location.getName().equalsIgnoreCase("backyard") && !player.hasGasMask()){
-            System.out.println("YOU HAVE DIED DUE TO THE SKOMBIE SPRAY");
-            checkForSpecialCommand("QUIT");
+            player.setDead(true);
+            player.setReasonForDeath("Died due to the skombie spray.");
+            return;
         }
         currentMap = String.format("images/map/%s.txt", location.getName().replaceAll("\\s+", "").toLowerCase());
         if (currLocation.getCharacters() != null) {
@@ -859,5 +860,9 @@ public class House {
 
     private InventoryItem findInventoryItemByName(String item) {
         return getInventoryItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
