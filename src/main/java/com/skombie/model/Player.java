@@ -17,6 +17,7 @@ public class Player implements Speaker, Serializable {
             add("Hey, these skunks are really getting on my last nerve.");
         }
     };
+    private int attackValue = 1;
 
     public Player() {
     }
@@ -79,6 +80,25 @@ public class Player implements Speaker, Serializable {
     public String getRandomDialogue(){
         Random random = new Random();
         return dialogue.get(random.nextInt(dialogue.size()));
+    }
+
+    private boolean hasWeapon() {
+        boolean hasWeapon = false;
+        attackValue = getAttackValue();
+        if (currentWeapon != null) {
+            hasWeapon = true;
+        }
+        return hasWeapon;
+    }
+
+    public int getAttackValue() {
+        if (hasWeapon()) {
+            this.attackValue = 3;
+        }
+        else {
+            this.attackValue = 1;
+        }
+        return attackValue;
     }
 
 }

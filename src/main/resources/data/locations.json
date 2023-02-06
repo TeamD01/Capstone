@@ -6,7 +6,9 @@
         {
           "name": "Grandpa Nick",
           "description": "Grandfather, he has the best war stories",
-          "dialogue": ["Back in my day we had zombie birds, they tasted delicious","I've survived five wars and one bird zombie attack, this is nothing", "Hurry up and call the calvary", "It's times like these when I wish I had good knees", "You handle the skunks, I'm going to take a nap"," this reminds me of a time back in 1908 or was it 1987.. nevermind, I don't remember"]
+          "dialogue": ["Back in my day we had zombie birds, they tasted delicious","I've survived five wars and one bird zombie attack, this is nothing", "Hurry up and call the calvary", "It's times like these when I wish I had good knees", "You handle the skunks, I'm going to take a nap"," this reminds me of a time back in 1908 or was it 1987.. nevermind, I don't remember"],
+          "isAvailableMove": true,
+          "isDead": false
         }
       ],
       "furniture": null,
@@ -47,7 +49,9 @@
         {
           "name": "Sugey",
           "description": "Wife, She knows where everything is in the house",
-          "dialogue": ["Don't hurt your hand with the hammer!","I just cleaned the house and now we are being attacked by skunks!","Those skunks better not dig up my new rose bush", "After you are done playing with skunks put your clothes in the bin","Take off your dirty shoes! you're getting mud all over my floors","Dinner will be ready at 6pm"]
+          "dialogue": ["Don't hurt your hand with the hammer!","I just cleaned the house and now we are being attacked by skunks!","Those skunks better not dig up my new rose bush", "After you are done playing with skunks put your clothes in the bin","Take off your dirty shoes! you're getting mud all over my floors","Dinner will be ready at 6pm"],
+          "isAvailableMove": true,
+          "isDead": false
         }
       ],
       "furniture": [
@@ -112,7 +116,9 @@
         {
           "name": "Chris",
           "description": "Son, he loves drawing maps",
-          "dialogue": ["I think skunks are cool", "Yay, I don't have to go to school!", "When I grow up, can I help you fight the skombies?","  I'll be in my room making videos for my tiktok", " I hope a skombie gets my english teacher, he gave me a C"]
+          "dialogue": ["I think skunks are cool", "Yay, I don't have to go to school!", "When I grow up, can I help you fight the skombies?","  I'll be in my room making videos for my tiktok", " I hope a skombie gets my english teacher, he gave me a C"],
+          "isAvailableMove": true,
+          "isDead": false
         }
       ],
       "furniture": null,

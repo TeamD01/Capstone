@@ -16,6 +16,7 @@ public class Location implements Serializable {
     private List<Weapon> weapons;
     private boolean isSecure;
     private List<String> availableRooms;
+    private int timesCanAttackZombie = 0;
 
     public Location(String name, String description, List<Character> characters,
                     List<Furniture> furniture, int unsecurePoints, boolean hasSkunk,
@@ -170,5 +171,13 @@ public class Location implements Serializable {
                 ", isSecure=" + isSecure +
                 ", availableRooms=" + availableRooms +
                 '}';
+    }
+
+    public int getTimesCanAttackZombie() {
+        return timesCanAttackZombie;
+    }
+
+    public void setTimesCanAttackZombie(int timesCanAttackZombie) {
+        this.timesCanAttackZombie = timesCanAttackZombie;
     }
 }
