@@ -14,8 +14,6 @@ import java.io.ObjectOutputStream;
 
 import java.util.*;
 
-import static com.skombie.utilities.Reader.readFileToArrayList;
-
 /*
  * HOUSE CLASS WILL BE USED TO MANAGE ROOMS (POSSIBLE OPTIONS FOR PLAYERS)
  * */
@@ -32,6 +30,15 @@ public class House {
     private static final String LOAD = "data/";
     private String currentMap = "images/map/livingroom.txt";
     private final PromptHelper prompter;
+    private List<Character> characterStatusList;
+    // Sets minimum number turns AFTER combat starts for character when turn into zombie. Must be higher than or equal to number turns after combat player dies.
+    private static final int TURNALIVE = 10;
+    // Sets number of combat turns for character until they die.
+    private static final int CHARACTERDIES = 5;
+    private int skombieCounter = 0;
+    // sets attack value of skombies and zombies
+    private static final double ATTACK_HEALTH = 10.0;
+    public boolean progressedPastHelp = false;
 
     public House() {
         JSONMapper map = new JSONMapper();
@@ -43,83 +50,99 @@ public class House {
         prompter = new PromptHelper(scanner);
     }
 
+    // Randomly called in the SkombieApp for making characters change rooms.
     public void changeCharacterRoom() {
         HashMap<Character, String> characters = new HashMap<>();
         ArrayList<Location> roomList = new ArrayList<>();
         ArrayList<Character> characterList = new ArrayList<>();
         for (Location roomOfCharacter : rooms) {
             // add all game Locations to roomList
-            roomList.add(roomOfCharacter);
-            if (roomOfCharacter.getCharacters() != null) {
-                //loop through all characters in room
-                for (Character characterInRoom : roomOfCharacter.getCharacters()) {
-                    // add to hashmap the characters in the room and all rooms
-                    characters.put(characterInRoom, roomOfCharacter.getName());
-                    // add character list all characters
-                    characterList.add(characterInRoom);
+            if (!roomOfCharacter.getName().toLowerCase(Locale.ROOT).equals("backyard")) {
+                roomList.add(roomOfCharacter);
+                if (roomOfCharacter.getCharacters() != null) {
+                    //loop through all characters in each room
+                    for (Character characterInRoom : roomOfCharacter.getCharacters()) {
+                        // add to hashmap the characters in the room and all rooms
+                        characters.put(characterInRoom, roomOfCharacter.getName());
+                        // add character list all characters
+                        characterList.add(characterInRoom);
+                    }
                 }
             }
         }
-
-
         //randomly select character
         Collections.shuffle(characterList);
         Character characterToMove = characterList.get(0);
-        // get string name of location of character to move
-        String characterToMoveLocation = characters.get(characterToMove);
-        //        Location nameOfRemovedLocation = null;
-        Location tempCurrentCharLoc = null;
+        //If the character is not in combat, or they are dead, they can move
+        if (characterToMove.isAvailableMove()) {
+            // get string name of location of character to move
+            String characterToMoveLocation = characters.get(characterToMove);
+            Location tempCurrentCharLoc = null;
 
-        for (
-                Location currentCharLoc : rooms) {
-            if (Objects.equals(characterToMoveLocation, currentCharLoc.getName())) {
-                tempCurrentCharLoc = currentCharLoc;
-//                currentCharLoc.removeCharacter(characterToMove);
-//                nameOfRemovedLocation = currentCharLoc;
-            }
-        }
-        if (tempCurrentCharLoc != null) {
-            if (rooms.contains(tempCurrentCharLoc)) {
-                rooms.remove(tempCurrentCharLoc);
-                tempCurrentCharLoc.removeCharacter(characterToMove);
-                rooms.add(tempCurrentCharLoc);
-            }
-        }
-        // for testing
-//        if (nameOfRemovedLocation != null) {
-//            System.out.println(characterToMove.getName() + " removed from " + nameOfRemovedLocation.getName());
-//        }
-
-        //put character in random room
-        Location tempRoomPutCharacterOld = null;
-        Location tempRoomPutCharacterNew = null;
-        List<Character> charsList = new ArrayList<>();
-        Collections.shuffle(roomList);
-        for (
-                Location roomToPutCharacter : rooms) {
-            if (roomToPutCharacter.getName().toLowerCase(Locale.ROOT).equals(roomList.get(0).getName().toLowerCase(Locale.ROOT))) {
-                tempRoomPutCharacterOld = roomToPutCharacter;
-
-                if (tempRoomPutCharacterOld.getCharacters() != null) {
-                    tempRoomPutCharacterNew = tempRoomPutCharacterOld;
-                    tempRoomPutCharacterNew.setCharacter(characterToMove);
-
-
-                }
-                if (tempRoomPutCharacterOld.getCharacters() == null) {
-                    charsList.add(characterToMove);
-                    tempRoomPutCharacterNew = tempRoomPutCharacterOld;
-                    tempRoomPutCharacterNew.setCharacters(charsList);
+            for (Location currentCharLoc : rooms) {
+                if (Objects.equals(characterToMoveLocation, currentCharLoc.getName())) {
+                    tempCurrentCharLoc = currentCharLoc;
                 }
             }
+            //remove room from list, remove char from room, add back room without character
+            if (tempCurrentCharLoc != null) {
+                if (rooms.contains(tempCurrentCharLoc)) {
+                    rooms.remove(tempCurrentCharLoc);
+                    tempCurrentCharLoc.removeCharacter(characterToMove);
+                    rooms.add(tempCurrentCharLoc);
+                }
+            }
+            //put character in random room
+            Location tempRoomPutCharacterOld = null;
+            Location tempRoomPutCharacterNew = null;
+            List<Character> charsList = new ArrayList<>();
+            Collections.shuffle(roomList);
+            // find random match for room to put character in
+            for (Location roomToPutCharacter : rooms) {
+                if (roomToPutCharacter.getName().toLowerCase(Locale.ROOT).equals(roomList.get(0).getName().toLowerCase(Locale.ROOT))) {
+                    tempRoomPutCharacterOld = roomToPutCharacter;
 
-        }
-        if (tempRoomPutCharacterOld != null && tempRoomPutCharacterNew != null && characterToMove != null && rooms.contains(tempRoomPutCharacterOld)) {
-            rooms.remove(tempRoomPutCharacterOld);
-            rooms.add(tempRoomPutCharacterNew);
-        }
-        if (characterToMove != null) {
-            System.out.println(characterToMove.getName() + " moving to " + roomList.get(0).getName());
+                    // if existing room to put character has other characters
+                    if (tempRoomPutCharacterOld.getCharacters() != null) {
+                        tempRoomPutCharacterNew = tempRoomPutCharacterOld;
+                        tempRoomPutCharacterNew.setCharacter(characterToMove);
+                    }
+                    // if existing room to put character in is empty of other characters
+                    if (tempRoomPutCharacterOld.getCharacters() == null) {
+                        charsList.add(characterToMove);
+                        tempRoomPutCharacterNew = tempRoomPutCharacterOld;
+                        tempRoomPutCharacterNew.setCharacters(charsList);
+                    }
+                }
+            }
+            // remove the old version of the room to put character in and add the new version
+            if (tempRoomPutCharacterOld != null && characterToMove != null && rooms.contains(tempRoomPutCharacterOld) && characterToMove.isAvailableMove()) {
+                rooms.remove(tempRoomPutCharacterOld);
+                rooms.add(tempRoomPutCharacterNew);
+                // movement logic for if room has a skunk or if the character is a zombie
+                if (tempRoomPutCharacterNew.isHasSkunk() && !characterToMove.isDead()) {
+                    System.out.println("You hear what sounds like fighting. You should see if anyone needs help!");
+                    characterToMove.setAvailableMove(false);
+                }
+
+                //combat here
+                if (characterToMove.isDead() && tempRoomPutCharacterNew.equals(currLocation)) {
+                    System.out.println("Zombie " + characterToMove.getName() + " has burst into the room... Fight or Run for your life");
+                    characterToMove.setAvailableMove(false);
+                    if (randGen() == 1) {
+                        double health = player.getHealth();
+                        player.setHealth(health - ATTACK_HEALTH);
+                        System.out.println("Zombie " + characterToMove.getName() + " has attacked you.");
+                    }
+                }
+                if (characterToMove.isDead()) {
+                    System.out.println("You hear strange groaning that kinda sounds like " + characterToMove.getName());
+                }
+            }
+            //shows character movement
+//            if (characterToMove != null) {
+//                System.out.println(characterToMove.getName() + " moving to " + roomList.get(0).getName());
+//            }
         }
     }
 
@@ -131,6 +154,7 @@ public class House {
         if (player != null) {
             saveGameData.add(player);
         }
+        saveGameData.add(skombieCounter);
         for (Location room : rooms) {
             if (room != null) {
                 saveGameData.add(room);
@@ -153,7 +177,6 @@ public class House {
         }
         System.out.println("Your progress is being saved.........");
         System.out.println("Gamed Saved");
-
     }
 
     public void loadGame() {
@@ -165,12 +188,14 @@ public class House {
             this.currentMap = String.format("images/map/%s.txt", currLocation.getName().replaceAll("\\s+", "").toLowerCase());
             this.player = (Player) saveGameData.get(1);
             this.rooms = new ArrayList<>();
-            for (int i = 2; i < saveGameData.size(); i++){
+            this.skombieCounter = (int) saveGameData.get(2);
+            for (int i = 3; i < saveGameData.size(); i++) {
                 Location loc = (Location) saveGameData.get(i);
                 if (loc != null) {
                     rooms.add(loc);
                 }
             }
+
             in.close();
             fileIn.close();
             System.out.println(".......loading....");
@@ -185,6 +210,8 @@ public class House {
 
         String[] userCommands = parser.verifyInput(userInput);
         if (userCommands == null) {
+            checkForZombie();
+            checkForSkombie();
             return;
         }
         String command = userCommands[0];
@@ -199,13 +226,23 @@ public class House {
             case "view":
             case "inspect":
                 Inspectable item = findInspectableByName(object);
-                if (item != null) {
+                if (item != null && item.getClass() != Character.class) {
                     String itemDesc = player.look(item);
                     System.out.println(itemDesc);
+                } else if (item != null) {
+                    Character deadChar = (Character) item;
+                    if (deadChar.isDead()) {
+                        System.out.println(deadChar.getName() + " is dead...");
+                    } else {
+                        String itemDesc = player.look(item);
+                        System.out.println(itemDesc);
+                    }
                 } else {
                     System.out.println("Not a valid item");
                 }
-                Console.pause(2000);
+                checkForZombie();
+                checkForSkombie();
+                Console.pause(20);
                 break;
 
             case "go":
@@ -220,7 +257,7 @@ public class House {
                     goLocation(location);
                 } else {
                     System.out.println("Not a valid location.");
-                    Console.pause(2000);
+                    Console.pause(20);
                 }
                 break;
 
@@ -247,7 +284,9 @@ public class House {
                 } else {
                     System.out.println("Not a valid item in this location");
                 }
-                Console.pause(2000);
+                checkForZombie();
+                checkForSkombie();
+                Console.pause(20);
                 break;
 
             case "drop":
@@ -262,7 +301,7 @@ public class House {
                     }
                 } else {
                     System.out.printf("You don't have %s in your inventory", object);
-                    Console.pause(2000);
+                    Console.pause(20);
                 }
                 break;
 
@@ -270,15 +309,36 @@ public class House {
             case "chat":
             case "speak":
                 Character friend = findNPCByName(object);
-                if (friend != null) {
+                if (friend != null && !friend.isDead()) {
                     String[] dialogue = player.talk(friend);
                     Arrays.stream(dialogue).forEach(System.out::println);
+                } else if (friend != null && friend.isDead()) {
+                    System.out.println("Argghhhaaaarrrgggghhhhh");
                 } else {
                     System.out.printf("%s is not in this room.", object);
                 }
-                Console.pause(2500);
+                checkForZombie();
+                checkForSkombie();
+                Console.pause(25);
                 break;
+//            case "attack":
+//            case "hit":
+//                if ( object != null && object.equals("skombie")) {
+//                    int skombieHealth = (currLocation.getTimesCanAttackZombie() - player.getAttackValue());
+//                    if (skombieHealth <= 0 && currLocation != null) {
+//                        currLocation.setHasSkunk(false);
+//                        System.out.println("You have vanquished the skombie!!!");
+//                    }
+//                    else {
+//                        System.out.println("You attack the skombie");
+//                    }
+//                }
+//                checkForZombie();
+//                checkForSkombie();
+//                break;
             default:
+                checkForZombie();
+                checkForSkombie();
                 System.out.printf("%s Not a valid command", command);
         }
     }
@@ -304,8 +364,12 @@ public class House {
         locationData.add("=======================");
         locationData.add(String.format("Location: %s", currLocation.getName()));
         locationData.add(String.format("%s", currLocation.getDescription()));
+        if (currLocation.isHasSkunk()){
+            locationData.add("\nSkombie in room:");
+            System.out.println(locationData.add(String.format("> %s", "Yes!!")));
+        }
         if (currLocation.getFurniture() != null && currLocation.getFurniture().size() != 0) {
-            locationData.add("Furniture:");
+            locationData.add("\nFurniture:");
             currLocation.getFurniture().forEach(x -> locationData.add(String.format("> %s", x.getName())));
         }
         if (currLocation.getCharacters() != null && currLocation.getCharacters().size() != 0) {
@@ -327,7 +391,7 @@ public class House {
         locationData.add(String.format("Health: %s", player.getHealth()));
         if (player.getCurrentWeapon() != null) {
             locationData.add("Current Weapon:");
-            locationData.add(String.format("> %s",player.getCurrentWeapon().getName()));
+            locationData.add(String.format("> %s", player.getCurrentWeapon().getName()));
         }
         if (player.getInventory().size() > 0) {
             locationData.add("Inventory:");
@@ -339,34 +403,43 @@ public class House {
     }
 
     private void goLocation(Location location) {
-        currentMap = String.format("images/map/%s.txt", location.getName().replaceAll("\\s+","").toLowerCase());
+        currentMap = String.format("images/map/%s.txt", location.getName().replaceAll("\\s+", "").toLowerCase());
+        if (currLocation.getCharacters() != null) {
+            for (Character deadCharNotMove : currLocation.getCharacters()) {
+                if (deadCharNotMove.isDead() & deadCharNotMove.getTurnsInCombat() >= TURNALIVE) {
+                    deadCharNotMove.setAvailableMove(true);
+
+                }
+            }
+        }
         currLocation = location;
         checkForSkombie();
+        checkForZombie();
+
     }
 
-    private void addMapAndPrint(List<String> locationData){
-       List<String> mapStrings = Reader.readFileToArrayList(currentMap);
-       int size = Math.max(locationData.size(), mapStrings.size());
-       Set<String> locationInfo = new HashSet<>();
-       int i = 0;
-       int j = 0;
+    private void addMapAndPrint(List<String> locationData) {
+        List<String> mapStrings = Reader.readFileToArrayList(currentMap);
+        int size = Math.max(locationData.size(), mapStrings.size());
+        Set<String> locationInfo = new HashSet<>();
+        int i = 0;
+        int j = 0;
 
-       while(i <= size || j <=  size){
-           String item1 = i < locationData.size() ? locationData.get(i) : "";
+        while (i <= size || j <= size) {
+            String item1 = i < locationData.size() ? locationData.get(i) : "";
 
-           if(item1.contains("\n")){
-               System.out.printf("%-65s %s%n", "", j < mapStrings.size() ? mapStrings.get(j) : "");
-               j++;
-               System.out.printf("%-65s %s%n", locationData.get(i).replace("\n", ""), j < mapStrings.size() ? mapStrings.get(j) : "");
-               i++;
-               j++;
-           }
-           else {
-               System.out.printf("%-65s %s%n", i < locationData.size() ? locationData.get(i) : "", j < mapStrings.size() ? mapStrings.get(j) : "");
+            if (item1.contains("\n")) {
+                System.out.printf("%-65s %s%n", "", j < mapStrings.size() ? mapStrings.get(j) : "");
+                j++;
+                System.out.printf("%-65s %s%n", locationData.get(i).replace("\n", ""), j < mapStrings.size() ? mapStrings.get(j) : "");
                 i++;
                 j++;
-           }
-       }
+            } else {
+                System.out.printf("%-65s %s%n", i < locationData.size() ? locationData.get(i) : "", j < mapStrings.size() ? mapStrings.get(j) : "");
+                i++;
+                j++;
+            }
+        }
     }
 
     private Character findNPCByName(String character) {
@@ -428,9 +501,53 @@ public class House {
         return validItems;
     }
 
+    //Combat here
+    //sets dialog for player when going to room that has skombie depending if other alive characters or not
     private void checkForSkombie() {
+        List<Character> charInCombatAlive = new ArrayList<>();
+        List<Character> charInSkombieRoomDead = new ArrayList<>();
+        if (currLocation.getCharacters() != null) {
+            for (Character charInRoom : currLocation.getCharacters()) {
+                if (!charInRoom.isDead()) {
+                    charInCombatAlive.add(charInRoom);
+                }
+                if (charInRoom.isDead()) {
+                    charInSkombieRoomDead.add(charInRoom);
+                }
+            }
+        }
         if (findLocationByName(currLocation.getName()).isHasSkunk()) {
-            System.out.println("There is a skunk, get it, get it!!!");
+            if (currLocation.getCharacters() == null) {
+                System.out.println("There is a skombie, get it, get it!!!");
+            }
+            else if (currLocation.getCharacters() != null) {
+                if (charInCombatAlive.size() > 0) {
+                    for (Character x : charInCombatAlive) {
+                        System.out.println(x.getName() + " needs your help fighting the skombie! They are doing what they can but it is not enough!");
+                    }
+                }
+                System.out.println("There is a skombie, get it get it!!!");
+
+            }
+            if (randGen() == 1) {
+                System.out.println("Skombie attacks you!!");
+                double health = player.getHealth();
+                player.setHealth( health - ATTACK_HEALTH);
+            }
+        }
+
+    }
+
+    //Combat here
+    private void checkForZombie() {
+        if (currLocation.getCharacters() != null) {
+            for (Character character : currLocation.getCharacters()) {
+                if (character.isDead() && character.getTurnsInCombat() >= TURNALIVE) {
+                    System.out.println(character.getName() + " is a zombie. You must attack");
+                    character.setAvailableMove(false);
+                    combatCycle(character);
+                }
+            }
         }
     }
 
@@ -459,8 +576,7 @@ public class House {
             isSpecial = true;
             saveGame();
             Console.pause(3000);
-        }
-        else if ("SAVE".equalsIgnoreCase(input)) {
+        } else if ("SAVE".equalsIgnoreCase(input)) {
             Console.clear();
             isSpecial = true;
             saveGame();
@@ -495,5 +611,70 @@ public class House {
                 System.out.printf("%s - %s\n", x.getName().toUpperCase(), x.getDescription().toUpperCase());
             });
         }
+    }
+
+    // checks all rooms to see if person is in combat and for how long. If too long, they die. If dead, after a while to turn into zombie and can move.
+    public void updateCharacterStatusList() {
+        for (Location room : rooms) {
+            if (room.getCharacters() == null) {
+
+            } else {
+                for (Character character : room.getCharacters()) {
+                    //If character cant move and is alive, it means they are in combat
+                    if (!character.isAvailableMove()) {
+                        character.setTurnsInCombat(1);
+                    }
+                    if (character.getTurnsInCombat() == CHARACTERDIES) {
+                        System.out.println(character.getName() + " is now dead.");
+                        character.setDead(true);
+                        character.setAvailableMove(false);
+                        character.setTurnsInCombat(1);
+                    }
+                    //turn into zombie
+                    if (character.getTurnsInCombat() == TURNALIVE) {
+                        character.setAvailableMove(true);
+                        System.out.println(character.getName() + " is now among the walking dead.");
+                        character.setTurnsInCombat(1);
+                    }
+
+                }
+            }
+
+        }
+    }
+    private void combatCycle(Character character) {
+        if (randGen() == 1) {
+            double health = player.getHealth();
+            System.out.println("Zombie " + character.getName() + " attacks you!!!");
+            player.setHealth(health - ATTACK_HEALTH);
+        }
+    }
+
+    public Location getCurrLocation() {
+        return currLocation;
+    }
+
+    public List<Location> getRooms() {
+        return rooms;
+    }
+
+    public int getSkombieCounter() {
+        return skombieCounter;
+    }
+
+    public void setSkombieCounter(int skombieInc) {
+        this.skombieCounter += skombieInc;
+    }
+
+    private int randGen() {
+        return new Random().nextInt(3);
+    }
+
+    public boolean isProgressedPastHelp() {
+        return progressedPastHelp;
+    }
+
+    public void setProgressedPastHelp(boolean progressedPastHelp) {
+        this.progressedPastHelp = progressedPastHelp;
     }
 }

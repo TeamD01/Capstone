@@ -9,11 +9,41 @@ public class Character implements Speaker, Inspectable, Serializable {
     private String name;
     private String description;
     private List<String> dialogue;
+    private boolean isAvailableMove;
+    private boolean isDead;
+    private int turnsInCombat = 0;
+    private int hitsCanTake = 3;
+    private boolean isDeadDead = false;
 
-    public Character(String name, String description, List<String> dialogue) {
+    public Character(String name, String description, List<String> dialogue, boolean isAvailableMove, boolean isDead) {
         setName(name);
         setDescription(description);
         setDialogue(dialogue);
+        setAvailableMove(isAvailableMove);
+        setDead(isDead);
+    }
+    public int getTurnsInCombat() {
+        return turnsInCombat;
+    }
+
+    public void setTurnsInCombat(int turnsInCombat) {
+        this.turnsInCombat += turnsInCombat;
+    }
+
+    public boolean isAvailableMove() {
+        return isAvailableMove;
+    }
+
+    public void setAvailableMove(boolean availableMove) {
+        isAvailableMove = availableMove;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
     }
 
     public String getName() {
@@ -66,5 +96,21 @@ public class Character implements Speaker, Inspectable, Serializable {
     public String getRandomDialogue() {
         Random random = new Random();
         return dialogue.get(random.nextInt(dialogue.size()));
+    }
+
+    public int getHitsCanTake() {
+        return hitsCanTake;
+    }
+
+    public void setHitsCanTake(int hitsCanTake) {
+        this.hitsCanTake = hitsCanTake;
+    }
+
+    public boolean isDeadDead() {
+        return isDeadDead;
+    }
+
+    public void setDeadDead(boolean deadDead) {
+        isDeadDead = deadDead;
     }
 }

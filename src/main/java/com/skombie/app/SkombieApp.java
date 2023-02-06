@@ -18,7 +18,6 @@ public class SkombieApp implements Runnable{
     private static final String INTRO = "data/intro";
     private final House house;
 
-
     public SkombieApp(House house) {
         this.house = house;
     }
@@ -29,6 +28,7 @@ public class SkombieApp implements Runnable{
         promptUserNew();
         alertMessage();
         generateInstructions();
+        house.setProgressedPastHelp(true);
         startGame();
     }
 
@@ -39,16 +39,17 @@ public class SkombieApp implements Runnable{
         }
         else if ("C".equalsIgnoreCase(input)) {
             house.loadGame();
+            house.setProgressedPastHelp(false);
         }
     }
 
     public void getGameTitle() {
-        printFile(TITLE, 500);
+        printFile(TITLE, 5);
     }
 
     public void alertMessage() {
-        printFile(ALERT, 600); //600
-        Console.pause(5000);//5000
+        printFile(ALERT, 6); //600
+        Console.pause(5);//5000
         Console.clear();
     }
 
@@ -63,13 +64,14 @@ public class SkombieApp implements Runnable{
              house.gatherLocationData();
              String userInput = prompter.prompt("Please enter a command to proceed.");
              house.manageCommand(userInput);
-             if (randGen() == 1) {
+             house.updateCharacterStatusList();
+             if (randGen() == 0) {
                  house.changeCharacterRoom();
              }
          }
     }
 
     private int randGen() {
-        return new Random().nextInt(5);
+        return new Random().nextInt(1);
     }
 }
