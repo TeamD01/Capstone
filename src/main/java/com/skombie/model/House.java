@@ -28,6 +28,7 @@ public class House {
     private Location currLocation;
     private String currentMap = "images/map/livingroom.txt";
     private final PromptHelper prompter;
+    private boolean firstInteraction = true;
     private List<Character> characterStatusList;
     // Sets minimum number turns AFTER combat starts for character when turn into zombie. Must be higher than or equal to number turns after combat player dies.
     private static final int TURNALIVE = 10;
@@ -308,12 +309,20 @@ public class House {
             case "chat":
             case "speak":
                 Character friend = findNPCByName(object);
-                if (friend != null && !friend.isDead()) {
+                if(friend != null && friend.getName().equalsIgnoreCase("sugey") && firstInteraction){
+                    firstInteraction = false;
+                    messages.add("YOU: Hey Honey, Do you know the code to Grandpa Nick's old military trunk?");
+                    messages.add("Sugey: Yea, it's one of the kids birthdays");
+                    messages.add("** I can't seem to remember their birthdays, we've got to have their birth certificates somewhere.**");
+                }
+                else if (friend != null && !friend.isDead()) {
                     String[] dialogue = player.talk(friend);
                     messages.addAll(Arrays.asList(dialogue));
-                } else if (friend != null && friend.isDead()) {
+                }
+                else if (friend != null && friend.isDead()) {
                     messages.add("Argghhhaaaarrrgggghhhhh");
-                } else {
+                }
+                else {
                     messages.add(String.format("%s is not in this room.", object.toUpperCase()));
                 }
                 break;
@@ -746,7 +755,6 @@ public class House {
         }
         return messages;
     }
-
 
     // checks all rooms to see if person is in combat and for how long. If too long, they die. If dead, after a while to turn into zombie and can move.
     public List<String> updateCharacterStatusList() {

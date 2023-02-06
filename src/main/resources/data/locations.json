@@ -86,7 +86,7 @@
       "furniture": [
         {
           "name": "Trunk",
-          "description": "An old dusty trunk, anything good?",
+          "description": "An old dusty trunk, anything good? **Trunk has note with password hint- birthday**",
           "isLocked": true,
           "unlockCode" : [4,4,0,6],
           "items": [
@@ -99,7 +99,7 @@
             {
               "name": "Flame Thrower",
               "description": "Just an old flame thrower",
-              "attackValue": 10.0
+              "attackValue": 5.0
             }
           ]
         }
