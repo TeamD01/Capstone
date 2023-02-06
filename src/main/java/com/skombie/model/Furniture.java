@@ -1,6 +1,7 @@
 package com.skombie.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ public class Furniture implements Inspectable, Serializable {
     private String name;
     private String description;
     private boolean isLocked;
+    private List<Integer> unlockCode = new ArrayList<>();
     private List<Item> items;
     private List<Weapon> weapons;
 
@@ -17,6 +19,21 @@ public class Furniture implements Inspectable, Serializable {
         this.isLocked = isLocked;
         this.items = items;
         this.weapons = weapons;
+    }
+
+    public void removeItemFromFurniture(Item item){
+        items.remove(item);
+    }
+
+    public void removeWeaponFromFurniture(Weapon weapon){
+        weapons.remove(weapon);
+    }
+
+    public void addWeaponToFurniture(Weapon weapon){
+        if (weapons == null) {
+            this.weapons = new ArrayList<>();
+        }
+        weapons.add(weapon);
     }
 
     public String getName() {
@@ -57,6 +74,10 @@ public class Furniture implements Inspectable, Serializable {
 
     public void setWeapons(List<Weapon> weapons) {
         this.weapons = weapons;
+    }
+
+    public List<Integer> getUnlockCode() {
+        return unlockCode;
     }
 
     @Override

@@ -11,7 +11,7 @@
           "isDead": false
         }
       ],
-      "furniture": null,
+      "furniture": [],
       "unsecurePoints": 2,
       "hasSkunk": false,
       "items": [
@@ -24,23 +24,25 @@
         {
           "name": "Baseball Bat",
           "description": "Louisville Slugger with nail spikes on the end",
-          "attack value": 10
+          "attackValue": 5
         }
       ],
       "isSecure": false,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Hallway",
       "description": "Ahh, yes the main hallway.",
-      "characters": null,
-      "furniture": null,
+      "characters": [],
+      "furniture": [],
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": null,
-      "weapons": null,
+      "items": [],
+      "weapons": [],
       "isSecure": false,
-      "availableRooms": ["Office", "Living Room", "Basement", "Bedroom", "Kitchen", "Backyard"]
+      "availableRooms": ["Office", "Living Room", "Basement", "Bedroom", "Kitchen", "Backyard"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Office",
@@ -59,34 +61,45 @@
           "name": "Desk",
           "description": "We might be able to find something useful in here.",
           "isLocked": false,
+          "unlockCode" : [],
           "items": [
             {
               "name": "Files",
               "description": "Looks like it's some birth certificates."
             }
-          ]
+          ],
+          "weapons": []
         }
       ],
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": null,
-      "weapons": null,
+      "items": [],
+      "weapons": [],
       "isSecure": false,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 10
     },
     {
       "name": "Basement",
       "description": "Maybe you should get down here soon to clean up.",
-      "characters": null,
+      "characters": [],
       "furniture": [
         {
           "name": "Trunk",
           "description": "An old dusty trunk, anything good?",
           "isLocked": true,
+          "unlockCode" : [4,4,0,6],
           "items": [
             {
               "name" : "Gas Mask",
               "description": "The Skombies will never stop you now!"
+            }
+          ],
+          "weapons": [
+            {
+              "name": "Flame Thrower",
+              "description": "Just an old flame thrower",
+              "attackValue": 10.0
             }
           ]
         }
@@ -99,15 +112,10 @@
           "description": "We definitely need these."
         }
       ],
-      "weapons": [
-        {
-          "name": "Vinegar Spray Bottle",
-          "description": "Bottle with apple cider vinegar",
-          "attack value": 25
-        }
-      ],
+      "weapons": [],
       "isSecure": false,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Bedroom",
@@ -121,29 +129,31 @@
           "isDead": false
         }
       ],
-      "furniture": null,
+      "furniture": [],
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": null,
-      "weapons": null,
+      "items": [],
+      "weapons": [],
       "isSecure": false,
-      "availableRooms": ["Hallway", "Attic"]
+      "availableRooms": ["Hallway", "Attic"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Kitchen",
       "description": "Room for cooking ",
-      "characters": null,
+      "characters": [],
       "furniture": [
         {
           "name": "Cabinet",
           "description": "Let's see if there is anything good in here.",
           "isLocked": false,
-          "items": null,
+          "unlockCode" : [],
+          "items": [],
           "weapons": [
             {
               "name": "Mothballs",
-              "description": "small balls of chemical pesticide and deodorant",
-              "attack value": 20
+              "description": "Small balls of chemical pesticide and deodorant",
+              "attackValue": 2
             }
           ]
         },
@@ -151,6 +161,7 @@
           "name": "Refrigerator",
           "description": "Time for snacks",
           "isLocked": false,
+          "unlockCode" : [],
           "items": [
             {
               "name": "Orange Juice",
@@ -161,7 +172,7 @@
               "description": "Time to take a bath!"
             }
           ],
-          "weapons": null
+          "weapons": []
         }
       ],
       "unsecurePoints": 2,
@@ -170,17 +181,19 @@
       "weapons" : [
         {
           "name": "Kitten Litter",
-          "description": "HMM.. This might come in handy."
+          "description": "HMM.. This might come in handy.",
+          "attackValue": 2
         }
       ],
       "isSecure": false,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Attic",
       "description": "Smells musty in here.",
-      "characters": null,
-      "furniture": null,
+      "characters": [],
+      "furniture": [],
       "unsecurePoints": 0,
       "hasSkunk": false,
       "items": [
@@ -193,17 +206,18 @@
         {
           "name": "Vinegar Spray Bottle",
           "description": "Bottle with apple cider vinegar",
-          "attack value": 25
+          "attackValue": 2
         }
       ],
       "isSecure": true,
-      "availableRooms": ["Bedroom"]
+      "availableRooms": ["Bedroom"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Backyard",
       "description": "1/8 acre fenced in...",
-      "characters": null,
-      "furniture": null,
+      "characters": [],
+      "furniture": [],
       "unsecurePoints": 0,
       "hasSkunk": true,
       "items": [
@@ -216,11 +230,12 @@
         {
           "name": "Leaf Blower",
           "description": "Device that propels air out of a nozzle to move debris",
-          "attack value": 50
+          "attackValue": 5
         }
       ],
       "isSecure": true,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 5
     }
   ]
 

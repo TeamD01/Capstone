@@ -1,5 +1,8 @@
 package com.skombie.model;
 
+import com.skombie.utilities.Music;
+
+import java.io.InputStream;
 import java.util.*;
 
 
@@ -29,14 +32,13 @@ public class Skombie extends TimerTask {
             this.skombieCounter = house.getSkombieCounter();
             if (locationNotSkunkNotCurrRoom.get(0) != null && skombieCounter < 4) {
                 locationNotSkunkNotCurrRoom.get(0).setHasSkunk(true);
-                System.out.println(locationNotSkunkNotCurrRoom.get(0).getName() + " has a skombie");
                 if (locationNotSkunkNotCurrRoom.get(0).getCharacters() == null) {
-                    System.out.println("You hear a strange animal like noise. Better go investigate and find the source!");
+                    Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/zombie.wav"));
                 } else {
                     for (Character charac : locationNotSkunkNotCurrRoom.get(0).getCharacters()) {
                         charac.setAvailableMove(false);
                     }
-                    System.out.println("You hear a noise that sounds like fighting. Perhaps a family member is in trouble. Better go help!");
+                    Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/bloodSplash.wav"));
                 }
             }
         }

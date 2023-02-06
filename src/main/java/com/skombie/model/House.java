@@ -11,15 +11,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-
 import java.util.*;
 
+import static com.skombie.utilities.Printer.printFile;
 /*
  * HOUSE CLASS WILL BE USED TO MANAGE ROOMS (POSSIBLE OPTIONS FOR PLAYERS)
  * */
 
 public class House {
-    //TODO : we need to add "secure" as a command?
     private static final String QUIT = "images/quit.txt";
     private static final String HELP = "data/intro";
     private static final String SAVE = "data/savefile.txt";
@@ -27,7 +26,6 @@ public class House {
     private List<Location> rooms;
     private final InteractionParser parser;
     private Location currLocation;
-    private static final String LOAD = "data/";
     private String currentMap = "images/map/livingroom.txt";
     private final PromptHelper prompter;
     private List<Character> characterStatusList;
@@ -37,8 +35,9 @@ public class House {
     private static final int CHARACTERDIES = 5;
     private int skombieCounter = 0;
     // sets attack value of skombies and zombies
-    private static final double ATTACK_HEALTH = 10.0;
+    private static final double ATTACK_HEALTH = 5.0;
     public boolean progressedPastHelp = false;
+    private boolean isSecure = false;
 
     public House() {
         JSONMapper map = new JSONMapper();
@@ -51,7 +50,8 @@ public class House {
     }
 
     // Randomly called in the SkombieApp for making characters change rooms.
-    public void changeCharacterRoom() {
+    public List<String> changeCharacterRoom() {
+        List<String> messages = new ArrayList<>();
         HashMap<Character, String> characters = new HashMap<>();
         ArrayList<Location> roomList = new ArrayList<>();
         ArrayList<Character> characterList = new ArrayList<>();
@@ -116,34 +116,31 @@ public class House {
                 }
             }
             // remove the old version of the room to put character in and add the new version
-            if (tempRoomPutCharacterOld != null && characterToMove != null && rooms.contains(tempRoomPutCharacterOld) && characterToMove.isAvailableMove()) {
+            if (tempRoomPutCharacterOld != null && rooms.contains(tempRoomPutCharacterOld) && characterToMove.isAvailableMove()) {
                 rooms.remove(tempRoomPutCharacterOld);
                 rooms.add(tempRoomPutCharacterNew);
                 // movement logic for if room has a skunk or if the character is a zombie
                 if (tempRoomPutCharacterNew.isHasSkunk() && !characterToMove.isDead()) {
-                    System.out.println("You hear what sounds like fighting. You should see if anyone needs help!");
+                    messages.add("You hear what sounds like fighting. You should see if anyone needs help!");
                     characterToMove.setAvailableMove(false);
                 }
 
                 //combat here
                 if (characterToMove.isDead() && tempRoomPutCharacterNew.equals(currLocation)) {
-                    System.out.println("Zombie " + characterToMove.getName() + " has burst into the room... Fight or Run for your life");
+                    messages.add("Zombie " + characterToMove.getName() + " has burst into the room... Fight or Run for your life\n");
                     characterToMove.setAvailableMove(false);
                     if (randGen() == 1) {
                         double health = player.getHealth();
                         player.setHealth(health - ATTACK_HEALTH);
-                        System.out.println("Zombie " + characterToMove.getName() + " has attacked you.");
+                        messages.add("Zombie " + characterToMove.getName() + " has attacked you.\n");
                     }
                 }
                 if (characterToMove.isDead()) {
-                    System.out.println("You hear strange groaning that kinda sounds like " + characterToMove.getName());
+                    messages.add("You hear strange groaning that kinda sounds like " + characterToMove.getName() + "\n");
                 }
             }
-            //shows character movement
-//            if (characterToMove != null) {
-//                System.out.println(characterToMove.getName() + " moving to " + roomList.get(0).getName());
-//            }
         }
+        return messages;
     }
 
     private void saveGame() {
@@ -161,13 +158,13 @@ public class House {
             }
         }
         try {
-            File myObj = new File("src/main/resources/data/save.txt");
+            File myObj = new File(Objects.requireNonNull(House.class.getClassLoader().getResource("data/save.txt")).getFile());
             if (myObj.createNewFile()) {
-                System.out.println("File created!");
+                System.out.println("File Created!");
             } else {
-                System.out.println("File exists!");
+                System.out.println("File Created!");
             }
-            FileOutputStream fileOut = new FileOutputStream("src/main/resources/data/save.txt");
+            FileOutputStream fileOut = new FileOutputStream(Objects.requireNonNull(House.class.getClassLoader().getResource("data/save.txt")).getFile());
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(saveGameData);
             out.close();
@@ -175,13 +172,13 @@ public class House {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Your progress is being saved.........");
+        System.out.println("\nYour progress is being saved.........");
         System.out.println("Gamed Saved");
     }
 
     public void loadGame() {
         try {
-            FileInputStream fileIn = new FileInputStream("src/main/resources/data/save.txt");
+            FileInputStream fileIn = new FileInputStream(Objects.requireNonNull(House.class.getClassLoader().getResource("data/save.txt")).getFile());
             ObjectInputStream in = new ObjectInputStream(fileIn);
             List<Object> saveGameData = (List<Object>) in.readObject();
             this.currLocation = (Location) saveGameData.get(0);
@@ -198,7 +195,7 @@ public class House {
 
             in.close();
             fileIn.close();
-            System.out.println(".......loading....");
+            System.out.println("\n.......Loading.......");
             System.out.println("Game Loaded.");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -206,7 +203,11 @@ public class House {
     }
 
     public void manageCommand(String userInput) {
-        if (checkForSpecialCommand(userInput)) return;
+        List<String> messages = new ArrayList<>();
+        if (checkForSpecialCommand(userInput)) {
+            gatherLocationData();
+            return;
+        }
 
         String[] userCommands = parser.verifyInput(userInput);
         if (userCommands == null) {
@@ -216,7 +217,6 @@ public class House {
         }
         String command = userCommands[0];
         String object = userCommands[1];
-
 
         switch (command) {
             case "look":
@@ -228,21 +228,16 @@ public class House {
                 Inspectable item = findInspectableByName(object);
                 if (item != null && item.getClass() != Character.class) {
                     String itemDesc = player.look(item);
-                    System.out.println(itemDesc);
+                    messages.add(itemDesc);
                 } else if (item != null) {
                     Character deadChar = (Character) item;
                     if (deadChar.isDead()) {
-                        System.out.println(deadChar.getName() + " is dead...");
+                        messages.add(deadChar.getName() + " is dead...");
                     } else {
                         String itemDesc = player.look(item);
-                        System.out.println(itemDesc);
+                        messages.add(itemDesc);
                     }
-                } else {
-                    System.out.println("Not a valid item");
                 }
-                checkForZombie();
-                checkForSkombie();
-                Console.pause(20);
                 break;
 
             case "go":
@@ -255,9 +250,9 @@ public class House {
                 Location location = findAvailableLocationInCurrLocation(object);
                 if (location != null) {
                     goLocation(location);
+                    messages.add(currLocation.getDescription());
                 } else {
-                    System.out.println("Not a valid location.");
-                    Console.pause(20);
+                    messages.add(String.format("%s Not a valid location.", object.toUpperCase()));
                 }
                 break;
 
@@ -269,24 +264,24 @@ public class House {
             case "hold":
                 InventoryItem found = findInventoryItemByName(object);
                 if (found != null) {
+                    if(found.getName().equalsIgnoreCase("gas mask")){
+                        player.setHasGasMask(true);
+                    }
                     if (found instanceof Weapon) {
                         Weapon previousWeapon = player.getCurrentWeapon();
                         if (previousWeapon != null) currLocation.addWeaponToRoom(previousWeapon);
 
                         player.setCurrentWeapon((Weapon) found);
-                        System.out.printf("\n%s set to current weapon\n", found.getName().toUpperCase());
+                        messages.add(String.format("%s set to current weapon", found.getName().toUpperCase()));
                         currLocation.removeWeaponFromRoom((Weapon) found);
                     } else if (found instanceof Item) {
                         player.get(found);
-                        System.out.printf("\n%s added to inventory\n", found.getName().toUpperCase());
+                        messages.add(String.format("%s added to inventory", found.getName().toUpperCase()));
                         currLocation.removeItemFromRoom((Item) found);
                     }
                 } else {
-                    System.out.println("Not a valid item in this location");
+                    messages.add(String.format("%s Not a valid item in this location", object.toUpperCase()));
                 }
-                checkForZombie();
-                checkForSkombie();
-                Console.pause(20);
                 break;
 
             case "drop":
@@ -296,12 +291,16 @@ public class House {
                 InventoryItem inInventory = findItemInUserInventory(object);
                 if (inInventory != null) {
                     if (inInventory instanceof Item) {
+                        if(inInventory.getName().equalsIgnoreCase("gas mask")){
+                            messages.add(String.format("Bold move dropping your %s", inInventory.getName()));
+                            player.setHasGasMask(false);
+                        }
                         player.drop(inInventory);
                         currLocation.addItemToRoom((Item) inInventory);
+                        messages.add(String.format("Dropped %s from inventory.", inInventory.getName()));
                     }
                 } else {
-                    System.out.printf("You don't have %s in your inventory", object);
-                    Console.pause(20);
+                    messages.add(String.format("You don't have %s in your inventory", object));
                 }
                 break;
 
@@ -311,38 +310,94 @@ public class House {
                 Character friend = findNPCByName(object);
                 if (friend != null && !friend.isDead()) {
                     String[] dialogue = player.talk(friend);
-                    Arrays.stream(dialogue).forEach(System.out::println);
+                    messages.addAll(Arrays.asList(dialogue));
                 } else if (friend != null && friend.isDead()) {
-                    System.out.println("Argghhhaaaarrrgggghhhhh");
+                    messages.add("Argghhhaaaarrrgggghhhhh");
                 } else {
-                    System.out.printf("%s is not in this room.", object);
+                    messages.add(String.format("%s is not in this room.", object.toUpperCase()));
                 }
-                checkForZombie();
-                checkForSkombie();
-                Console.pause(25);
                 break;
-//            case "attack":
-//            case "hit":
-//                if ( object != null && object.equals("skombie")) {
-//                    int skombieHealth = (currLocation.getTimesCanAttackZombie() - player.getAttackValue());
-//                    if (skombieHealth <= 0 && currLocation != null) {
-//                        currLocation.setHasSkunk(false);
-//                        System.out.println("You have vanquished the skombie!!!");
-//                    }
-//                    else {
-//                        System.out.println("You attack the skombie");
-//                    }
-//                }
-//                checkForZombie();
-//                checkForSkombie();
-//                break;
+
+            case "open":
+                Furniture furniture = findFurnitureInLocation(object);
+                if (furniture != null) {
+                    if (furniture.isLocked()) {
+                        messages.add(String.format("The %s seems to be locked. We need to find a way to open it.", furniture.getName().toUpperCase()));
+                        String userAttempt = prompter.prompt("Combination Code: ", "\\d{1,4}", "\nNot valid input code MUST be 4 digits\n");
+                        boolean isCorrect = promptUserForCode(furniture, userAttempt);
+
+                        if(!isCorrect){
+                            messages.add("That's not it. Keep looking around. It has to be in here");
+                        }
+                    } else {
+                        inspectFurniture(furniture, "");
+                    }
+                } else {
+                    messages.add(String.format("%s is not in this room.", object.toUpperCase()));
+                }
+
+                break;
+            case "secure":
+                if(inInventory("wood") && inInventory("hammer") && inInventory("nails") && currLocation.getUnsecurePoints() > 0){
+                    messages.add(String.format("%s all secure!", currLocation.getName()));
+                    currLocation.setUnsecurePoints(0);
+                    currLocation.setSecure(true);
+                }
+                else if(currLocation.getUnsecurePoints() == 0){
+                    messages.add(String.format("%s is already secure", currLocation.getName()));
+                }
+                else{
+                    messages.add("You will need the following equipment to secure this room : WOOD, HAMMER, NAILS");
+                }
+                break;
+
+            case "attack":
+            case "hit":
+                if (object != null && object.equalsIgnoreCase("skombie") && currLocation.isHasSkunk()) {
+                    double attackValue = (currLocation.getTimesLeftToKillSkombie() - player.getAttackValue());
+                    currLocation.setTimesLeftToKillSkombie(attackValue);
+                    if (attackValue <= 0) {
+                        currLocation.setHasSkunk(false);
+                        messages.add("** You have killed the skombie **");
+                    } else {
+                        messages.add("** You attacked the skombie. Keep attacking it! **");
+                    }
+                }
+                else if (!currLocation.isHasSkunk()) {
+                    messages.add("Relax there is no skombie here.. YET..");
+                }
+                break;
             default:
-                checkForZombie();
-                checkForSkombie();
-                System.out.printf("%s Not a valid command", command);
+                messages.add(String.format("%s Not a valid command", command.toUpperCase()));
         }
+        messages.addAll(checkForSkombie());
+        messages.addAll(checkForZombie());
+        gatherLocationData(messages);
     }
 
+    public boolean inInventory(String name){
+        return player.getInventory().stream().anyMatch(i -> name.equalsIgnoreCase(i.getName()));
+    }
+
+    public boolean promptUserForCode(Furniture furniture, String userInput){
+        boolean isCodeCorrect = false;
+        List<Integer> unlockCode = furniture.getUnlockCode();
+        List<Integer> userAttempt = new ArrayList<>();
+        char[] input = userInput.toCharArray();
+
+        for (char codeDigit : input) {
+            userAttempt.add(java.lang.Character.getNumericValue(codeDigit));
+        }
+
+        Collections.sort(unlockCode);
+        Collections.sort(userAttempt);
+
+        if(userAttempt.equals(unlockCode)){
+            inspectFurniture(furniture, "");
+            isCodeCorrect = true;
+        }
+       return isCodeCorrect;
+    }
 
     /**
      * Used to find location in the entire house based on the name passed in.
@@ -352,22 +407,22 @@ public class House {
         return rooms.stream().filter(x -> x.getName().equalsIgnoreCase(location)).findFirst().orElse(null);
     }
 
+    public void gatherLocationData() {
+        gatherLocationData(new ArrayList<>());
+    }
+
     /**
      * Helper method to print information for the current location the user is in.
      */
-    public void gatherLocationData() {
+    public void gatherLocationData(List<String> previousInfo) {
         Console.pause(150);
         Console.clear();
 
         List<String> locationData = new ArrayList<>();
 
         locationData.add("=======================");
-        locationData.add(String.format("Location: %s", currLocation.getName()));
-        locationData.add(String.format("%s", currLocation.getDescription()));
-        if (currLocation.isHasSkunk()){
-            locationData.add("\nSkombie in room:");
-            System.out.println(locationData.add(String.format("> %s", "Yes!!")));
-        }
+        locationData.add(String.format("Unsecure Points: %s", currLocation.getUnsecurePoints()));
+
         if (currLocation.getFurniture() != null && currLocation.getFurniture().size() != 0) {
             locationData.add("\nFurniture:");
             currLocation.getFurniture().forEach(x -> locationData.add(String.format("> %s", x.getName())));
@@ -397,12 +452,21 @@ public class House {
             locationData.add("Inventory:");
             player.getInventory().forEach(x -> locationData.add(String.format("> %s", x.getName())));
         }
-        locationData.add("=======================");
-
+        if (!previousInfo.isEmpty()) {
+            locationData.add("\n========OUTPUT=========");
+            locationData.addAll(previousInfo);
+            locationData.add("=======================");
+        } else {
+            locationData.add("=======================");
+        }
         addMapAndPrint(locationData);
     }
 
     private void goLocation(Location location) {
+        if(location.getName().equalsIgnoreCase("backyard") && !player.hasGasMask()){
+            System.out.println("YOU HAVE DIED DUE TO THE SKOMBIE SPRAY");
+            checkForSpecialCommand("QUIT");
+        }
         currentMap = String.format("images/map/%s.txt", location.getName().replaceAll("\\s+", "").toLowerCase());
         if (currLocation.getCharacters() != null) {
             for (Character deadCharNotMove : currLocation.getCharacters()) {
@@ -413,15 +477,11 @@ public class House {
             }
         }
         currLocation = location;
-        checkForSkombie();
-        checkForZombie();
-
     }
 
     private void addMapAndPrint(List<String> locationData) {
         List<String> mapStrings = Reader.readFileToArrayList(currentMap);
         int size = Math.max(locationData.size(), mapStrings.size());
-        Set<String> locationInfo = new HashSet<>();
         int i = 0;
         int j = 0;
 
@@ -440,6 +500,10 @@ public class House {
                 j++;
             }
         }
+    }
+
+    private Furniture findFurnitureInLocation(String furniture) {
+        return currLocation.getFurniture().stream().filter(x -> x.getName().equalsIgnoreCase(furniture)).findFirst().orElse(null);
     }
 
     private Character findNPCByName(String character) {
@@ -503,7 +567,8 @@ public class House {
 
     //Combat here
     //sets dialog for player when going to room that has skombie depending if other alive characters or not
-    private void checkForSkombie() {
+    private List<String> checkForSkombie() {
+        List<String> userMessages = new ArrayList<>();
         List<Character> charInCombatAlive = new ArrayList<>();
         List<Character> charInSkombieRoomDead = new ArrayList<>();
         if (currLocation.getCharacters() != null) {
@@ -518,114 +583,182 @@ public class House {
         }
         if (findLocationByName(currLocation.getName()).isHasSkunk()) {
             if (currLocation.getCharacters() == null) {
-                System.out.println("There is a skombie, get it, get it!!!");
-            }
-            else if (currLocation.getCharacters() != null) {
+                Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/zombie.wav"));
+                userMessages.add("There is a skombie, get it!");
+            } else if (currLocation.getCharacters() != null) {
                 if (charInCombatAlive.size() > 0) {
                     for (Character x : charInCombatAlive) {
-                        System.out.println(x.getName() + " needs your help fighting the skombie! They are doing what they can but it is not enough!");
+                        Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/bloodSplash.wav"));
+                        userMessages.add(x.getName() + " needs your help fighting the skombie! They are doing what they can but it is not enough!");
                     }
                 }
-                System.out.println("There is a skombie, get it get it!!!");
-
+                Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/zombie.wav"));
+                userMessages.add("There is a skombie, get it!");
             }
             if (randGen() == 1) {
-                System.out.println("Skombie attacks you!!");
                 double health = player.getHealth();
-                player.setHealth( health - ATTACK_HEALTH);
+                Music.playSound(this.getClass().getClassLoader().getResourceAsStream("music/bloodSplash.wav"));
+                userMessages.add("Skombie attacks you!! Your health has dropped to " + (health - ATTACK_HEALTH));
+                player.setHealth(health - ATTACK_HEALTH);
             }
         }
-
+        return userMessages;
     }
 
     //Combat here
-    private void checkForZombie() {
+    private List<String> checkForZombie() {
+        List<String> messages = new ArrayList<>();
         if (currLocation.getCharacters() != null) {
             for (Character character : currLocation.getCharacters()) {
                 if (character.isDead() && character.getTurnsInCombat() >= TURNALIVE) {
-                    System.out.println(character.getName() + " is a zombie. You must attack");
+                    messages.add(character.getName() + " is a zombie. You must attack");
                     character.setAvailableMove(false);
-                    combatCycle(character);
+                    messages.add(combatCycle(character));
                 }
+            }
+        }
+        return messages;
+    }
+
+    private void inspectFurniture(Furniture furniture, String message) {
+        boolean inspectingFurniture = true;
+
+        printFurnitureDetails(furniture, new ArrayList<>());
+        while (inspectingFurniture) {
+            String userInput = prompter.prompt("Please enter a command to proceed or [Back] to go back.");
+
+            if(!userInput.equalsIgnoreCase("back")){
+                List<String> statement = promptInFurniture(userInput, furniture);
+                Console.clear();
+                printFurnitureDetails(furniture, statement);
+            }
+            else{
+               inspectingFurniture = false;
             }
         }
     }
 
-    private boolean checkForSpecialCommand(String input) {
-        boolean isSpecial = false;
+    public void printFurnitureDetails(Furniture furniture, List<String> messages) {
+        System.out.println("====================================================");
+        System.out.println("Available Commands: Look<Item|Weapon>, Get<Item|Weapon>\n");
+        printFile(String.format("images/%s.txt", furniture.getName().trim().toLowerCase()));
 
-        if ("QUIT".equalsIgnoreCase(input)) {
-            Console.clear();
-            isSpecial = true;
-            Printer.printFile(QUIT);
-            System.exit(0);
-        } else if ("HELP".equalsIgnoreCase(input)) {
-            Console.clear();
-            isSpecial = true;
-            Printer.printFile(HELP);
-            Scanner myObj = new Scanner(System.in);
-            prompter.prompt("\n[P]roceed ?", "[pP]", "\nNot Valid");
-
-        } else if ("INVENTORY".equalsIgnoreCase(input)) {
-            Console.clear();
-            isSpecial = true;
-            printInventory();
-            Console.pause(3000);
-        } else if ("SAVE".equalsIgnoreCase(input)) {
-            Console.clear();
-            isSpecial = true;
-            saveGame();
-            Console.pause(3000);
-        } else if ("SAVE".equalsIgnoreCase(input)) {
-            Console.clear();
-            isSpecial = true;
-            saveGame();
-            Console.pause(3000);
+        if (furniture.getItems() != null && furniture.getItems().size() != 0) {
+            System.out.println("Items:");
+            furniture.getItems().forEach(x -> System.out.printf("> %s\n", x.getName()));
         }
 
-        return isSpecial;
-    }
+        if (furniture.getWeapons() != null && furniture.getWeapons().size() != 0) {
+            System.out.println("Weapons:");
+            furniture.getWeapons().forEach(x -> System.out.printf("> %s\n", x.getName()));
+        }
 
-    /**
-     * InventoryItem is an interface that collects both Item <Class/> & Weapon<Class/>
-     * because functionality is very similar with these objects
-     */
-    private InventoryItem findInventoryItemByName(String item) {
-        return getInventoryItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
-    }
-
-    /**
-     * Based on user input will find if location input is an available location in the current room
-     */
-    private Location findAvailableLocationInCurrLocation(String location) {
-        String valid = currLocation.getAvailableRooms().stream().filter(x -> x.equalsIgnoreCase(location)).findFirst().orElse(null);
-
-        return findLocationByName(valid);
-    }
-
-    private void printInventory() {
-        if (player.getInventory().isEmpty()) {
-            System.out.println("Your inventory is empty.");
+        if (messages.size() != 0) {
+            System.out.println("=======================OUTPUT======================");
+            messages.forEach(System.out::println);
+            System.out.println("====================================================");
         } else {
-            player.getInventory().forEach(x -> {
-                System.out.printf("%s - %s\n", x.getName().toUpperCase(), x.getDescription().toUpperCase());
-            });
+            System.out.println("====================================================");
         }
     }
+
+    public List<String> promptInFurniture(String userInput, Furniture furniture) {
+        List<String> messages = new ArrayList<>();
+        String[] userCommands = parser.verifyInput(userInput);
+
+        if (userCommands == null) {
+            messages.add("Not Valid");
+            return messages;
+        }
+
+
+        String command = userCommands[0];
+        String object = userCommands[1];
+
+        List<Inspectable> inFurniture = new ArrayList<>();
+        List<InventoryItem> inventoryItemsInFurniture = new ArrayList<>();
+
+        if (furniture.getItems() != null) {
+            inFurniture.addAll(furniture.getItems());
+            inventoryItemsInFurniture.addAll(furniture.getItems());
+        }
+        if (furniture.getWeapons() != null) {
+            inFurniture.addAll(furniture.getWeapons());
+            inventoryItemsInFurniture.addAll(furniture.getWeapons());
+        }
+
+        switch (command) {
+            case "look":
+            case "examine":
+            case "see":
+            case "scan":
+            case "view":
+            case "inspect":
+                Inspectable item = inFurniture.stream().filter(x -> x.getName().equalsIgnoreCase(object)).findFirst().orElse(null);
+                if (item != null) {
+                    if(item.getName().equalsIgnoreCase("files")){
+                        messages.addAll(Reader.readFileToArrayList("images/files.txt"));
+                    }
+                    messages.add(player.look(item));
+                } else {
+                  messages.add("Item not in room");
+                }
+                break;
+
+        case "get":
+        case "take":
+        case "pick":
+        case "grab":
+        case "acquire":
+        case "hold":
+
+            InventoryItem found = inventoryItemsInFurniture.stream().filter(x -> x.getName().equalsIgnoreCase(object)).findFirst().orElse(null);
+
+            if (found != null) {
+                if(found.getName().equalsIgnoreCase("gas mask")){
+                    player.setHasGasMask(true);
+                }
+                if (found instanceof Weapon) {
+                    Weapon previousWeapon = player.getCurrentWeapon();
+                    if (previousWeapon != null) furniture.addWeaponToFurniture(previousWeapon);
+                    player.setCurrentWeapon((Weapon) found);
+                    messages.add(String.format("%s set to current weapon", found.getName().toUpperCase()));
+                    furniture.removeWeaponFromFurniture((Weapon) found);
+                }
+                else if (found instanceof Item) {
+                    if(found.getName().equalsIgnoreCase("files")){
+                        messages.add("We probably don't want to carry files around with us.");
+                        messages.addAll(Reader.readFileToArrayList("images/files.txt"));
+                    }
+                    else {
+                        player.get(found);
+                        messages.add(String.format("%s added to inventory", found.getName().toUpperCase()));
+                        furniture.removeItemFromFurniture((Item) found);
+                    }
+                    }
+            } else {
+                messages.add(String.format("%s Not a valid item in this location", object.toUpperCase()));
+            }
+            break;
+            default:
+                messages.add(String.format("%s not a valid command.", command.toUpperCase()));
+        }
+        return messages;
+    }
+
 
     // checks all rooms to see if person is in combat and for how long. If too long, they die. If dead, after a while to turn into zombie and can move.
-    public void updateCharacterStatusList() {
+    public List<String> updateCharacterStatusList() {
+        List<String> messages = new ArrayList<>();
         for (Location room : rooms) {
-            if (room.getCharacters() == null) {
-
-            } else {
+            if (room.getCharacters() != null) {
                 for (Character character : room.getCharacters()) {
                     //If character cant move and is alive, it means they are in combat
                     if (!character.isAvailableMove()) {
                         character.setTurnsInCombat(1);
                     }
                     if (character.getTurnsInCombat() == CHARACTERDIES) {
-                        System.out.println(character.getName() + " is now dead.");
+                        messages.add(character.getName() + " is now dead.");
                         character.setDead(true);
                         character.setAvailableMove(false);
                         character.setTurnsInCombat(1);
@@ -633,21 +766,23 @@ public class House {
                     //turn into zombie
                     if (character.getTurnsInCombat() == TURNALIVE) {
                         character.setAvailableMove(true);
-                        System.out.println(character.getName() + " is now among the walking dead.");
+                        messages.add(character.getName() + " is now among the walking dead.");
                         character.setTurnsInCombat(1);
                     }
-
                 }
             }
-
         }
+        return messages;
     }
-    private void combatCycle(Character character) {
+
+    private String combatCycle(Character character) {
+        String message = "";
         if (randGen() == 1) {
             double health = player.getHealth();
-            System.out.println("Zombie " + character.getName() + " attacks you!!!");
+            message = ("Zombie " + character.getName() + " attacks you!!!");
             player.setHealth(health - ATTACK_HEALTH);
         }
+        return message;
     }
 
     public Location getCurrLocation() {
@@ -676,5 +811,53 @@ public class House {
 
     public void setProgressedPastHelp(boolean progressedPastHelp) {
         this.progressedPastHelp = progressedPastHelp;
+    }
+
+    private boolean checkForSpecialCommand(String input) {
+        boolean isSpecial = false;
+
+        if ("QUIT".equalsIgnoreCase(input)) {
+            Console.clear();
+            isSpecial = true;
+            printFile(QUIT);
+            System.exit(0);
+        } else if ("HELP".equalsIgnoreCase(input)) {
+            Console.clear();
+            isSpecial = true;
+            printFile(HELP);
+            Scanner myObj = new Scanner(System.in);
+            prompter.prompt("\n[P]roceed ?", "[pP]", "\nNot Valid");
+
+        } else if ("INVENTORY".equalsIgnoreCase(input)) {
+            Console.clear();
+            isSpecial = true;
+            printInventory();
+            Console.pause(3000);
+        } else if ("SAVE".equalsIgnoreCase(input)) {
+            Console.clear();
+            isSpecial = true;
+            saveGame();
+            Console.pause(3000);
+        }
+        return isSpecial;
+    }
+
+    private void printInventory() {
+        if (player.getInventory().isEmpty()) {
+            System.out.println("Your inventory is empty.");
+        } else {
+            player.getInventory().forEach(x -> {
+                System.out.printf("%s - %s\n", x.getName().toUpperCase(), x.getDescription().toUpperCase());
+            });
+        }
+    }
+
+    private Location findAvailableLocationInCurrLocation(String location) {
+        String valid = currLocation.getAvailableRooms().stream().filter(x -> x.equalsIgnoreCase(location)).findFirst().orElse(null);
+        return findLocationByName(valid);
+    }
+
+    private InventoryItem findInventoryItemByName(String item) {
+        return getInventoryItems().stream().filter(x -> x.getName().equalsIgnoreCase(item)).findFirst().orElse(null);
     }
 }
