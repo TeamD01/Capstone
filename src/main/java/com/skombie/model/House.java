@@ -384,7 +384,8 @@ public class House {
                 break;
 
             case "use":
-                if(object != null && object.equalsIgnoreCase("radio")){
+                InventoryItem foundItem = findInventoryItemByName(object);
+                if(foundItem != null && object.equalsIgnoreCase("radio")){
                     if(!isSecure){
                         messages.add("YOU: MAYDAY, MAYDAY We need to request evacuation at 2 Jefferson Ave.");
                         messages.add("GENERAL JOE LEE: We hear you loud and clear, we won't be able to get to you for another 30 minutes or so.");
@@ -395,6 +396,9 @@ public class House {
                         messages.add("GENERAL JOE LEE: We have a helicopter heading your way now. Get to the highest point in your house");
                         isEvacuating = true;
                     }
+                }
+                else{
+                    messages.add(String.format("%s not in room.", object.toUpperCase()));
                 }
                 break;
             default:
