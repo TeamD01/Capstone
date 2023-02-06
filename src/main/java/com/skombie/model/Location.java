@@ -34,6 +34,9 @@ public class Location implements Serializable {
     }
 
     // action methods
+    public void removeNPCFromRoom(Character character){
+        characters.remove(character);
+    }
     public void removeItemFromRoom(Item item){
         items.remove(item);
     }

@@ -11,8 +11,8 @@ public class Character implements Speaker, Inspectable, Serializable {
     private List<String> dialogue;
     private boolean isAvailableMove;
     private boolean isDead;
+    private double hitsCanTake;
     private int turnsInCombat = 0;
-    private int hitsCanTake = 3;
     private boolean isDeadDead = false;
 
     public Character(String name, String description, List<String> dialogue, boolean isAvailableMove, boolean isDead) {
@@ -98,11 +98,11 @@ public class Character implements Speaker, Inspectable, Serializable {
         return dialogue.get(random.nextInt(dialogue.size()));
     }
 
-    public int getHitsCanTake() {
+    public double getHitsCanTake() {
         return hitsCanTake;
     }
 
-    public void setHitsCanTake(int hitsCanTake) {
+    public void setHitsCanTake(double hitsCanTake) {
         this.hitsCanTake = hitsCanTake;
     }
 
