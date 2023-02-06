@@ -1,8 +1,10 @@
 package com.skombie.app;
 
 import com.skombie.model.House;
+import com.skombie.model.Player;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.Music;
+import com.skombie.utilities.Printer;
 import com.skombie.utilities.PromptHelper;
 
 import java.io.InputStream;
@@ -67,18 +69,22 @@ public class SkombieApp implements Runnable{
     }
 
     public void startGame() {
+        Player player = house.getPlayer();
         if(previousMessage.size() == 0){
             house.gatherLocationData();
         }else {
             house.gatherLocationData(previousMessage);
         }
-         while(true){
+         while(!player.isDead()){
              String userInput = prompter.prompt("Please enter a command to proceed.");
              house.manageCommand(userInput);
              previousMessage.addAll(house.updateCharacterStatusList());
              if (randGen()) {
                  previousMessage = house.changeCharacterRoom();
              }
+         }
+         if(player.isDead()){
+             printDeadMessage(player.getReasonForDeath());
          }
     }
 
@@ -95,5 +101,10 @@ public class SkombieApp implements Runnable{
     private void waitForUserResponse() {
         System.out.println("Press [Enter] to continue.");
         scanner.nextLine();
+    }
+    private void printDeadMessage(String message){
+        Printer.printFile("data/dead.txt");
+        System.out.printf("\nREASON: %s", message);
+        System.exit(0);
     }
 }
