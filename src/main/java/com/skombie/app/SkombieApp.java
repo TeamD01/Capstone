@@ -31,16 +31,16 @@ public class SkombieApp implements Runnable{
     }
 
     public void run() {
-//        Music.playSound(MAIN_SONG);
-//        getGameTitle();
-//        promptUserNew();
-//        Music.stopSound();
-//        Music.playSound(EMERGENCY);
-//        alertMessage();
-//        waitForUserResponse();
-//        Music.stopSound();
-//        generateInstructions();
-//        house.setProgressedPastHelp(true);
+        Music.playSound(MAIN_SONG);
+        getGameTitle();
+        promptUserNew();
+        Music.stopSound();
+        Music.playSound(EMERGENCY);
+        alertMessage();
+        waitForUserResponse();
+        Music.stopSound();
+        generateInstructions();
+        house.setProgressedPastHelp(true);
         startGame();
     }
     public void promptUserNew() {
@@ -73,7 +73,8 @@ public class SkombieApp implements Runnable{
         if(previousMessage.size() == 0){
             previousMessage = new ArrayList<>(){
                 {
-                    add("Grandpa Nick: You know I had some old military gear in an old trunk that might come in handy.");
+                    add("Grandpa Nick:");
+                    add("You know I had some old military gear in an old trunk that might come in handy.");
                     add("I took it from the Army because I knew this would go down eventually.");
                     add("You'll have to find your wife to get the combination");
                 }
@@ -109,11 +110,13 @@ public class SkombieApp implements Runnable{
         System.out.println("Press [Enter] to continue.");
         scanner.nextLine();
     }
+
     private void printDeadMessage(String message){
         Printer.printFile("data/dead.txt");
         Music.playSound(getFile("music/eatingMeat.wav"));
         System.out.printf("\nREASON: %s", message);
-        Console.pause(1500);
+        Music.playSound(getFile("music/gamefinish.wav"));
+        Console.pause(15000);
         System.exit(0);
     }
 }
