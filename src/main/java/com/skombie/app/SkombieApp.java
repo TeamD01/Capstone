@@ -5,6 +5,9 @@ import com.skombie.utilities.Console;
 import com.skombie.utilities.Music;
 import com.skombie.utilities.PromptHelper;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -17,21 +20,27 @@ public class SkombieApp implements Runnable{
     private static final String ALERT = "data/alertMsg.txt";
     private static final String INTRO = "data/intro";
     private final House house;
+    private final InputStream MAIN_SONG = getFile("music/MonkeySpin.wav");
+    private final InputStream EMERGENCY = getFile("music/emergency.wav");
+    List<String> previousMessage = new ArrayList<>();
 
     public SkombieApp(House house) {
         this.house = house;
     }
 
     public void run() {
-        Music.playSound(SkombieApp.class.getClassLoader().getResourceAsStream("music/monkeySpin.wav"));
+        Music.playSound(MAIN_SONG);
         getGameTitle();
         promptUserNew();
+        Music.stopSound();
+        Music.playSound(EMERGENCY);
         alertMessage();
+        waitForUserResponse();
+        Music.stopSound();
         generateInstructions();
         house.setProgressedPastHelp(true);
         startGame();
     }
-
     public void promptUserNew() {
         String input = prompter.prompt("\nWould you like to start a new game or continue?\n[N]ew Game\t[C]ontinue", "[nNcC]", "\nInvalid Entry\n");
         if ("N".equalsIgnoreCase(input)) {
@@ -48,9 +57,7 @@ public class SkombieApp implements Runnable{
     }
 
     public void alertMessage() {
-        printFile(ALERT, 6); //600
-        Console.pause(5);//5000
-        Console.clear();
+        printFile(ALERT, 600); //600
     }
 
     public void generateInstructions() {
@@ -60,18 +67,33 @@ public class SkombieApp implements Runnable{
     }
 
     public void startGame() {
+        if(previousMessage.size() == 0){
+            house.gatherLocationData();
+        }else {
+            house.gatherLocationData(previousMessage);
+        }
          while(true){
-             house.gatherLocationData();
              String userInput = prompter.prompt("Please enter a command to proceed.");
              house.manageCommand(userInput);
-             house.updateCharacterStatusList();
-             if (randGen() == 0) {
-                 house.changeCharacterRoom();
+             previousMessage.addAll(house.updateCharacterStatusList());
+             if (randGen()) {
+                 previousMessage = house.changeCharacterRoom();
              }
          }
     }
 
-    private int randGen() {
-        return new Random().nextInt(1);
+    private boolean randGen() {
+        return Math.random() < 0.3;
+    }
+
+    //If moved to util class we will pass generic so any class can use it
+    //private <T> InputStream getFile(Class<T> obj, String file)
+    private InputStream getFile(String file){
+        return this.getClass().getClassLoader().getResourceAsStream(file);
+    }
+
+    private void waitForUserResponse() {
+        System.out.println("Press [Enter] to continue.");
+        scanner.nextLine();
     }
 }

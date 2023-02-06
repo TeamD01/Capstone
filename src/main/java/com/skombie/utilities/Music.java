@@ -6,10 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Music {
+    private static Clip clip;
     public static void playSound(InputStream soundFile){
         try {
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
-            Clip clip = AudioSystem.getClip();
+            clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
         }
@@ -17,4 +18,9 @@ public class Music {
             e.printStackTrace();
         }
     }
+
+    public static void stopSound(){
+        clip.close();
+    }
+
 }

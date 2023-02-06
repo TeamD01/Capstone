@@ -17,7 +17,8 @@ public class Player implements Speaker, Serializable {
             add("Hey, these skunks are really getting on my last nerve.");
         }
     };
-    private int attackValue = 1;
+    private boolean hasGasMask = false;
+
 
     public Player() {
     }
@@ -38,8 +39,8 @@ public class Player implements Speaker, Serializable {
     public String[] talk(Character friend){
         return new String[]{
 
-                String.format("YOU: %s\n", getRandomDialogue()),
-                String.format("%s: %s\n", friend.getName().toUpperCase(), friend.getRandomDialogue())
+                String.format("YOU: %s", getRandomDialogue()),
+                String.format("%s: %s", friend.getName().toUpperCase(), friend.getRandomDialogue())
         };
     }
 
@@ -76,27 +77,24 @@ public class Player implements Speaker, Serializable {
         this.currentWeapon = currentWeapon;
     }
 
+    public boolean hasGasMask() {
+        return hasGasMask;
+    }
+
+    public void setHasGasMask(boolean hasGasMask) {
+        this.hasGasMask = hasGasMask;
+    }
+
     @Override
     public String getRandomDialogue(){
         Random random = new Random();
         return dialogue.get(random.nextInt(dialogue.size()));
     }
 
-    private boolean hasWeapon() {
-        boolean hasWeapon = false;
-        attackValue = getAttackValue();
+    public double getAttackValue() {
+        double attackValue = 1;
         if (currentWeapon != null) {
-            hasWeapon = true;
-        }
-        return hasWeapon;
-    }
-
-    public int getAttackValue() {
-        if (hasWeapon()) {
-            this.attackValue = 3;
-        }
-        else {
-            this.attackValue = 1;
+            attackValue = currentWeapon.getAttackValue();
         }
         return attackValue;
     }
