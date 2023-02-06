@@ -6,39 +6,44 @@
         {
           "name": "Grandpa Nick",
           "description": "Grandfather, he has the best war stories",
-          "dialogue": ["Back in my day we had zombie birds, they tasted delicious","I've survived five wars and one bird zombie attack, this is nothing", "Hurry up and call the calvary"]
+          "dialogue": ["Back in my day we had zombie birds, they tasted delicious","I've survived five wars and one bird zombie attack, this is nothing", "Hurry up and call the calvary", "It's times like these when I wish I had good knees", "You handle the skunks, I'm going to take a nap"," this reminds me of a time back in 1908 or was it 1987.. nevermind, I don't remember"],
+          "isAvailableMove": true,
+          "isDead": false,
+          "hitsCanTake": 10.0
         }
       ],
-      "furniture": null,
+      "furniture": [],
       "unsecurePoints": 2,
       "hasSkunk": false,
       "items": [
         {
-          "name" : "Hammer",
-          "description": "This will probably be helpful to secure the house."
+          "name": "Radio",
+          "description": "We should use this to request help."
         }
       ],
       "weapons": [
         {
           "name": "Baseball Bat",
           "description": "Louisville Slugger with nail spikes on the end",
-          "attack value": 10
+          "attackValue": 5
         }
       ],
       "isSecure": false,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Hallway",
       "description": "Ahh, yes the main hallway.",
-      "characters": null,
-      "furniture": null,
+      "characters": [],
+      "furniture": [],
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": null,
-      "weapons": null,
+      "items": [],
+      "weapons": [],
       "isSecure": false,
-      "availableRooms": ["Office", "Living Room", "Basement", "Bedroom", "Kitchen", "Backyard"]
+      "availableRooms": ["Office", "Living Room", "Basement", "Bedroom", "Kitchen", "Backyard"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Office",
@@ -47,7 +52,10 @@
         {
           "name": "Sugey",
           "description": "Wife, She knows where everything is in the house",
-          "dialogue": ["Don't hurt your hand with the hammer!","I just cleaned the house and now we are being attacked by skunks!","Those skunks better not dig up my new rose bush"]
+          "dialogue": ["Don't hurt your hand with the hammer!","I just cleaned the house and now we are being attacked by skunks!","Those skunks better not dig up my new rose bush", "After you are done playing with skunks put your clothes in the bin","Take off your dirty shoes! you're getting mud all over my floors","Dinner will be ready at 6pm"],
+          "isAvailableMove": true,
+          "isDead": false,
+          "hitsCanTake": 10.0
         }
       ],
       "furniture": [
@@ -55,34 +63,45 @@
           "name": "Desk",
           "description": "We might be able to find something useful in here.",
           "isLocked": false,
+          "unlockCode" : [],
           "items": [
             {
               "name": "Files",
               "description": "Looks like it's some birth certificates."
             }
-          ]
+          ],
+          "weapons": []
         }
       ],
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": null,
-      "weapons": null,
+      "items": [],
+      "weapons": [],
       "isSecure": false,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 10
     },
     {
       "name": "Basement",
-      "description": "Maybe you should get down here soon to clean up. That is if you make it out alive.",
-      "characters": null,
+      "description": "Maybe you should get down here soon to clean up.",
+      "characters": [],
       "furniture": [
         {
           "name": "Trunk",
-          "description": "An old dusty trunk, anything good?",
+          "description": "An old dusty trunk, anything good? **Trunk has note with password hint- birthday**",
           "isLocked": true,
+          "unlockCode" : [4,4,0,6],
           "items": [
             {
               "name" : "Gas Mask",
               "description": "The Skombies will never stop you now!"
+            }
+          ],
+          "weapons": [
+            {
+              "name": "Flame Thrower",
+              "description": "Just an old flame thrower",
+              "attackValue": 5.0
             }
           ]
         }
@@ -95,15 +114,10 @@
           "description": "We definitely need these."
         }
       ],
-      "weapons": [
-        {
-          "name": "Vinegar Spray Bottle",
-          "description": "Bottle with apple cider vinegar",
-          "attack value": 25
-        }
-      ],
+      "weapons": [],
       "isSecure": false,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Bedroom",
@@ -112,32 +126,37 @@
         {
           "name": "Chris",
           "description": "Son, he loves drawing maps",
-          "dialogue": ["I think skunks are cool", "Yay, I don't have to go to school!", "When I grow up, can I help you fight the skombies?"]
+          "dialogue": ["I think skunks are cool", "Yay, I don't have to go to school!", "When I grow up, can I help you fight the skombies?","  I'll be in my room making videos for my tiktok", " I hope a skombie gets my english teacher, he gave me a C"],
+          "isAvailableMove": true,
+          "isDead": false,
+          "hitsCanTake": 10.0
         }
       ],
-      "furniture": null,
+      "furniture": [],
       "unsecurePoints": 2,
       "hasSkunk": false,
-      "items": null,
-      "weapons": null,
+      "items": [],
+      "weapons": [],
       "isSecure": false,
-      "availableRooms": ["Hallway", "Attic"]
+      "availableRooms": ["Hallway", "Attic"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Kitchen",
       "description": "Room for cooking ",
-      "characters": null,
+      "characters": [],
       "furniture": [
         {
           "name": "Cabinet",
           "description": "Let's see if there is anything good in here.",
           "isLocked": false,
-          "items": null,
+          "unlockCode" : [],
+          "items": [],
           "weapons": [
             {
               "name": "Mothballs",
-              "description": "small balls of chemical pesticide and deodorant",
-              "attack value": 20
+              "description": "Small balls of chemical pesticide and deodorant",
+              "attackValue": 2
             }
           ]
         },
@@ -145,6 +164,7 @@
           "name": "Refrigerator",
           "description": "Time for snacks",
           "isLocked": false,
+          "unlockCode" : [],
           "items": [
             {
               "name": "Orange Juice",
@@ -155,7 +175,7 @@
               "description": "Time to take a bath!"
             }
           ],
-          "weapons": null
+          "weapons": []
         }
       ],
       "unsecurePoints": 2,
@@ -164,40 +184,43 @@
       "weapons" : [
         {
           "name": "Kitten Litter",
-          "description": "HMM.. This might come in handy."
+          "description": "HMM.. This might come in handy.",
+          "attackValue": 2
         }
       ],
       "isSecure": false,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Attic",
       "description": "Smells musty in here.",
-      "characters": null,
-      "furniture": null,
+      "characters": [],
+      "furniture": [],
       "unsecurePoints": 0,
       "hasSkunk": false,
       "items": [
         {
-          "name": "Radio",
-          "description": "We should use this to request help."
+          "name" : "Hammer",
+          "description": "This will probably be helpful to secure the house."
         }
       ],
       "weapons": [
         {
           "name": "Vinegar Spray Bottle",
           "description": "Bottle with apple cider vinegar",
-          "attack value": 25
+          "attackValue": 2
         }
       ],
       "isSecure": true,
-      "availableRooms": ["Bedroom"]
+      "availableRooms": ["Bedroom"],
+      "timesLeftToKillSkombie": 5
     },
     {
       "name": "Backyard",
       "description": "1/8 acre fenced in...",
-      "characters": null,
-      "furniture": null,
+      "characters": [],
+      "furniture": [],
       "unsecurePoints": 0,
       "hasSkunk": true,
       "items": [
@@ -210,11 +233,12 @@
         {
           "name": "Leaf Blower",
           "description": "Device that propels air out of a nozzle to move debris",
-          "attack value": 50
+          "attackValue": 5
         }
       ],
       "isSecure": true,
-      "availableRooms": ["Hallway"]
+      "availableRooms": ["Hallway"],
+      "timesLeftToKillSkombie": 5
     }
   ]
 

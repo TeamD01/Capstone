@@ -8,11 +8,14 @@ Go <Direction> - Go Living Room
 Get <Item>  - Get Hammer
 Drop <Item> - Drop Hammer
 Look <Item> - Look Hammer
+Open<Furniture> - Open Refrigerator
 
 ** TALK **
 Talk <Character> - Talk Chris
 
 ** OTHER **
+ATTACK Skombie - attack skombie with current weapon
+SECURE ROOM - In order to secure the room you are in
 Inventory - returns your inventory details
 Help - returns this page if you get stuck
 Quit - quit the current game

@@ -1,8 +1,7 @@
 package com.skombie.utilities;
-import com.skombie.House;
-import com.skombie.Player;
+import com.skombie.model.House;
 import com.skombie.app.SkombieApp;
-import com.skombie.Skombie;
+import com.skombie.model.Skombie;
 import java.util.TimerTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +18,7 @@ public class TaskHandler extends TimerTask {
         tp.setContinueExistingPeriodicTasksAfterShutdownPolicy(true); //not sure about this one...
         tp.scheduleWithFixedDelay(rb1, 0, 10, TimeUnit.SECONDS);
         //set to 10000 to avoid many skombies while testing.
-        tp.scheduleAtFixedRate(skombie, 10000, 10, TimeUnit.SECONDS);
+        tp.scheduleAtFixedRate(skombie, 60, 180, TimeUnit.SECONDS);
     }
 
 }

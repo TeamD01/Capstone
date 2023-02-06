@@ -12,6 +12,7 @@ public class PromptHelper {
 
     public String prompt(String message){
         System.out.println(message);
+        System.out.print("> ");
         return getInput();
     }
 
@@ -19,8 +20,9 @@ public class PromptHelper {
         String userInput = null;
         boolean isValid = false;
 
-        while(!isValid){
+        while(true){
             System.out.println(message);
+            System.out.print("> ");
             userInput = getInput();
             isValid = userInput.matches(regex);
 
