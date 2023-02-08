@@ -21,6 +21,7 @@ public class GameStartEventHandler implements ActionListener {
         bGround.setVisible(false);
         Music.stopSound();
 
+        //For ticket tracking AB#908 starts on line 25
         JFrame alertFrame = new JFrame();
         alertFrame.setSize(1500,500);
         alertFrame.setLayout(null);
