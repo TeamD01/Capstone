@@ -15,7 +15,7 @@ public class GameStartEventHandler implements ActionListener {
         this.gStart = gStart;
         this.bGround = bGround;
     }
-
+    //For ticket tracking AB#907 on line 21
     @Override
     public void actionPerformed(ActionEvent e) {
         bGround.setVisible(false);
