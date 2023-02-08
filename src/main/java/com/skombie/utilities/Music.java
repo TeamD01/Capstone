@@ -20,6 +20,7 @@ public class Music {
     }
 
     public static void stopSound(){
+
         clip.close();
     }
 
