@@ -61,10 +61,13 @@ public class SkombieApp implements Runnable{
         JButton gameStart;
         JButton gameHelp;
         JButton gameQuit;
+        JButton Inventory;
 
         gameFrame = new JFrame();
         gameFrame.setTitle("NIGHT OF THE SKOMBIES");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameFrame.setResizable(false);
+        gameFrame.setSize(520, 520);
 
         URL imgPath = ClassLoader.getSystemClassLoader().getResource("images/NightOfTheSkombies.jpeg");
         assert imgPath != null;
@@ -74,8 +77,10 @@ public class SkombieApp implements Runnable{
 
         gameControls = new JPanel();
         GridLayout blockLayout;
-        blockLayout = new GridLayout(3, 3);
+        blockLayout = new GridLayout(4, 4);
         background.setLayout(blockLayout);
+
+
 
         gameStart = new JButton("START");
         gameStart.setBackground(Color.green);
@@ -95,6 +100,12 @@ public class SkombieApp implements Runnable{
         gameFrame.add(gameControls);
         gameQuit.addActionListener(new GameQuitEventHandler());
 
+        Inventory = new JButton("Inventory");
+        Inventory.setBackground(Color.YELLOW);
+        gameControls.add(Inventory);
+        //gameFrame.add(gameControls);
+        Inventory.addActionListener(new DisplayInventoryEventHandler());
+
         gameStart.requestFocus();
         gameFrame.setSize(600, 500);
         gameFrame.pack();
@@ -105,7 +116,7 @@ public class SkombieApp implements Runnable{
         printFile(TITLE, 5);
     }
 
-    public void alertMessage() {
+    public static void alertMessage() {
 
         printFile(ALERT, 600); //600
     }

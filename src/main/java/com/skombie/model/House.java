@@ -924,7 +924,7 @@ public class House {
         return isSpecial;
     }
 
-    private void printInventory() {
+    void printInventory() {
         if (player.getInventory().isEmpty()) {
             System.out.println("Your inventory is empty.");
         } else {
@@ -932,6 +932,7 @@ public class House {
                 System.out.printf("%s - %s\n", x.getName().toUpperCase(), x.getDescription().toUpperCase());
             });
         }
+        return;
     }
 
     private Location findAvailableLocationInCurrLocation(String location) {

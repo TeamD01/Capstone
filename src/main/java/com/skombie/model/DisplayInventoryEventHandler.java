@@ -3,10 +3,12 @@ package com.skombie.model;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GameQuitEventHandler implements ActionListener {
+public class DisplayInventoryEventHandler implements ActionListener {
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.exit(0);
 
+       House classObj = new House();
+       classObj.printInventory();
     }
 }

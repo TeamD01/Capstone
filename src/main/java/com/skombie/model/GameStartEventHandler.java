@@ -1,5 +1,6 @@
 package com.skombie.model;
 
+import com.skombie.app.SkombieApp;
 import com.skombie.utilities.Music;
 
 import javax.swing.*;
@@ -21,6 +22,7 @@ public class GameStartEventHandler implements ActionListener {
         bGround.setVisible(false);
         Music.stopSound();
 
+        SkombieApp.alertMessage();
         //For ticket tracking AB#908 starts on line 25
         JFrame alertFrame = new JFrame();
         alertFrame.setSize(1500,500);
@@ -33,6 +35,7 @@ public class GameStartEventHandler implements ActionListener {
                 "\n" +
                 "** Authorities are urging that everyone stay indoors since the skunk spray will KILL you. **\n" +
                 "                IF YOU DO NEED TO GO OUTSIDE MAKE SURE TO WEAR A GAS MASK");
+
         area.setBounds(10,10, 2500, 300);
         alertFrame.add(area);
 
