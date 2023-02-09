@@ -1,4 +1,6 @@
-package com.skombie.model;
+package com.skombie.eventhandling;
+
+import com.skombie.model.House;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

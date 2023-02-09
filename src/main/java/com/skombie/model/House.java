@@ -924,7 +924,7 @@ public class House {
         return isSpecial;
     }
 
-    void printInventory() {
+    public void printInventory() {
         if (player.getInventory().isEmpty()) {
             System.out.println("Your inventory is empty.");
         } else {
