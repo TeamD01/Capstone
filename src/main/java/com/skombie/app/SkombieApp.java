@@ -24,7 +24,7 @@ public class SkombieApp implements Runnable{
     private static final String INTRO = "data/intro";
     private final House house;
     private final InputStream MAIN_SONG = getFile("music/MonkeySpin.wav");
-    private final InputStream EMERGENCY = getFile("music/emergency.wav");
+    public final InputStream EMERGENCY = getFile("music/emergency.wav");
     List<String> previousMessage = new ArrayList<>();
 
     public SkombieApp(House house) {
@@ -37,7 +37,7 @@ public class SkombieApp implements Runnable{
         promptUserNew();
         Music.stopSound();
         Music.playSound(EMERGENCY);
-        alertMessage();
+        //alertMessage();
         waitForUserResponse();
         Music.stopSound();
         generateInstructions();
@@ -81,13 +81,13 @@ public class SkombieApp implements Runnable{
         gameStart.setBackground(Color.green);
         gameControls.add(gameStart);
         gameFrame.add(gameControls);
-        gameStart.addActionListener(new GameStartEventHandler(gameStart, background));
+        gameStart.addActionListener(new GameStartEventHandler(background));
 
         gameHelp = new JButton("HELP");
         gameHelp.setBackground(Color.red);
         gameControls.add(gameHelp);
         gameFrame.add(gameControls);
-        gameHelp.addActionListener(new GameHelpEventHandler(gameHelp, background));
+        gameHelp.addActionListener(new GameHelpEventHandler(background));
 
         gameQuit = new JButton("QUIT");
         gameQuit.setBackground(Color.red);
