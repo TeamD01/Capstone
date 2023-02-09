@@ -1,4 +1,4 @@
-package com.skombie.model;
+package com.skombie.eventhandling;
 
 import com.skombie.utilities.Music;
 

@@ -1,5 +1,8 @@
 package com.skombie.app;
 
+import com.skombie.eventhandling.GameHelpEventHandler;
+import com.skombie.eventhandling.GameQuitEventHandler;
+import com.skombie.eventhandling.GameStartEventHandler;
 import com.skombie.model.*;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.Music;
@@ -37,22 +40,25 @@ public class SkombieApp implements Runnable{
         promptUserNew();
         Music.stopSound();
         Music.playSound(EMERGENCY);
-        //alertMessage();
+        alertMessage();
         waitForUserResponse();
         Music.stopSound();
         generateInstructions();
         house.setProgressedPastHelp(true);
         startGame();
     }
+
+    //removed option to continue game saved game data and continuation is not stable or properly functioning
+    //[N]ew Game \t[C]ontinue & "[nNcC]" can be added to the String input when that functionality is fixed.
     public void promptUserNew() {
-        String input = prompter.prompt("\nWould you like to start a new game or continue?\n[N]ew Game\t[C]ontinue", "[nNcC]", "\nInvalid Entry\n");
+        String input = prompter.prompt("\nWould you like to start a new game or continue?\n[N]ew Game", "[nN]", "\nInvalid Entry\n");
         if ("N".equalsIgnoreCase(input)) {
             Console.clear();
         }
-        else if ("C".equalsIgnoreCase(input)) {
-            house.loadGame();
-            house.setProgressedPastHelp(false);
-        }
+//        else if ("C".equalsIgnoreCase(input)) {
+//            house.loadGame();
+//            house.setProgressedPastHelp(false);
+//        }
     }
 
     public void getGameTitle() {
