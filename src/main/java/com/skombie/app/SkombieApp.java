@@ -1,16 +1,20 @@
 package com.skombie.app;
 
-import com.skombie.model.House;
-import com.skombie.model.Player;
+import com.skombie.eventhandling.GameHelpEventHandler;
+import com.skombie.eventhandling.GameQuitEventHandler;
+import com.skombie.eventhandling.GameStartEventHandler;
+import com.skombie.model.*;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.Music;
 import com.skombie.utilities.Printer;
 import com.skombie.utilities.PromptHelper;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import static com.skombie.utilities.Printer.printFile;
@@ -23,7 +27,7 @@ public class SkombieApp implements Runnable{
     private static final String INTRO = "data/intro";
     private final House house;
     private final InputStream MAIN_SONG = getFile("music/MonkeySpin.wav");
-    private final InputStream EMERGENCY = getFile("music/emergency.wav");
+    public final InputStream EMERGENCY = getFile("music/emergency.wav");
     List<String> previousMessage = new ArrayList<>();
 
     public SkombieApp(House house) {
@@ -43,22 +47,72 @@ public class SkombieApp implements Runnable{
         house.setProgressedPastHelp(true);
         startGame();
     }
+
+    //removed option to continue game saved game data and continuation is not stable or properly functioning
+    //[N]ew Game \t[C]ontinue & "[nNcC]" can be added to the String input when that functionality is fixed.
     public void promptUserNew() {
-        String input = prompter.prompt("\nWould you like to start a new game or continue?\n[N]ew Game\t[C]ontinue", "[nNcC]", "\nInvalid Entry\n");
+        String input = prompter.prompt("\nWould you like to start a new game or continue?\n[N]ew Game", "[nN]", "\nInvalid Entry\n");
         if ("N".equalsIgnoreCase(input)) {
             Console.clear();
         }
-        else if ("C".equalsIgnoreCase(input)) {
-            house.loadGame();
-            house.setProgressedPastHelp(false);
-        }
+//        else if ("C".equalsIgnoreCase(input)) {
+//            house.loadGame();
+//            house.setProgressedPastHelp(false);
+//        }
     }
 
     public void getGameTitle() {
+        JPanel gameControls;
+        JFrame gameFrame;
+        JButton gameStart;
+        JButton gameHelp;
+        JButton gameQuit;
+
+        gameFrame = new JFrame();
+        gameFrame.setTitle("NIGHT OF THE SKOMBIES");
+        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        URL imgPath = ClassLoader.getSystemClassLoader().getResource("images/NightOfTheSkombies.jpeg");
+        assert imgPath != null;
+        ImageIcon img = new ImageIcon(imgPath);
+        JLabel background;
+        background = new JLabel(img);
+
+        gameControls = new JPanel();
+        GridLayout blockLayout;
+        blockLayout = new GridLayout(3, 3);
+        background.setLayout(blockLayout);
+
+        gameStart = new JButton("START");
+        gameStart.setBackground(Color.green);
+        gameControls.add(gameStart);
+        gameFrame.add(gameControls);
+        gameStart.addActionListener(new GameStartEventHandler(background));
+
+        gameHelp = new JButton("HELP");
+        gameHelp.setBackground(Color.red);
+        gameControls.add(gameHelp);
+        gameFrame.add(gameControls);
+        gameHelp.addActionListener(new GameHelpEventHandler(background));
+
+        gameQuit = new JButton("QUIT");
+        gameQuit.setBackground(Color.red);
+        gameControls.add(gameQuit);
+        gameFrame.add(gameControls);
+        gameQuit.addActionListener(new GameQuitEventHandler());
+
+        gameStart.requestFocus();
+        gameFrame.setSize(600, 500);
+        gameFrame.pack();
+        gameFrame.add(background);
+        gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        gameFrame.setVisible(true);
+
         printFile(TITLE, 5);
     }
 
     public void alertMessage() {
+
         printFile(ALERT, 600); //600
     }
 
