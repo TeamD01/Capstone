@@ -63,6 +63,7 @@ public class SkombieApp implements Runnable{
 
     public void getGameTitle() {
         JPanel gameControls;
+        JPanel houseMapPanel;
         JFrame gameFrame;
         JButton gameStart;
         JButton gameHelp;
@@ -83,23 +84,10 @@ public class SkombieApp implements Runnable{
         blockLayout = new GridLayout(3, 3);
         background.setLayout(blockLayout);
 
-        gameStart = new JButton("START");
-        gameStart.setBackground(Color.green);
-        gameControls.add(gameStart);
-        gameFrame.add(gameControls);
-        gameStart.addActionListener(new GameStartEventHandler(background));
-
-        gameHelp = new JButton("HELP");
-        gameHelp.setBackground(Color.red);
-        gameControls.add(gameHelp);
-        gameFrame.add(gameControls);
-        gameHelp.addActionListener(new GameHelpEventHandler(background));
-
-        gameQuit = new JButton("QUIT");
-        gameQuit.setBackground(Color.red);
-        gameControls.add(gameQuit);
-        gameFrame.add(gameControls);
-        gameQuit.addActionListener(new GameQuitEventHandler());
+        //generate game start and buttons
+        gameStart = generateStartButton(gameControls, gameFrame, background);
+        generateHelpButton(gameControls, gameFrame, background);
+        generateQuitButton(gameControls, gameFrame);
 
         gameStart.requestFocus();
         gameFrame.setSize(600, 500);
@@ -108,11 +96,54 @@ public class SkombieApp implements Runnable{
         gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gameFrame.setVisible(true);
 
+        addMapToGameFrame(gameFrame);
+
+
         printFile(TITLE, 5);
     }
 
-    public void alertMessage() {
+    private void generateQuitButton(JPanel gameControls, JFrame gameFrame) {
+        JButton gameQuit;
+        gameQuit = new JButton("QUIT");
+        gameQuit.setBackground(Color.red);
+        gameControls.add(gameQuit);
+        gameFrame.add(gameControls);
+        gameQuit.addActionListener(new GameQuitEventHandler());
+    }
 
+    private void generateHelpButton(JPanel gameControls, JFrame gameFrame, JLabel background) {
+        JButton gameHelp;
+        gameHelp = new JButton("HELP");
+        gameHelp.setBackground(Color.red);
+        gameControls.add(gameHelp);
+        gameFrame.add(gameControls);
+        gameHelp.addActionListener(new GameHelpEventHandler(background));
+    }
+
+    private JButton generateStartButton(JPanel gameControls, JFrame gameFrame, JLabel background) {
+        JButton gameStart;
+        gameStart = new JButton("START");
+        gameStart.setBackground(Color.green);
+        gameControls.add(gameStart);
+        gameFrame.add(gameControls);
+        gameStart.addActionListener(new GameStartEventHandler(background));
+        return gameStart;
+    }
+
+    private void addMapToGameFrame(JFrame gameFrame) {
+        JPanel houseMapPanel;
+        //adding a persistent map to the upper right hand corner.
+        houseMapPanel = new JPanel();
+        URL houseMapImgPath = ClassLoader.getSystemClassLoader().getResource("images/skombies-house-map.jpg");
+        assert houseMapImgPath != null;
+        ImageIcon houseMapImg = new ImageIcon(houseMapImgPath);
+        JLabel mapDisplayLabel = new JLabel(houseMapImg);
+        houseMapPanel.setBounds(550, 450, 50, 50);
+        houseMapPanel.add(mapDisplayLabel);
+        gameFrame.add(houseMapPanel);
+    }
+
+    public void alertMessage() {
         printFile(ALERT, 600); //600
     }
 
