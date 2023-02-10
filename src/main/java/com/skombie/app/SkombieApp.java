@@ -1,6 +1,6 @@
 package com.skombie.app;
-
-import com.skombie.eventhandling.DisplayInventoryEventHandler;
+import com.skombie.UI.*;
+import com.skombie.eventhandling.GameInventoryEventHandler;
 import com.skombie.eventhandling.GameHelpEventHandler;
 import com.skombie.eventhandling.GameQuitEventHandler;
 import com.skombie.eventhandling.GameStartEventHandler;
@@ -63,7 +63,7 @@ public class SkombieApp implements Runnable{
     }
 
     public void getGameTitle() {
-        JPanel gameControls;
+       /* JPanel gameControls;
         JFrame gameFrame;
         JButton gameStart;
         JButton gameHelp;
@@ -73,7 +73,7 @@ public class SkombieApp implements Runnable{
         gameFrame = new JFrame();
         gameFrame.setTitle("NIGHT OF THE SKOMBIES");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gameFrame.setResizable(false);
+        //gameFrame.setResizable(false);
         gameFrame.setSize(520, 520);
 
         URL imgPath = ClassLoader.getSystemClassLoader().getResource("images/NightOfTheSkombies.jpeg");
@@ -111,15 +111,16 @@ public class SkombieApp implements Runnable{
         Inventory.setBackground(Color.YELLOW);
         gameControls.add(Inventory);
         //gameFrame.add(gameControls);
-        Inventory.addActionListener(new DisplayInventoryEventHandler());
+        Inventory.addActionListener(new GameInventoryEventHandler());
 
         gameStart.requestFocus();
         gameFrame.setSize(600, 500);
         gameFrame.pack();
         gameFrame.add(background);
         gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        gameFrame.setVisible(true);
-
+        gameFrame.setVisible(true);*/
+        mainFrame mainFrame = new mainFrame();
+        JPanel redPanel = new JPanel();
         printFile(TITLE, 5);
     }
 
