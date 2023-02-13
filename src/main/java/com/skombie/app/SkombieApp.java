@@ -64,6 +64,8 @@ public class SkombieApp implements Runnable{
 
     public void getGameTitle() {
 
+        mainFrame mainFrame = new mainFrame();
+        JPanel redPanel = new JPanel();
         printFile(TITLE, 5);
     }
 
