@@ -1,9 +1,8 @@
 package com.skombie.app;
 
-import com.skombie.eventhandling.GameHelpEventHandler;
-import com.skombie.eventhandling.GameQuitEventHandler;
-import com.skombie.eventhandling.GameStartEventHandler;
-import com.skombie.model.*;
+import com.skombie.eventhandling.*;
+import com.skombie.model.House;
+import com.skombie.model.Player;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.Music;
 import com.skombie.utilities.Printer;
@@ -38,11 +37,11 @@ public class SkombieApp implements Runnable{
         Music.playSound(MAIN_SONG);
         getGameTitle();
         promptUserNew();
-        Music.stopSound();
+        Music.stop();
         Music.playSound(EMERGENCY);
         alertMessage();
         waitForUserResponse();
-        Music.stopSound();
+        Music.stop();
         generateInstructions();
         house.setProgressedPastHelp(true);
         startGame();
@@ -60,6 +59,9 @@ public class SkombieApp implements Runnable{
 //            house.setProgressedPastHelp(false);
 //        }
     }
+    private final JMenuItem item1 = new JMenuItem("                         MUTE");
+    private final JMenuItem item2 = new JMenuItem("                         STOP");
+    private final JMenuItem item3 = new JMenuItem("                        START");
 
     public void getGameTitle() {
         JPanel gameControls;
@@ -67,6 +69,7 @@ public class SkombieApp implements Runnable{
         JButton gameStart;
         JButton gameHelp;
         JButton gameQuit;
+        JSlider slider;
 
         gameFrame = new JFrame();
         gameFrame.setTitle("NIGHT OF THE SKOMBIES");
@@ -79,9 +82,8 @@ public class SkombieApp implements Runnable{
         background = new JLabel(img);
 
         gameControls = new JPanel();
-        GridLayout blockLayout;
-        blockLayout = new GridLayout(3, 3);
-        background.setLayout(blockLayout);
+        BorderLayout borderLayout = new BorderLayout();
+        background.setLayout(borderLayout);
 
         gameStart = new JButton("START");
         gameStart.setBackground(Color.green);
@@ -93,7 +95,36 @@ public class SkombieApp implements Runnable{
         gameHelp.setBackground(Color.red);
         gameControls.add(gameHelp);
         gameFrame.add(gameControls);
-        gameHelp.addActionListener(new GameHelpEventHandler(background));
+        gameHelp.addActionListener(new GameHelpEventHandler(background, gameStart, gameHelp));
+
+        JMenuBar musicBar = new JMenuBar();
+        JMenu menu1 = new JMenu("MUSIC");
+        musicBar.setBackground(Color.red);
+        musicBar.setPreferredSize(new Dimension(55,27));
+
+        menu1.add(item1);
+        menu1.add(item2);
+        menu1.add(item3);
+
+        item1.setBackground(Color.red);
+        item2.setBackground(Color.orange);
+        item3.setBackground(Color.yellow);
+
+        item1.addActionListener(new GameMusicMuteEventHandler());
+        item2.addActionListener(new GameMusicStopEventHandler());
+        item3.addActionListener(new GameMusicStartEventHandler());
+
+        musicBar.add(menu1);
+        gameControls.add(musicBar);
+
+        slider = new JSlider(-40, 6);
+        slider.setBackground(Color.green);
+        slider.addChangeListener(e -> {
+            Music.setCurrentVolume(slider.getValue());
+            Music.fc.setValue(Music.getCurrentVolume());
+        });
+        menu1.add(slider);
+        gameFrame.add(gameControls);
 
         gameQuit = new JButton("QUIT");
         gameQuit.setBackground(Color.red);
@@ -101,8 +132,8 @@ public class SkombieApp implements Runnable{
         gameFrame.add(gameControls);
         gameQuit.addActionListener(new GameQuitEventHandler());
 
+
         gameStart.requestFocus();
-        gameFrame.setSize(600, 500);
         gameFrame.pack();
         gameFrame.add(background);
         gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -110,6 +141,7 @@ public class SkombieApp implements Runnable{
 
         printFile(TITLE, 5);
     }
+
 
     public void alertMessage() {
 
@@ -123,6 +155,9 @@ public class SkombieApp implements Runnable{
     }
 
     public void startGame() {
+
+// pop new screen...borderlayout??
+
         Player player = house.getPlayer();
         if(previousMessage.size() == 0){
             previousMessage = new ArrayList<>(){
