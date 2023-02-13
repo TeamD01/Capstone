@@ -11,6 +11,7 @@ import java.net.URL;
 public class mainFrame extends JFrame {
 
     JPanel gameControls;
+    JLabel playerInventoryLabel;
     JButton gameStart;
     JButton gameHelp;
     JButton gameQuit;
@@ -18,10 +19,38 @@ public class mainFrame extends JFrame {
     public mainFrame() {
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
         this.setSize(520, 520);
         this.setTitle("NIGHT OF THE SKOMBIES");
+        this.setLayout(new BorderLayout(10, 10));
         this.setVisible(true);
+
+        JPanel nPanel = new JPanel();
+        JPanel sPanel = new JPanel();
+        JPanel ePanel = new JPanel();
+        JPanel wPanel = new JPanel();
+        JPanel cPanel = new JPanel();
+
+        nPanel.setBackground(Color.red);
+        sPanel.setBackground(Color.yellow);
+        ePanel.setBackground(Color.blue);
+        wPanel.setBackground(Color.green);
+        cPanel.setBackground(Color.orange);
+
+        nPanel.setPreferredSize(new Dimension(40, 40));
+        sPanel.setPreferredSize(new Dimension(40, 40));
+        ePanel.setPreferredSize(new Dimension(40, 40));
+        wPanel.setPreferredSize(new Dimension(40, 40));
+        cPanel.setPreferredSize(new Dimension(20, 30));
+
+        this.add(nPanel,BorderLayout.NORTH);
+        this.add(sPanel,BorderLayout.SOUTH);
+        this.add(ePanel,BorderLayout.EAST);
+        this.add(wPanel,BorderLayout.WEST);
+        this.add(cPanel,BorderLayout.CENTER);
+
+        playerInventoryLabel = new JLabel("Inventory");
+        playerInventoryLabel.setForeground(Color.white);
+        cPanel.add(playerInventoryLabel);
 
 
         URL imgPath = ClassLoader.getSystemClassLoader().getResource("images/NightOfTheSkombies.jpeg");
@@ -30,38 +59,41 @@ public class mainFrame extends JFrame {
         JLabel background;
         background = new JLabel(img);
 
-        JPanel redPanel = new JPanel();
-        redPanel.setBackground(Color.red);
-        redPanel.setBounds(20, 20, 200, 200);
-
-        gameControls = new JPanel();
+        this.gameControls = new JPanel();
         GridLayout blockLayout;
         blockLayout = new GridLayout(4, 4);
         background.setLayout(blockLayout);
 
-
         gameStart = new JButton("START");
         gameStart.setBackground(Color.green);
-        gameControls.add(gameStart);
+        nPanel.add(gameStart);
+        gameStart.setLayout(null);
         this.add(gameControls);
+
         gameStart.addActionListener(new GameStartEventHandler(background));
 
         gameHelp = new JButton("HELP");
-        gameHelp.setBackground(Color.red);
-        gameControls.add(gameHelp);
+        gameHelp.setBackground(Color.green);
+        nPanel.add(gameHelp);
+        gameHelp.setLayout(null);
         this.add(gameControls);
+        gameHelp.setBounds(0, 0, 10, 10);
+        gameHelp.setLayout(null);
         gameHelp.addActionListener(new GameHelpEventHandler(background));
 
         gameQuit = new JButton("QUIT");
-        gameQuit.setBackground(Color.red);
-        gameControls.add(gameQuit);
+        gameQuit.setBackground(Color.green);
+        gameQuit.setLayout(null);
+        nPanel.add(gameQuit);
         this.add(gameControls);
+
         gameQuit.addActionListener(new GameQuitEventHandler());
 
-        JButton playerInventory = new JButton();
-        playerInventory.setText("Inventory");
-        playerInventory.setBackground(Color.YELLOW);
-        gameControls.add(playerInventory);
+        JButton playerInventory = new JButton("Inventory");
+        //playerInventory.setText("Inventory");
+        playerInventory.setBackground(Color.green);
+        playerInventory.setLayout(null);
+        cPanel.add(playerInventory);
         this.add(gameControls);
         playerInventory.addActionListener(new GameInventoryEventHandler());
 
@@ -71,9 +103,23 @@ public class mainFrame extends JFrame {
         this.add(background);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setVisible(true);
+
     }
-
-
-
-
 }
+
+/*
+public class mainFrame extends JFrame implements ActionListener {
+
+    */
+/*JMenuBar menuBar;
+    JMenu startMenu;
+    JMenu quitMenu;
+    JMenu helpMenu;
+    JMenu inventoryMenu;
+    JMenuItem m
+*//*
+
+    JFrame mainFrame = new JFrame();
+    mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+*/
+

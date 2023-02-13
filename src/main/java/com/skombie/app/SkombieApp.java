@@ -63,64 +63,7 @@ public class SkombieApp implements Runnable{
     }
 
     public void getGameTitle() {
-       /* JPanel gameControls;
-        JFrame gameFrame;
-        JButton gameStart;
-        JButton gameHelp;
-        JButton gameQuit;
-        JButton Inventory;
 
-        gameFrame = new JFrame();
-        gameFrame.setTitle("NIGHT OF THE SKOMBIES");
-        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //gameFrame.setResizable(false);
-        gameFrame.setSize(520, 520);
-
-        URL imgPath = ClassLoader.getSystemClassLoader().getResource("images/NightOfTheSkombies.jpeg");
-        assert imgPath != null;
-        ImageIcon img = new ImageIcon(imgPath);
-        JLabel background;
-        background = new JLabel(img);
-
-        gameControls = new JPanel();
-        GridLayout blockLayout;
-        blockLayout = new GridLayout(4, 4);
-        background.setLayout(blockLayout);
-
-
-
-        gameStart = new JButton("START");
-        gameStart.setBackground(Color.green);
-        gameControls.add(gameStart);
-        gameFrame.add(gameControls);
-        gameStart.addActionListener(new GameStartEventHandler(background));
-
-        gameHelp = new JButton("HELP");
-        gameHelp.setBackground(Color.red);
-        gameControls.add(gameHelp);
-        gameFrame.add(gameControls);
-        gameHelp.addActionListener(new GameHelpEventHandler(background));
-
-        gameQuit = new JButton("QUIT");
-        gameQuit.setBackground(Color.red);
-        gameControls.add(gameQuit);
-        gameFrame.add(gameControls);
-        gameQuit.addActionListener(new GameQuitEventHandler());
-
-        Inventory = new JButton("Inventory");
-        Inventory.setBackground(Color.YELLOW);
-        gameControls.add(Inventory);
-        //gameFrame.add(gameControls);
-        Inventory.addActionListener(new GameInventoryEventHandler());
-
-        gameStart.requestFocus();
-        gameFrame.setSize(600, 500);
-        gameFrame.pack();
-        gameFrame.add(background);
-        gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        gameFrame.setVisible(true);*/
-        mainFrame mainFrame = new mainFrame();
-        JPanel redPanel = new JPanel();
         printFile(TITLE, 5);
     }
 
