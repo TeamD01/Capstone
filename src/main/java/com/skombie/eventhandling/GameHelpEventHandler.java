@@ -1,20 +1,28 @@
 package com.skombie.eventhandling;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class GameHelpEventHandler implements ActionListener {
     private final JLabel bGround;
+    private final JButton gStart;
+    private final JButton gHelp;
 
-    public GameHelpEventHandler(JLabel background) {
+    public GameHelpEventHandler(JLabel background, JButton gameStart, JButton gameHelp) {
         this.bGround = background;
+        this.gStart = gameStart;
+        this.gHelp = gameHelp;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getSource() == gHelp){
+            gStart.setBackground(Color.red);
+            gHelp.setBackground(Color.green);
+        }
         JOptionPane.showMessageDialog(bGround, "<html><body BGCOLOR=GREEN TEXT=BLACK STYLE=TEXT-ALIGN:left>"
                 + "<H1>Basic Commands </H1><br>" +
                 "<H2>** Navigation **<br>" +
