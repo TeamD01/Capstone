@@ -79,7 +79,7 @@ public class mainFrame extends JFrame {
         this.add(gameControls);
         gameHelp.setBounds(0, 0, 10, 10);
         gameHelp.setLayout(null);
-        gameHelp.addActionListener(new GameHelpEventHandler(background));
+        gameHelp.addActionListener(new GameHelpEventHandler(background, gameStart, gameHelp));
 
         gameQuit = new JButton("QUIT");
         gameQuit.setBackground(Color.green);

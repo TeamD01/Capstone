@@ -1,9 +1,6 @@
 package com.skombie.app;
 import com.skombie.UI.*;
-import com.skombie.eventhandling.GameInventoryEventHandler;
-import com.skombie.eventhandling.GameHelpEventHandler;
-import com.skombie.eventhandling.GameQuitEventHandler;
-import com.skombie.eventhandling.GameStartEventHandler;
+import com.skombie.eventhandling.*;
 import com.skombie.model.*;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.Music;
