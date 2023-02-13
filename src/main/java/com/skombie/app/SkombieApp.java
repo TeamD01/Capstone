@@ -1,8 +1,10 @@
 package com.skombie.app;
-
-import com.skombie.eventhandling.*;
-import com.skombie.model.House;
-import com.skombie.model.Player;
+import com.skombie.UI.*;
+import com.skombie.eventhandling.GameInventoryEventHandler;
+import com.skombie.eventhandling.GameHelpEventHandler;
+import com.skombie.eventhandling.GameQuitEventHandler;
+import com.skombie.eventhandling.GameStartEventHandler;
+import com.skombie.model.*;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.Music;
 import com.skombie.utilities.Printer;
@@ -102,7 +104,7 @@ public class SkombieApp implements Runnable{
 
         printFile(TITLE, 5);
     }
-
+    
     private void generateMusicDropDown(JPanel gameControls) {
         JSlider slider;
         JMenuBar musicBar = new JMenuBar();
