@@ -12,6 +12,7 @@ public class GameStartEventHandler implements ActionListener {
     InputStream EMERGENCY = getFile();
 
     public GameStartEventHandler(JLabel bGround) {
+
         this.bGround = bGround;
     }
 
@@ -22,7 +23,7 @@ public class GameStartEventHandler implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         bGround.setVisible(false);
-        Music.stopSound();
+        Music.stop();
         Music.playSound(EMERGENCY);
 
         //For ticket tracking AB#908 starts on line 25
@@ -36,6 +37,7 @@ public class GameStartEventHandler implements ActionListener {
                 + "** Authorities are urging that everyone stay indoors since the skunk spray will KILL you. **<br><br></H2> "
                 + "<H1>IF YOU DO NEED TO GO OUTSIDE MAKE SURE TO WEAR A GAS MASK  </H1>"
         );
+        bGround.requestFocus();
 
     }
 
