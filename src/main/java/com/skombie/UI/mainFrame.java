@@ -4,25 +4,26 @@ import com.skombie.eventhandling.GameHelpEventHandler;
 import com.skombie.eventhandling.GameInventoryEventHandler;
 import com.skombie.eventhandling.GameQuitEventHandler;
 import com.skombie.eventhandling.GameStartEventHandler;
+import com.skombie.model.House;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-public class mainFrame extends JFrame {
+class gameFrame extends JFrame {
 
-    JPanel gameControls;
-    JLabel playerInventoryLabel;
+    /*JPanel gameControls;
+    JLabel playerInventory;
     JButton gameStart;
     JButton gameHelp;
     JButton gameQuit;
 
-    public mainFrame() {
-
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(520, 520);
-        this.setTitle("NIGHT OF THE SKOMBIES");
-        this.setLayout(new BorderLayout(10, 10));
-        this.setVisible(true);
+    public gameFrame() {
+        JFrame mainFrame = new JFrame();
+        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameFrame.setSize(520, 520);
+        gameFrame.setLayout(new BorderLayout(10, 10));
+        gameFrame.setTitle("NIGHT OF THE SKOMBIES");
+        gameFrame.setVisible(true);
 
         JPanel nPanel = new JPanel();
         JPanel sPanel = new JPanel();
@@ -40,17 +41,24 @@ public class mainFrame extends JFrame {
         sPanel.setPreferredSize(new Dimension(40, 40));
         ePanel.setPreferredSize(new Dimension(40, 40));
         wPanel.setPreferredSize(new Dimension(40, 40));
-        cPanel.setPreferredSize(new Dimension(20, 30));
+        cPanel.setPreferredSize(new Dimension(40, 40));
 
-        this.add(nPanel,BorderLayout.NORTH);
-        this.add(sPanel,BorderLayout.SOUTH);
-        this.add(ePanel,BorderLayout.EAST);
-        this.add(wPanel,BorderLayout.WEST);
-        this.add(cPanel,BorderLayout.CENTER);
+        gameFrame.add(nPanel,BorderLayout.NORTH);
+        gameFrame.add(sPanel,BorderLayout.SOUTH);
+        gameFrame.add(ePanel,BorderLayout.EAST);
+        gameFrame.add(wPanel,BorderLayout.WEST);
+        gameFrame.add(cPanel,BorderLayout.CENTER);
 
-        playerInventoryLabel = new JLabel("Inventory");
-        playerInventoryLabel.setForeground(Color.white);
-        cPanel.add(playerInventoryLabel);
+        JPanel playerInventoryPanel = new JPanel();
+       URL playerInventoryImgPath = ClassLoader.getSystemClassLoader().getResource("images/Inventory.jpg");
+       assert playerInventoryImgPath != null;
+       ImageIcon playerInventoryImg = new ImageIcon(playerInventoryImgPath);
+       JLabel mapDisplayLabel = new JLabel(playerInventoryImg);
+       playerInventoryPanel.setBounds(700, 50, 550, 425);
+       playerInventoryPanel.setLocation(900, 200);
+       playerInventoryPanel.createImage(10, 10);
+       playerInventoryPanel.add(mapDisplayLabel);
+       gameFrame.add(playerInventoryPanel);
 
 
         URL imgPath = ClassLoader.getSystemClassLoader().getResource("images/NightOfTheSkombies.jpeg");
@@ -58,6 +66,7 @@ public class mainFrame extends JFrame {
         ImageIcon img = new ImageIcon(imgPath);
         JLabel background;
         background = new JLabel(img);
+        playerInventory = new JLabel("House.printInventory()");
 
         this.gameControls = new JPanel();
         GridLayout blockLayout;
@@ -86,26 +95,27 @@ public class mainFrame extends JFrame {
         gameQuit.setLayout(null);
         nPanel.add(gameQuit);
         this.add(gameControls);
-
         gameQuit.addActionListener(new GameQuitEventHandler());
 
         JButton playerInventory = new JButton("Inventory");
-        //playerInventory.setText("Inventory");
+        playerInventory.setText("Inventory");
         playerInventory.setBackground(Color.green);
         playerInventory.setLayout(null);
         cPanel.add(playerInventory);
+        this.setSize(600, 500);
         this.add(gameControls);
-        playerInventory.addActionListener(new GameInventoryEventHandler());
+
+        //playerInventory.addActionListener(new GameInventoryEventHandler());
 
         gameStart.requestFocus();
         this.setSize(600, 500);
         this.pack();
         this.add(background);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setVisible(true);
+        this.setVisible(true);*/
 
     }
-}
+
 
 /*
 public class mainFrame extends JFrame implements ActionListener {

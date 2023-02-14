@@ -8,6 +8,7 @@ import com.skombie.utilities.Printer;
 import com.skombie.utilities.PromptHelper;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.io.InputStream;
 import java.net.URL;
@@ -81,6 +82,30 @@ public class SkombieApp implements Runnable{
         background = new JLabel(img);
 
         gameControls = new JPanel();
+        JPanel sPanel = new JPanel();
+        JPanel ePanel = new JPanel();
+        JPanel wPanel = new JPanel();
+        JPanel cPanel = new JPanel();
+
+        gameControls.setBackground(Color.red);
+        sPanel.setBackground(Color.yellow);
+        ePanel.setBackground(Color.blue);
+        wPanel.setBackground(Color.green);
+        cPanel.setBackground(Color.orange);
+
+        gameControls.setPreferredSize(new Dimension(40, 40));
+        sPanel.setPreferredSize(new Dimension(40, 40));
+        ePanel.setPreferredSize(new Dimension(40, 40));
+        wPanel.setPreferredSize(new Dimension(40, 40));
+        cPanel.setPreferredSize(new Dimension(40, 40));
+
+        gameFrame.add(gameControls,BorderLayout.NORTH);
+        gameFrame.add(sPanel,BorderLayout.SOUTH);
+        gameFrame.add(ePanel,BorderLayout.EAST);
+        gameFrame.add(wPanel,BorderLayout.WEST);
+        gameFrame.add(cPanel,BorderLayout.CENTER);
+
+        gameControls = new JPanel();
         BorderLayout borderLayout = new BorderLayout();
         background.setLayout(borderLayout);
 
@@ -97,10 +122,13 @@ public class SkombieApp implements Runnable{
         gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gameFrame.setVisible(true);
 
+        addInventoryToGameFrame(gameFrame);
         addMapToGameFrame(gameFrame);
 
-        mainFrame mainFrame = new mainFrame();
-        JPanel redPanel = new JPanel();
+
+        //mainFrame mainFrame = new mainFrame();
+        //JPanel redPanel = new JPanel();
+
         printFile(TITLE, 5);
     }
     
@@ -171,11 +199,27 @@ public class SkombieApp implements Runnable{
         assert houseMapImgPath != null;
         ImageIcon houseMapImg = new ImageIcon(houseMapImgPath);
         JLabel mapDisplayLabel = new JLabel(houseMapImg);
-        houseMapPanel.setBounds(550, 450, 50, 50);
+        houseMapPanel.setBounds(700, 350, 550, 425);
+        houseMapPanel.setLocation(120, 50);
         houseMapPanel.add(mapDisplayLabel);
         gameFrame.add(houseMapPanel);
     }
+   private void addInventoryToGameFrame(JFrame gameFrame) {
+       // AB#964 Inventory is persistent in its own panel on upper right-hand corner.
+       JPanel playerInventoryPanel = new JPanel();
+       URL playerInventoryImgPath = ClassLoader.getSystemClassLoader().getResource("images/Inventory.png");
+       assert playerInventoryImgPath != null;
+       ImageIcon playerInventoryImg = new ImageIcon(playerInventoryImgPath);
+       JLabel playerInventoryDisplayLabel = new JLabel(playerInventoryImg);
+       playerInventoryPanel.setBounds(700, 50, 330, 400);
+       playerInventoryPanel.setLocation(910, 50);
+       Border titleLine = BorderFactory.createTitledBorder("Inventory");
+       playerInventoryPanel.setBorder(titleLine);
+       playerInventoryPanel.add(new JLabel("Player Inventory Displays Here"));
+       playerInventoryPanel.add(playerInventoryDisplayLabel);
+       gameFrame.add(playerInventoryPanel);
 
+    }
 
     public void alertMessage() {
         printFile(ALERT, 600); //600
