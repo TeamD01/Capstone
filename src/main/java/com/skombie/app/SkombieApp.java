@@ -93,14 +93,7 @@ public class SkombieApp implements Runnable {
 
         gameControls = new JPanel();
 
-<<<<<<< Updated upstream
-        gameStart = generateStartButton(gameControls, gameFrame, background);
-        generateHelpButton(gameControls, gameFrame, gameStart, background);
-        generateQuitButton(gameControls, gameFrame);
-        generateMusicDropDown(gameControls);
 
-        gameFrame.add(gameControls);
-=======
         gameStart = new JButton("START");
         gameStart.setBackground(Color.green);
         gameControls.add(gameStart);
@@ -112,7 +105,32 @@ public class SkombieApp implements Runnable {
         gameControls.add(gameHelp);
         gameFrame.add(gameControls, BorderLayout.NORTH);
         gameHelp.addActionListener(new GameHelpEventHandler(background, gameStart, gameHelp));
->>>>>>> Stashed changes
+        gameFrame.add(gameControls, BorderLayout.NORTH);
+
+        generateMusicDropDown(gameControls);
+
+        gameAttack = new JButton("ATTACK");
+        gameAttack.setBackground(Color.red);
+        gameControls.add(gameAttack);
+        gameFrame.add(gameControls, BorderLayout.NORTH);
+        gameAttack.addActionListener(new DamageHandler());// attack button
+
+        //Skombie Health
+        skombieHealthBarPanel = new JPanel();
+        skombieHealthBarPanel.setBackground(Color.green);
+        skombieHealthBarPanel.setPreferredSize(new Dimension(300, 27));
+        skombieHealthBarPanel.setFocusable(false);
+        gameControls.add(skombieHealthBarPanel);
+        gameFrame.add(gameControls, BorderLayout.NORTH);
+
+        skombieHealthBar = new JProgressBar(0, 100);
+        skombieHealthBar.setPreferredSize(new Dimension(300, 50));
+        skombieHealthBar.setForeground(Color.green);
+
+        skombieHealthBar.setValue(80);  // set the healthbar
+        skombieHealthBarPanel.add(skombieHealthBar);
+
+        generateQuitButton(gameControls, gameFrame);
 
         gameStart.requestFocus();
         gameFrame.pack();
@@ -121,6 +139,11 @@ public class SkombieApp implements Runnable {
         gameFrame.setVisible(true);
 
         addMapToGameFrame(gameFrame);
+        gameStart.requestFocus();
+        gameFrame.pack();
+        gameFrame.add(background);
+        gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        gameFrame.setVisible(true);
 
         printFile(TITLE, 5);
     }
@@ -154,32 +177,9 @@ public class SkombieApp implements Runnable {
             Music.fc.setValue(Music.getCurrentVolume());
         });
         menu1.add(slider);
-<<<<<<< Updated upstream
+
     }
-=======
-        gameFrame.add(gameControls, BorderLayout.NORTH);
 
-        gameAttack = new JButton("ATTACK");
-        gameAttack.setBackground(Color.red);
-        gameControls.add(gameAttack);
-        gameFrame.add(gameControls, BorderLayout.NORTH);
-        gameAttack.addActionListener(new DamageHandler());// attack button
-
-        //Skombie Health
-        skombieHealthBarPanel = new JPanel();
-        skombieHealthBarPanel.setBackground(Color.green);
-        skombieHealthBarPanel.setPreferredSize(new Dimension(300, 27));
-        skombieHealthBarPanel.setFocusable(false);
-        gameControls.add(skombieHealthBarPanel);
-        gameFrame.add(gameControls, BorderLayout.NORTH);
-
-        skombieHealthBar = new JProgressBar(0, 100);
-        skombieHealthBar.setPreferredSize(new Dimension(300, 50));
-        skombieHealthBar.setForeground(Color.green);
-
-        skombieHealthBar.setValue(80);  // set the healthbar
-        skombieHealthBarPanel.add(skombieHealthBar);
->>>>>>> Stashed changes
 
     private void generateQuitButton(JPanel gameControls, JFrame gameFrame) {
         JButton gameQuit;
@@ -190,7 +190,7 @@ public class SkombieApp implements Runnable {
         gameQuit.addActionListener(new GameQuitEventHandler());
     }
 
-<<<<<<< Updated upstream
+
     private void generateHelpButton(JPanel gameControls, JFrame gameFrame, JButton gameStart, JLabel background) {
         JButton gameHelp;
         gameHelp = new JButton("HELP");
@@ -209,13 +209,7 @@ public class SkombieApp implements Runnable {
         gameStart.addActionListener(new GameStartEventHandler(background));
         return gameStart;
     }
-=======
-        gameStart.requestFocus();
-        gameFrame.pack();
-        gameFrame.add(background);
-        gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        gameFrame.setVisible(true);
->>>>>>> Stashed changes
+
 
     private void addMapToGameFrame(JFrame gameFrame) {
         JPanel houseMapPanel;
