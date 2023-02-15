@@ -1,23 +1,21 @@
 package com.skombie.app;
 import com.skombie.UI.*;
-import com.skombie.eventhandling.*;
-import com.skombie.model.*;
+import com.skombie.model.House;
+import com.skombie.model.Player;
 import com.skombie.utilities.Console;
 import com.skombie.utilities.Music;
 import com.skombie.utilities.Printer;
 import com.skombie.utilities.PromptHelper;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import static com.skombie.utilities.Printer.printFile;
 
-public class SkombieApp implements Runnable{
+public class SkombieApp implements Runnable {
     private final Scanner scanner = new Scanner(System.in);
     private final PromptHelper prompter = new PromptHelper(scanner);
     private static final String TITLE = "images/title.txt";
@@ -27,6 +25,7 @@ public class SkombieApp implements Runnable{
     private final InputStream MAIN_SONG = getFile("music/MonkeySpin.wav");
     public final InputStream EMERGENCY = getFile("music/emergency.wav");
     List<String> previousMessage = new ArrayList<>();
+    private JComponent gameMap;
 
     public SkombieApp(House house) {
         this.house = house;
@@ -58,9 +57,12 @@ public class SkombieApp implements Runnable{
 //            house.setProgressedPastHelp(false);
 //        }
     }
+
     private final JMenuItem item1 = new JMenuItem("                         MUTE");
     private final JMenuItem item2 = new JMenuItem("                         STOP");
     private final JMenuItem item3 = new JMenuItem("                        START");
+
+    int hp = 100;
 
     public void getGameTitle() {
 //        JPanel gameControls;
@@ -176,7 +178,6 @@ public class SkombieApp implements Runnable{
 //        gameFrame.add(houseMapPanel);
 //    }
 
-
     public void alertMessage() {
         printFile(ALERT, 600); //600
     }
@@ -188,12 +189,11 @@ public class SkombieApp implements Runnable{
     }
 
     public void startGame() {
-
-// pop new screen...borderlayout??
+        gameMap.setVisible(true);
 
         Player player = house.getPlayer();
-        if(previousMessage.size() == 0){
-            previousMessage = new ArrayList<>(){
+        if (previousMessage.size() == 0) {
+            previousMessage = new ArrayList<>() {
                 {
                     add("Grandpa Nick:");
                     add("You know I had some old military gear in an old trunk that might come in handy.");
@@ -202,20 +202,20 @@ public class SkombieApp implements Runnable{
                 }
             };
             house.gatherLocationData(previousMessage);
-        }else {
+        } else {
             house.gatherLocationData(previousMessage);
         }
-         while(!player.isDead()){
-             String userInput = prompter.prompt("Please enter a command to proceed.");
-             house.manageCommand(userInput);
-             previousMessage.addAll(house.updateCharacterStatusList());
-             if (randGen()) {
-                 previousMessage = house.changeCharacterRoom();
-             }
-         }
-         if(player.isDead()){
-             printDeadMessage(player.getReasonForDeath());
-         }
+        while (!player.isDead()) {
+            String userInput = prompter.prompt("Please enter a command to proceed.");
+            house.manageCommand(userInput);
+            previousMessage.addAll(house.updateCharacterStatusList());
+            if (randGen()) {
+                previousMessage = house.changeCharacterRoom();
+            }
+        }
+        if (player.isDead()) {
+            printDeadMessage(player.getReasonForDeath());
+        }
     }
 
     private boolean randGen() {
@@ -224,7 +224,7 @@ public class SkombieApp implements Runnable{
 
     //If moved to util class we will pass generic so any class can use it
     //private <T> InputStream getFile(Class<T> obj, String file)
-    private InputStream getFile(String file){
+    private InputStream getFile(String file) {
         return this.getClass().getClassLoader().getResourceAsStream(file);
     }
 
@@ -233,7 +233,7 @@ public class SkombieApp implements Runnable{
         scanner.nextLine();
     }
 
-    private void printDeadMessage(String message){
+    private void printDeadMessage(String message) {
         Printer.printFile("data/dead.txt");
         Music.playSound(getFile("music/eatingMeat.wav"));
         System.out.printf("\nREASON: %s", message);
@@ -241,4 +241,6 @@ public class SkombieApp implements Runnable{
         Console.pause(15000);
         System.exit(0);
     }
+
+
 }

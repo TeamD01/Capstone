@@ -1,6 +1,7 @@
 package com.skombie.UI;
 
 import com.skombie.eventhandling.*;
+import com.skombie.utilities.AttackEngine;
 import com.skombie.utilities.Music;
 
 import javax.swing.*;
@@ -73,6 +74,8 @@ public class mainFrame extends JFrame {
         generateMusicDropDown(nPanel);
         generateInventoryButton(ePanel);
         addMapToGameFrame(ePanel);
+
+        new AttackEngine();
 
         gameStart.requestFocus();
         this.setSize(600, 500);
