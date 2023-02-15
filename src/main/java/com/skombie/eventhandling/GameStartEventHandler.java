@@ -1,6 +1,6 @@
 package com.skombie.eventhandling;
 
-import com.skombie.model.AttackEngine;
+import com.skombie.utilities.AttackEngine;
 import com.skombie.utilities.Music;
 
 import javax.swing.*;

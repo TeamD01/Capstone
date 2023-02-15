@@ -22,7 +22,7 @@ public class House {
     private static final String QUIT = "images/quit.txt";
     private static final String HELP = "data/intro";
     private static final String SAVE = "data/savefile.txt";
-    private Player player;
+    private static Player player;
     private List<Location> rooms;
     private final InteractionParser parser;
     private Location currLocation;
@@ -924,7 +924,7 @@ public class House {
         return isSpecial;
     }
 
-    private void printInventory() {
+    public static void printInventory() {
         if (player.getInventory().isEmpty()) {
             System.out.println("Your inventory is empty.");
         } else {
@@ -932,6 +932,7 @@ public class House {
                 System.out.printf("%s - %s\n", x.getName().toUpperCase(), x.getDescription().toUpperCase());
             });
         }
+
     }
 
     private Location findAvailableLocationInCurrLocation(String location) {
