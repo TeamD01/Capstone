@@ -1,6 +1,7 @@
 package com.skombie.app;
 
 import com.skombie.eventhandling.*;
+import com.skombie.model.AttackEngine;
 import com.skombie.model.House;
 import com.skombie.model.Player;
 import com.skombie.utilities.Console;
@@ -10,8 +11,6 @@ import com.skombie.utilities.PromptHelper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -74,12 +73,9 @@ public class SkombieApp implements Runnable {
         JFrame gameFrame;
         JButton gameStart;
         JButton gameHelp;
+        JButton gameAttack;
         JButton gameQuit;
         JSlider slider;
-        JButton gameAttack;
-        JPanel skombieHealthBarPanel;
-        JProgressBar skombieHealthBar;
-
 
         gameFrame = new JFrame();
         gameFrame.setTitle("NIGHT OF THE SKOMBIES");
@@ -109,26 +105,7 @@ public class SkombieApp implements Runnable {
 
         generateMusicDropDown(gameControls);
 
-        gameAttack = new JButton("ATTACK");
-        gameAttack.setBackground(Color.red);
-        gameControls.add(gameAttack);
-        gameFrame.add(gameControls, BorderLayout.NORTH);
-        gameAttack.addActionListener(new DamageHandler());// attack button
-
-        //Skombie Health
-        skombieHealthBarPanel = new JPanel();
-        skombieHealthBarPanel.setBackground(Color.green);
-        skombieHealthBarPanel.setPreferredSize(new Dimension(300, 27));
-        skombieHealthBarPanel.setFocusable(false);
-        gameControls.add(skombieHealthBarPanel);
-        gameFrame.add(gameControls, BorderLayout.NORTH);
-
-        skombieHealthBar = new JProgressBar(0, 100);
-        skombieHealthBar.setPreferredSize(new Dimension(300, 50));
-        skombieHealthBar.setForeground(Color.green);
-
-        skombieHealthBar.setValue(80);  // set the healthbar
-        skombieHealthBarPanel.add(skombieHealthBar);
+        new AttackEngine(); //calls the Skombie fight
 
         generateQuitButton(gameControls, gameFrame);
 
@@ -237,7 +214,6 @@ public class SkombieApp implements Runnable {
 
     public void startGame() {
         gameMap.setVisible(true);
-// pop new screen...borderlayout??
 
         Player player = house.getPlayer();
         if (previousMessage.size() == 0) {
@@ -290,19 +266,5 @@ public class SkombieApp implements Runnable {
         System.exit(0);
     }
 
-    public class DamageHandler implements ActionListener {
-
-        public void actionPerformed(ActionEvent event) {
-            hp = hp - 10;
-        }
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
 
 }
