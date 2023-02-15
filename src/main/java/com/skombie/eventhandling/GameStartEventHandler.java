@@ -1,5 +1,6 @@
 package com.skombie.eventhandling;
 
+import com.skombie.model.AttackEngine;
 import com.skombie.utilities.Music;
 
 import javax.swing.*;
@@ -39,6 +40,7 @@ public class GameStartEventHandler implements ActionListener {
         );
         bGround.requestFocus();
 
+        new AttackEngine(); //calls the Skombie fight
     }
 
 }
