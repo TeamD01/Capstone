@@ -1,7 +1,5 @@
 package com.skombie.utilities;
 
-import com.google.gson.JsonObject;
-
 public class InteractionParser {
 
     public String[] verifyInput(String userInput) {
