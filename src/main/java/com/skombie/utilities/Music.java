@@ -1,6 +1,5 @@
 package com.skombie.utilities;
 
-
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -35,23 +34,6 @@ public class Music {
         clip.start();
     }
 
-    public static void volumeUp(){
-        currentVolume += 3.0f;
-        if(currentVolume > 6.0f) {
-            setCurrentVolume(6.0f);
-        }
-        fc.setValue(currentVolume);
-    }
-
-    public static void volumeDown(){
-        currentVolume -= 3.0f;
-        if(currentVolume < -40.0f){
-            setCurrentVolume(-40.0f);
-        }
-        fc.setValue(currentVolume);
-    }
-
-
     public static void volumeMute() {
         if (!mute) {
             setPreviousVolume(getCurrentVolume());
@@ -63,14 +45,6 @@ public class Music {
             fc.setValue(currentVolume + 10);
             setMute(false);
         }
-    }
-
-    public static Clip getClip() {
-        return clip;
-    }
-
-    public static void setClip(Clip clip) {
-        Music.clip = clip;
     }
 
     public static float getPreviousVolume() {
@@ -87,18 +61,6 @@ public class Music {
 
     public static void setCurrentVolume(float currentVolume) {
         Music.currentVolume = currentVolume;
-    }
-
-    public static FloatControl getFc() {
-        return fc;
-    }
-
-    public static void setFc(FloatControl fc) {
-        Music.fc = fc;
-    }
-
-    public static boolean isMute() {
-        return mute;
     }
 
     public static void setMute(boolean mute) {
