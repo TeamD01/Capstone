@@ -1,7 +1,6 @@
 package com.skombie.UI;
 
 import com.skombie.eventhandling.*;
-import com.skombie.utilities.AttackEngine;
 import com.skombie.utilities.Music;
 
 import javax.swing.*;
@@ -17,6 +16,15 @@ public class mainFrame extends JFrame {
     JButton gameStart;
     JButton gameHelp;
     JButton gameQuit;
+    JButton hallway = new JButton("HALLWAY");
+    JButton livingroom = new JButton("LIVINGROOM");
+    JButton office = new JButton("OFFICE");
+    JButton basement = new JButton("BASEMENT");
+    JButton bedroom = new JButton("BEDROOM");
+    JButton kitchen = new JButton("KITCHEN");
+    JButton backyard = new JButton("BACKYARD");
+    JButton attic = new JButton("ATTIC");
+
 
     public mainFrame() {
 
@@ -40,21 +48,22 @@ public class mainFrame extends JFrame {
 
         nPanel.setPreferredSize(new Dimension(40, 40));
         sPanel.setPreferredSize(new Dimension(40, 150));
-        ePanel.setPreferredSize(new Dimension(100, 40));
+        ePanel.setPreferredSize(new Dimension(490, 40));
         wPanel.setPreferredSize(new Dimension(40, 40));
         cPanel.setPreferredSize(new Dimension(20, 30));
+
 
         this.add(nPanel,BorderLayout.NORTH);
         this.add(sPanel,BorderLayout.SOUTH);
         this.add(ePanel,BorderLayout.EAST);
         this.add(wPanel,BorderLayout.WEST);
-        this.add(cPanel,BorderLayout.CENTER);
+        //this.add(cPanel,BorderLayout.CENTER);         //turns off that black panel
 
         playerInventoryLabel = new JLabel("Inventory");
         playerInventoryLabel.setForeground(Color.white);
         ePanel.add(playerInventoryLabel);
 
-
+        //todo change
         URL imgPath = ClassLoader.getSystemClassLoader().getResource("images/NightOfTheSkombies.jpeg");
         assert imgPath != null;
         ImageIcon img = new ImageIcon(imgPath);
@@ -62,24 +71,63 @@ public class mainFrame extends JFrame {
         background = new JLabel(img);
 
         this.gameControls = new JPanel();
-        GridLayout blockLayout;
-        blockLayout = new GridLayout(4, 4);
-        background.setLayout(blockLayout);
 
         generateStartButton(nPanel);
-        gameStart.addActionListener(new GameStartEventHandler(background));
+
+        gameStart.addActionListener(new GameStartEventHandler(background, gameStart, hallway));
         generateHelpButton(nPanel, background);
         generateQuitButton(nPanel);
         gameQuit.addActionListener(new GameQuitEventHandler());
         generateMusicDropDown(nPanel);
         generateInventoryButton(ePanel);
+
+        generateLivingRoomButton(nPanel);
+        livingroom.addActionListener(new LivingroomEventHandler(background, hallway, livingroom, office,
+                basement, bedroom, kitchen, backyard));
+        livingroom.setVisible(false);
+
+        generateHallwayButton(nPanel);
+        hallway.setVisible(false);
+        hallway.addActionListener(new HallwayEventHandler(background,livingroom, hallway, office,
+                basement, bedroom, kitchen, backyard));
+
+        generateOfficeButton(nPanel);
+        office.setVisible(false);
+        office.addActionListener(new OfficeEventHandler(background, livingroom, hallway, office,
+                basement, bedroom, kitchen, backyard));
+
+        generateBasementButton(nPanel);
+        basement.setVisible(false);
+        basement.addActionListener(new BasementEventHandler(background, livingroom, hallway, office,
+                basement, bedroom, kitchen, backyard));
+
+        generateBedroomButton(nPanel);
+        bedroom.setVisible(false);
+        bedroom.addActionListener(new BedroomEventHandler(background, livingroom, hallway, office,
+                basement, bedroom, kitchen, backyard, attic));
+
+        generateKitchenButton(nPanel);
+        kitchen.setVisible(false);
+        kitchen.addActionListener(new KitchenEventHandler(background, livingroom, hallway, office,
+                basement, bedroom, kitchen, backyard));
+
+        generateBackyardButton(nPanel);
+        backyard.setVisible(false);
+        backyard.addActionListener(new BackyardEventHandler(background, livingroom, hallway, office,
+                basement, bedroom, kitchen, backyard));
+
+        generateAtticButton(nPanel);
+        attic.setVisible(false);
+        attic.addActionListener(new AtticEventHandler(background, livingroom, hallway, office,
+                basement, bedroom, kitchen, backyard, attic));
+
         addMapToGameFrame(ePanel);
 
-        new AttackEngine();
+       // new AttackEngine();  skombie attack...
 
         gameStart.requestFocus();
         this.setSize(600, 500);
-        this.pack();
+        //this.pack();
         this.add(background);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setVisible(true);
@@ -112,7 +160,7 @@ public class mainFrame extends JFrame {
         this.add(gameControls);
         gameHelp.setBounds(0, 0, 10, 10);
         gameHelp.setLayout(null);
-        gameHelp.addActionListener(new GameHelpEventHandler(background, gameStart, gameHelp));
+        gameHelp.addActionListener(new GameHelpEventHandler(background));
     }
 
     private void generateQuitButton(JPanel nPanel) {
@@ -120,6 +168,62 @@ public class mainFrame extends JFrame {
         gameQuit.setBackground(Color.green);
         gameQuit.setLayout(null);
         nPanel.add(gameQuit);
+        this.add(gameControls);
+    }
+
+    private void generateHallwayButton(JPanel nPanel) {
+        hallway.setBackground(Color.green);
+        hallway.setLayout(null);
+        nPanel.add(hallway);
+        this.add(gameControls);
+    }
+
+    private void generateLivingRoomButton(JPanel nPanel) {
+        livingroom.setBackground(Color.green);
+        livingroom.setLayout(null);
+        nPanel.add(livingroom);
+        this.add(gameControls);
+    }
+
+    private void generateOfficeButton(JPanel nPanel) {
+        office.setBackground(Color.green);
+        office.setLayout(null);
+        nPanel.add(office);
+        this.add(gameControls);
+    }
+
+    private void generateBasementButton(JPanel nPanel) {
+        basement.setBackground(Color.green);
+        basement.setLayout(null);
+        nPanel.add(basement);
+        this.add(gameControls);
+    }
+
+    private void generateKitchenButton(JPanel nPanel) {
+        kitchen.setBackground(Color.green);
+        kitchen.setLayout(null);
+        nPanel.add(kitchen);
+        this.add(gameControls);
+    }
+
+    private void generateBedroomButton(JPanel nPanel) {
+        bedroom.setBackground(Color.green);
+        bedroom.setLayout(null);
+        nPanel.add(bedroom);
+        this.add(gameControls);
+    }
+
+    private void generateBackyardButton(JPanel nPanel) {
+        backyard.setBackground(Color.green);
+        backyard.setLayout(null);
+        nPanel.add(backyard);
+        this.add(gameControls);
+    }
+
+    private void generateAtticButton(JPanel nPanel) {
+        attic.setBackground(Color.green);
+        attic.setLayout(null);
+        nPanel.add(attic);
         this.add(gameControls);
     }
 
@@ -166,21 +270,6 @@ public class mainFrame extends JFrame {
         houseMapPanel.add(mapDisplayLabel);
         gameFrame.add(houseMapPanel);
     }
+
+
 }
-
-/*
-public class mainFrame extends JFrame implements ActionListener {
-
-    */
-/*JMenuBar menuBar;
-    JMenu startMenu;
-    JMenu quitMenu;
-    JMenu helpMenu;
-    JMenu inventoryMenu;
-    JMenuItem m
-*//*
-
-    JFrame mainFrame = new JFrame();
-    mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-*/
-

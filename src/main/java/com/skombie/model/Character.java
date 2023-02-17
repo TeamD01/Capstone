@@ -13,7 +13,7 @@ public class Character implements Speaker, Inspectable, Serializable {
     private boolean isDead;
     private double hitsCanTake;
     private int turnsInCombat = 0;
-    private boolean isDeadDead = false;
+    //private final boolean isDeadDead = false;
 
     public Character(String name, String description, List<String> dialogue, boolean isAvailableMove, boolean isDead) {
         setName(name);
@@ -106,11 +106,4 @@ public class Character implements Speaker, Inspectable, Serializable {
         this.hitsCanTake = hitsCanTake;
     }
 
-    public boolean isDeadDead() {
-        return isDeadDead;
-    }
-
-    public void setDeadDead(boolean deadDead) {
-        isDeadDead = deadDead;
-    }
 }

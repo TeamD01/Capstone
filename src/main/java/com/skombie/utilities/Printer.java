@@ -18,9 +18,9 @@ public class Printer {
     * @param pauseAtLine - how long to pause after each line print (long milliseconds)
     * */
     public static void printFile(String fileName, long pauseAtLine) {
-        try (InputStream stream = Printer.class.getClassLoader().getResourceAsStream(fileName);) {
+        try (InputStream stream = Printer.class.getClassLoader().getResourceAsStream(fileName)) {
             assert stream != null;
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream));){
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))){
                 String line;
                 while((line = reader.readLine()) != null){
                     System.out.println(line);
